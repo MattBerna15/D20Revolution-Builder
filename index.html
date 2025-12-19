@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>D20 Revolution - Spellcasting Added</title>
+    <title>D20 Revolution - Character Builder</title>
     
     <!-- Librerie React e Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -95,7 +95,7 @@ Extra Attack,Combat,Fighter,5,20,,Non valgono le regole del multiclasse in quest
 Extra Attack,Combat,Monk,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Extra Attack,Combat,Paladin,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Extra Attack,Combat,Ranger,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Warlock,5,5,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
+Extra Attack,Combat,Warlock,2,5,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Extra Attack,Combat,Warlock,5,11,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Extra Attack,Combat,Wizard,5,6,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Extra Attack,Combat,Artificier,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
@@ -2970,14 +2970,16 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
 
             // HP Calc
             const conMod = getAbilityMod(calculateFinalScore(charData.stats.CON));
-            const hpClasses = React.useMemo(() => charData.classes.filter(c => c.showProficiency), [charData.classes]);
-            const totalClassLevels = React.useMemo(() => hpClasses.reduce((acc, cls) => acc + (cls.level || 0), 0), [hpClasses]);
-            const totalBaseHp = React.useMemo(() => hpClasses.reduce((acc, cls) => {
-                const base = getHpPerLevel(cls.className);
-                const current = cls.selectedHp || base;
-                return acc + (current * cls.level);
-            }, 0), [hpClasses, getHpPerLevel]);
-            const totalHP = totalBaseHp + (conMod * totalClassLevels);
+            
+            // MODIFICA: Calcolo HP basato sul Livello Totale del Personaggio
+            // 1. Recupera il valore HP impostato sulla classe proficiente (univoco per tutto il PG)
+            const hpClass = charData.classes.find(c => c.showProficiency);
+            const currentHpPerLevel = hpClass ? (hpClass.selectedHp || getHpPerLevel(hpClass.className)) : 0;
+            
+            // 2. Calcola il totale usando il Character Level globale
+            // Formula: (HP Base per Livello + Modificatore Costituzione) * Livello Totale Personaggio
+            const totalHP = (currentHpPerLevel + conMod) * charData.charPower.level;
+
             const bpUsed = calculateTotalBP();
 
             // --- FILTERING & PREREQUISITES ---
