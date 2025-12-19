@@ -89,7 +89,7 @@
             { name: "Spellcasting, Arcane Trickster", cost: 4 }
         ];
 		
-		const APP_VERSION = "0.056";
+		const APP_VERSION = "0.057";
 
         const PRELOADED_CSV = `Name,Element Type,Class Tag,Creation Points,Class Power,Prerequistes,Description,Action Points
 Extra Attack,Combat,Barbarian,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
@@ -2702,7 +2702,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
             const getAbilityMod = (score) => Math.floor((score - 10) / 2);
             const getProficiencyBonus = (level) => Math.ceil(1 + (level / 4));
             
-            // --- PARSERS ---
+            // --- PARSERS (Senza caching persistente) ---
             const parseFeaturesCSV = (text) => {
                 Papa.parse(text, {
                     header: true,
@@ -2722,7 +2722,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                             };
                         }).filter(Boolean);
                         setDb(newItems);
-                        localStorage.setItem('d20_db_data', JSON.stringify(newItems));
+                        // RIMOSSO: localStorage.setItem('d20_db_data', ...)
                     }
                 });
             };
@@ -2745,7 +2745,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                              };
                         }).filter(Boolean);
                         setFeatsDb(parsedFeats);
-                        localStorage.setItem('d20_feats_db', JSON.stringify(parsedFeats));
+                        // RIMOSSO: localStorage.setItem('d20_feats_db', ...)
                     }
                 });
             };
@@ -2760,10 +2760,10 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                              name: row["Name"],
                              action: row["Action"] || "None",
                              desc: row["Description"],
-                             cost: 3 // Costo fisso
+                             cost: 3
                          })).filter(s => s.name);
                          setFightingStylesDb(styles);
-                         localStorage.setItem('d20_fighting_styles_db', JSON.stringify(styles));
+                         // RIMOSSO: localStorage.setItem('d20_fighting_styles_db', ...)
                     }
                 });
             };
@@ -2778,10 +2778,10 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                              name: row["Name"],
                              costDice: row["Sneak Dice"] || "-",
                              desc: row["Description"],
-                             cpCost: 2 // Costo fisso
+                             cpCost: 2
                          })).filter(s => s.name);
                          setCunningStrikesDb(items);
-                         localStorage.setItem('d20_cunning_strikes_db', JSON.stringify(items));
+                         // RIMOSSO: localStorage.setItem('d20_cunning_strikes_db', ...)
                     }
                 });
             };
@@ -2796,58 +2796,33 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                              name: row["Metamagic Feat"] || row["Name"],
                              spCost: row["Sorcere Point"] || row["SP Cost"] || "-",
                              desc: row["Description"],
-                             cpCost: 2 // Costo fisso
+                             cpCost: 2
                          })).filter(s => s.name);
                          setMetamagicDb(items);
-                         localStorage.setItem('d20_metamagic_db', JSON.stringify(items));
+                         // RIMOSSO: localStorage.setItem('d20_metamagic_db', ...)
                     }
                 });
             };
             
-            // --- INITIALIZATION CON CONTROLLO VERSIONE ---
+            // --- INITIALIZATION (ALWAYS LOAD FRESH DATA) ---
             React.useEffect(() => {
-                const savedVersion = localStorage.getItem('d20_app_version');
-                const versionMismatch = savedVersion !== APP_VERSION;
+                // 1. Pulizia preventiva della cache DB (Opzionale, ma consigliata per pulire il telefono degli utenti)
+                // Nota: Non tocchiamo 'd20_profiles' o 'd20_profile_...', così i PG sono salvi.
+                localStorage.removeItem('d20_db_data');
+                localStorage.removeItem('d20_feats_db');
+                localStorage.removeItem('d20_fighting_styles_db');
+                localStorage.removeItem('d20_cunning_strikes_db');
+                localStorage.removeItem('d20_metamagic_db');
 
-                if (versionMismatch) {
-                    console.log(`Nuova versione rilevata (${APP_VERSION}). Aggiornamento database...`);
-                    // Se la versione è cambiata, puliamo SOLO le cache dei database (NON i profili dei PG)
-                    localStorage.removeItem('d20_db_data');
-                    localStorage.removeItem('d20_feats_db');
-                    localStorage.removeItem('d20_fighting_styles_db');
-                    localStorage.removeItem('d20_cunning_strikes_db');
-                    localStorage.removeItem('d20_metamagic_db');
-                    // Aggiorniamo la versione salvata
-                    localStorage.setItem('d20_app_version', APP_VERSION);
-                }
-
-                // Caricamento Dati (Se versione nuova, carica dai CSV, altrimenti prova cache)
-                // 1. Features
-                const savedDB = localStorage.getItem('d20_db_data');
-                if (savedDB && !versionMismatch) setDb(JSON.parse(savedDB));
-                else parseFeaturesCSV(PRELOADED_CSV);
+                // 2. Caricamento DIRETTO dai CSV nel codice
+                // Questo garantisce che ciò che scrivi nel file HTML sia ciò che l'utente vede.
+                parseFeaturesCSV(PRELOADED_CSV);
+                parseFeatsCSV(PRELOADED_FEATS_CSV);
+                parseFightingStylesCSV(PRELOADED_FIGHTING_STYLES_CSV);
+                parseCunningStrikesCSV(PRELOADED_CUNNING_STRIKES_CSV);
+                parseMetamagicCSV(PRELOADED_METAMAGIC_CSV);
                 
-                // 2. Feats
-                const savedFeatsDB = localStorage.getItem('d20_feats_db');
-                if (savedFeatsDB && !versionMismatch) setFeatsDb(JSON.parse(savedFeatsDB));
-                else parseFeatsCSV(PRELOADED_FEATS_CSV);
-
-                // 3. Fighting Styles
-                const savedFS = localStorage.getItem('d20_fighting_styles_db');
-                if (savedFS && !versionMismatch) setFightingStylesDb(JSON.parse(savedFS));
-                else parseFightingStylesCSV(PRELOADED_FIGHTING_STYLES_CSV);
-                
-                // 4. Cunning Strikes
-                const savedCS = localStorage.getItem('d20_cunning_strikes_db');
-                if (savedCS && !versionMismatch) setCunningStrikesDb(JSON.parse(savedCS));
-                else parseCunningStrikesCSV(PRELOADED_CUNNING_STRIKES_CSV);
-
-                // 5. Metamagic
-                const savedMM = localStorage.getItem('d20_metamagic_db');
-                if (savedMM && !versionMismatch) setMetamagicDb(JSON.parse(savedMM));
-                else parseMetamagicCSV(PRELOADED_METAMAGIC_CSV);
-                
-                // 6. Proficiency (Sempre da CSV perché non salviamo cache complessa per questa)
+                // 3. Caricamento Proficiency
                 Papa.parse(PRELOADED_PROFICIENCY_CSV, {
                     header: true,
                     skipEmptyLines: true,
@@ -2862,7 +2837,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                     }
                 });
 
-                // Caricamento Profili (Questi NON vengono mai cancellati dall'aggiornamento)
+                // 4. Caricamento PROFILI UTENTE (Questi vanno mantenuti dal localStorage!)
                 const savedProfiles = localStorage.getItem('d20_profiles');
                 let loadedProfiles = savedProfiles ? JSON.parse(savedProfiles) : ['Personaggio 1'];
                 setProfiles(loadedProfiles);
@@ -3658,7 +3633,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
                             <div className="flex justify-center md:justify-start">
                                 <h1 className="text-xl font-bold text-white flex items-center gap-2 whitespace-nowrap">
-                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.056</span>
+                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.057</span>
                                 </h1>
                                 {totalCPSpent > totalCPAvailable && (
                                     <div className="text-red-500 animate-pulse ml-3 w-6 h-6" title="CP Exceeded!"><Icons.AlertLarge /></div>
