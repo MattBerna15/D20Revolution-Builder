@@ -89,7 +89,7 @@
             { name: "Spellcasting, Arcane Trickster", cost: 4 }
         ];
 		
-		const APP_VERSION = "0.057";
+		const APP_VERSION = "0.061";
 
         const PRELOADED_CSV = `Name,Element Type,Class Tag,Creation Points,Class Power,Prerequistes,Description,Action Points
 Extra Attack,Combat,Barbarian,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
@@ -2934,7 +2934,6 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
             const totalCPCunningStrikes = React.useMemo(() => (charData.cunningStrikes || []).length * 2, [charData.cunningStrikes]);
             const totalCPMetamagic = React.useMemo(() => {
                 return (charData.metamagic || []).reduce((acc, item) => {
-                    // Se è stringa (vecchio formato) costa 2, se è oggetto controlla flag Sorcerer
                     if (typeof item === 'string') return acc + 2;
                     return acc + (item.isSorcerer ? 0 : 2);
                 }, 0);
@@ -2944,14 +2943,11 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                 const m = charData.magic || { extraSpells: 0, extraSlots: 0, slotAsMana: false };
                 let base = (m.extraSpells || 0) * 1 + (m.extraSlots || 0) * 10 + (m.slotAsMana ? 10 : 0);
                 
-                // Add Spellcasting costs
                 const spellcastingCost = (charData.spellcasting || []).reduce((acc, scName) => {
                      const sc = SPELLCASTING_DATA.find(s => s.name === scName);
                      return acc + (sc ? sc.cost : 0);
                 }, 0);
                 
-                // Add Caster Level costs
-                // Nota: Definiamo i tipi qui per sicurezza nel calcolo globale
                 const slotTypes = ['full', 'full', 'half', 'half', 'third', 'third'];
                 const casterLevelCost = (m.casterSlots || []).reduce((acc, slot, idx) => {
                     if (!slot || !slot.active) return acc;
@@ -2965,30 +2961,26 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                 return base + spellcastingCost + casterLevelCost;
             }, [charData.magic, charData.spellcasting]);
 
-            const totalCPSpent = React.useMemo(() => charData.features.reduce((acc, id) => {
-                const feat = dbMap[id];
-                return acc + (feat ? feat.cp : 0);
+            // MODIFICA: Calcolo CP Features ora lavora su oggetti completi
+            const totalCPSpent = React.useMemo(() => charData.features.reduce((acc, feat) => {
+                // Supporta sia oggetto completo che ID per sicurezza
+                const f = (typeof feat === 'object') ? feat : dbMap[feat];
+                return acc + (f ? f.cp : 0);
             }, 0) + totalCPClasses + totalCPFeats + abilityCostCP + totalHpCost + totalSkillCost + totalCPFightingStyles + totalCPCunningStrikes + totalCPMetamagic + totalCPMagic,
             [charData.features, dbMap, totalCPClasses, totalCPFeats, abilityCostCP, totalHpCost, totalSkillCost, totalCPFightingStyles, totalCPCunningStrikes, totalCPMetamagic, totalCPMagic]);
 
             // HP Calc
             const conMod = getAbilityMod(calculateFinalScore(charData.stats.CON));
-            
-            // MODIFICA: Calcolo HP basato sul Livello Totale del Personaggio
-            // 1. Recupera il valore HP impostato sulla classe proficiente (univoco per tutto il PG)
             const hpClass = charData.classes.find(c => c.showProficiency);
             const currentHpPerLevel = hpClass ? (hpClass.selectedHp || getHpPerLevel(hpClass.className)) : 0;
-            
-            // 2. Calcola il totale usando il Character Level globale
-            // Formula: (HP Base per Livello + Modificatore Costituzione) * Livello Totale Personaggio
             const totalHP = (currentHpPerLevel + conMod) * charData.charPower.level;
-
             const bpUsed = calculateTotalBP();
 
             // --- FILTERING & PREREQUISITES ---
-            const selectedFeatureNames = React.useMemo(() => new Set(charData.features.map(id => {
-                const f = dbMap[id];
-                return f ? f.name.trim().toLowerCase() : null;
+            // MODIFICA: Mappa i nomi direttamente dagli oggetti salvati
+            const selectedFeatureNames = React.useMemo(() => new Set(charData.features.map(f => {
+                const featObj = (typeof f === 'object') ? f : dbMap[f];
+                return featObj ? featObj.name.trim().toLowerCase() : null;
             }).filter(Boolean)), [dbMap, charData.features]);
 
             const checkPrereq = React.useCallback((str) => {
@@ -3005,32 +2997,67 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                 return { allowed: true, msg: '' };
             }, [charData.classes]);
 
-            // --- AUTO-VALIDAZIONE ---
+            // --- AUTO-VALIDAZIONE & MIGRATION ---
             React.useEffect(() => {
                 if (db.length === 0) return;
 
-                const validFeatures = charData.features.filter(id => {
-                    const f = dbMap[id];
-                    if (!f) return false; 
+                const migrateList = (list, sourceMap, isMetamagic = false) => {
+                    return list.map(item => {
+                        // Se è già un oggetto completo, tienilo
+                        if (typeof item === 'object' && item !== null && item.name) return item;
+                        
+                        // Se è un ID (stringa), cercalo nel DB
+                        const id = typeof item === 'object' ? item.id : item;
+                        const found = sourceMap[id];
+                        
+                        if (!found) return null; // Se non esiste, rimuovilo
+                        
+                        // Per Metamagic, aggiungi il flag Sorcerer di default
+                        if (isMetamagic) {
+                            const isSorc = (typeof item === 'object' && item.isSorcerer) || false;
+                            return { ...found, isSorcerer: isSorc };
+                        }
+                        
+                        return found;
+                    }).filter(Boolean);
+                };
 
-                    const classCheck = checkClassPrereq(f);
-                    if (!classCheck.allowed) return false;
+                // Controlla e Migra
+                let newData = { ...charData };
+                let hasChanges = false;
 
-                    if (f.pre && f.pre !== '-') {
-                        const reqs = f.pre.split(';').map(t => t.trim());
-                        if (reqs.some(r => !selectedFeatureNames.has(r.toLowerCase()))) return false;
-                    }
-                    return true;
-                });
-
-                if (validFeatures.length !== charData.features.length) {
-                    updateCharData('features', validFeatures);
+                // 1. Features
+                if (charData.features.some(f => typeof f === 'number' || typeof f === 'string')) {
+                    newData.features = migrateList(charData.features, dbMap);
+                    hasChanges = true;
                 }
-            }, [charData.features, charData.classes, dbMap, selectedFeatureNames, checkClassPrereq, updateCharData, db.length]); 
+                // 2. Fighting Styles
+                if (charData.fightingStyles.some(s => typeof s === 'string')) {
+                    newData.fightingStyles = migrateList(charData.fightingStyles, fightingStylesDb);
+                    hasChanges = true;
+                }
+                // 3. Cunning Strikes
+                if (charData.cunningStrikes.some(c => typeof c === 'string')) {
+                    newData.cunningStrikes = migrateList(charData.cunningStrikes, cunningStrikesDb);
+                    hasChanges = true;
+                }
+                // 4. Metamagic
+                if (charData.metamagic.some(m => typeof m === 'string' || (typeof m === 'object' && !m.name))) {
+                    newData.metamagic = migrateList(charData.metamagic, metamagicDb, true);
+                    hasChanges = true;
+                }
+
+                if (hasChanges) {
+                    console.log("Migrazione dati completata.");
+                    setCharData(newData);
+                }
+            }, [charData.features, charData.fightingStyles, charData.cunningStrikes, charData.metamagic, dbMap, fightingStylesDb, cunningStrikesDb, metamagicDb, db.length]); 
 
             const toggleFeature = (id) => {
-                if (charData.features.includes(id)) {
-                    updateCharData('features', charData.features.filter(x => x !== id));
+                // MODIFICA FONDAMENTALE: Gestione Oggetti
+                const exists = charData.features.some(f => f.id === id);
+                if (exists) {
+                    updateCharData('features', charData.features.filter(f => f.id !== id));
                     return;
                 }
                 const f = dbMap[id];
@@ -3040,14 +3067,16 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                         if (reqs.some(r => !selectedFeatureNames.has(r.toLowerCase()))) return;
                     }
                     if (!checkClassPrereq(f).allowed) return;
-                    updateCharData('features', [...charData.features, id]);
+                    // SALVA L'INTERO OGGETTO, NON SOLO L'ID
+                    updateCharData('features', [...charData.features, f]);
                 }
             };
 
             const classes = React.useMemo(() => [...new Set(db.flatMap(f => f.tag.split(';').map(t => t.trim())).filter(Boolean))].sort(), [db]);
             
             const filteredData = React.useMemo(() => db.filter(item => {
-                if (showSelectedOnly && !charData.features.includes(item.id)) return false;
+                // MODIFICA: Check su id nell'array di oggetti
+                if (showSelectedOnly && !charData.features.some(f => f.id === item.id)) return false;
                 const tags = item.tag.split(';').map(t => t.trim());
                 const matchTag = selectedTags.length === 0 || selectedTags.some(t => tags.includes(t));
                 const matchSearch = (item.name + item.desc + item.pre).toLowerCase().includes(search.toLowerCase());
@@ -3206,29 +3235,40 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
 
             const addFightingStyle = () => {
                 if (!fightingStyleSelection) return;
-                updateCharData('fightingStyles', [...charData.fightingStyles, fightingStyleSelection]);
-                setFightingStyleSelection("");
+                const styleObj = fightingStylesDb.find(s => s.id === fightingStyleSelection); // Trova l'oggetto
+                if (styleObj) {
+                    // Salva l'OGGETTO, non l'ID
+                    updateCharData('fightingStyles', [...charData.fightingStyles, styleObj]);
+                    setFightingStyleSelection("");
+                }
             };
 
             const removeFightingStyle = (styleId) => {
-                updateCharData('fightingStyles', charData.fightingStyles.filter(id => id !== styleId));
+                // Filtra confrontando gli ID degli oggetti salvati
+                updateCharData('fightingStyles', charData.fightingStyles.filter(s => s.id !== styleId));
             };
 
             const addCunningStrike = () => {
                 if (!cunningStrikeSelection) return;
-                updateCharData('cunningStrikes', [...charData.cunningStrikes, cunningStrikeSelection]);
-                setCunningStrikeSelection("");
+                const strikeObj = cunningStrikesDb.find(s => s.id === cunningStrikeSelection); // Trova l'oggetto
+                if (strikeObj) {
+                    updateCharData('cunningStrikes', [...charData.cunningStrikes, strikeObj]);
+                    setCunningStrikeSelection("");
+                }
             };
 
             const removeCunningStrike = (styleId) => {
-                updateCharData('cunningStrikes', charData.cunningStrikes.filter(id => id !== styleId));
+                updateCharData('cunningStrikes', charData.cunningStrikes.filter(s => s.id !== styleId));
             };
 
             const addMetamagic = () => {
                 if (!metamagicSelection) return;
-                // Aggiunge come oggetto con flag isSorcerer: false di default
-                updateCharData('metamagic', [...charData.metamagic, { id: metamagicSelection, isSorcerer: false }]);
-                setMetamagicSelection("");
+                const mmObj = metamagicDb.find(m => m.id === metamagicSelection); // Trova l'oggetto
+                if (mmObj) {
+                    // Salva oggetto + flag sorcerer
+                    updateCharData('metamagic', [...charData.metamagic, { ...mmObj, isSorcerer: false }]);
+                    setMetamagicSelection("");
+                }
             };
 
             const removeMetamagic = (styleId) => {
@@ -3341,13 +3381,10 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                 text += `\n`;
 
                 text += `--- CLASSI & HP ---\n`;
-                // Recupera HP per livello (prendendo il primo valido, dato che è una tantum)
                 const hpClass = charData.classes.find(c => c.showProficiency);
                 const currentHpPerLevel = hpClass ? (hpClass.selectedHp || getHpPerLevel(hpClass.className)) : 0;
                 
-                if (currentHpPerLevel > 0) {
-                    text += `HP Scelti per Livello: ${currentHpPerLevel}\n`;
-                }
+                if (currentHpPerLevel > 0) text += `HP Scelti per Livello: ${currentHpPerLevel}\n`;
                 text += `HP Totali: ${totalHP}\n`;
                 
                 charData.classes.forEach(c => {
@@ -3377,9 +3414,10 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
 
                 text += `--- CLASS FEATURES ---\n`;
                 if(charData.features.length === 0) text += `(Nessuna)\n`;
-                charData.features.forEach(id => {
-                    const f = dbMap[id];
-                    if (f) text += `- ${f.name} (${f.cp} CP)\n`;
+                // MODIFICA: Itera direttamente gli oggetti feature salvati
+                charData.features.forEach(f => {
+                    const featObj = (typeof f === 'object') ? f : dbMap[f];
+                    if (featObj) text += `- ${featObj.name} (${featObj.cp} CP)\n`;
                 });
                 text += `\n`;
 
@@ -3413,16 +3451,13 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                 if (charData.metamagic.length) {
                     text += `Metamagic:\n`;
                     charData.metamagic.forEach(item => {
-                        // Gestione stringa/oggetto per retrocompatibilità
                         const itemId = typeof item === 'string' ? item : item.id;
                         const isSorcerer = typeof item === 'string' ? false : item.isSorcerer;
                         const m = metamagicMap[itemId];
-                        
                         if (m) text += `  * ${m.name}${isSorcerer ? ' (Sorcerer - Free)' : ''}\n`;
                     });
                 }
                 
-                // Generazione e download del file
                 const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
@@ -3633,7 +3668,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
                             <div className="flex justify-center md:justify-start">
                                 <h1 className="text-xl font-bold text-white flex items-center gap-2 whitespace-nowrap">
-                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.057</span>
+                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.061</span>
                                 </h1>
                                 {totalCPSpent > totalCPAvailable && (
                                     <div className="text-red-500 animate-pulse ml-3 w-6 h-6" title="CP Exceeded!"><Icons.AlertLarge /></div>
@@ -3712,7 +3747,9 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                                     <div className="col-span-1 text-right">Info</div>
                                 </div>
                                 {filteredData.map(feat => {
-                                    const isSelected = charData.features.includes(feat.id);
+                                    // MODIFICA: Controllo 'isSelected' compatibile con oggetti
+                                    const isSelected = charData.features.some(f => f.id === feat.id);
+                                    
                                     const displayTags = feat.tag ? feat.tag.split(';').map(t => t.trim()) : [];
                                     const displayPrereqs = feat.pre && feat.pre !== '-' ? feat.pre.split(';').map(t => t.trim()).filter(Boolean) : [];
                                     let canSelect = true;
@@ -4268,10 +4305,10 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                     {/* VISTA 4: COMBAT & MAGIC (NEW) */}
                     {activeTab === 'combat_magic' && (
                         <div className="flex-1 overflow-y-auto p-4 custom-scrollbar animate-in fade-in slide-in-from-bottom-4 duration-300">
-                            {/* MODIFICA: 'h-full' cambiato in 'lg:h-full' per permettere lo scroll su mobile */}
                             <div className="flex flex-col lg:flex-row gap-6 lg:h-full">
                                 {/* LEFT COLUMN (1/3) */}
                                 <div className="w-full lg:w-1/3 flex flex-col gap-6">
+                                    
                                     {/* FIGHTING STYLE */}
                                     <div className="bg-slate-900 rounded-xl border border-slate-800 p-4 shadow-lg flex-1">
                                         <div className="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
@@ -4282,57 +4319,37 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                                                 {charData.fightingStyles.length * 3} CP
                                             </div>
                                         </div>
-
                                         {/* Dropdown Selection */}
                                         <div className="flex gap-2 mb-4">
                                             <div className="relative flex-1 bg-slate-950/50 border border-slate-700 rounded-lg flex items-center px-3 py-2">
-                                                <select 
-                                                    value={fightingStyleSelection} 
-                                                    onChange={(e) => setFightingStyleSelection(e.target.value)}
-                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs"
-                                                >
+                                                <select value={fightingStyleSelection} onChange={(e) => setFightingStyleSelection(e.target.value)} 
+                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs" >
                                                     <option value="" className="bg-slate-900">Seleziona Stile...</option>
                                                     {availableFightingStyles.map(s => (
                                                         <option key={s.id} value={s.id} className="bg-slate-900">{s.name} (3 CP)</option>
                                                     ))}
                                                 </select>
-                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
-                                                </div>
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500"><Icons.Filter /></div>
                                             </div>
-                                            <button 
-                                                onClick={addFightingStyle}
-                                                disabled={!fightingStyleSelection}
-                                                className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${fightingStyleSelection ? 'bg-red-600 text-white hover:bg-red-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
-                                            >
+                                            <button onClick={addFightingStyle} disabled={!fightingStyleSelection} className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${fightingStyleSelection ? 'bg-red-600 text-white hover:bg-red-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`} >
                                                 Aggiungi
                                             </button>
                                         </div>
-
                                         {/* Selected Styles List */}
                                         <div className="space-y-3">
-                                            {charData.fightingStyles.map(id => {
-                                                const style = fightingStylesDb.find(s => s.id === id);
+                                            {charData.fightingStyles.map((item, idx) => {
+                                                // FIX: Supporta sia oggetti (nuovi) che stringhe (vecchi)
+                                                const style = typeof item === 'object' ? item : fightingStylesDb.find(s => s.id === item);
                                                 if (!style) return null;
                                                 return (
-                                                    <div key={style.id} className="bg-slate-950/80 border border-slate-700 rounded-lg p-3 relative group hover:border-red-500/30 transition-all">
-                                                        <button 
-                                                            onClick={() => removeFightingStyle(style.id)}
-                                                            className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors"
-                                                            title="Rimuovi Stile"
-                                                        >
-                                                            <Icons.Trash />
-                                                        </button>
+                                                    <div key={`${style.id}-${idx}`} className="bg-slate-950/80 border border-slate-700 rounded-lg p-3 relative group hover:border-red-500/30 transition-all">
+                                                        <button onClick={() => removeFightingStyle(style.id)} className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors" title="Rimuovi Stile"><Icons.Trash /></button>
                                                         <div className="flex justify-between items-start pr-6 mb-1">
                                                             <div className="font-bold text-sm text-white">{style.name}</div>
-                                                            {style.action && style.action !== 'None' && (
-                                                                <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">{style.action}</span>
-                                                            )}
+                                                            {style.action && style.action !== 'None' && <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">{style.action}</span>}
                                                         </div>
                                                         <div className="text-xs text-yellow-600 font-bold mb-1">Costo: 3 CP</div>
-                                                        <div className="text-xs text-slate-400 leading-relaxed">
-                                                            {style.desc}
-                                                        </div>
+                                                        <div className="text-xs text-slate-400 leading-relaxed">{style.desc}</div>
                                                     </div>
                                                 );
                                             })}
@@ -4350,57 +4367,37 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                                                 {charData.cunningStrikes.length * 2} CP
                                             </div>
                                         </div>
-
                                         {/* Dropdown Selection */}
                                         <div className="flex gap-2 mb-4">
                                             <div className="relative flex-1 bg-slate-950/50 border border-slate-700 rounded-lg flex items-center px-3 py-2">
-                                                <select 
-                                                    value={cunningStrikeSelection} 
-                                                    onChange={(e) => setCunningStrikeSelection(e.target.value)}
-                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs"
-                                                >
+                                                <select value={cunningStrikeSelection} onChange={(e) => setCunningStrikeSelection(e.target.value)} 
+                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs" >
                                                     <option value="" className="bg-slate-900">Seleziona Strike...</option>
                                                     {availableCunningStrikes.map(s => (
                                                         <option key={s.id} value={s.id} className="bg-slate-900">{s.name} (2 CP)</option>
                                                     ))}
                                                 </select>
-                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
-                                                </div>
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500"><Icons.Filter /></div>
                                             </div>
-                                            <button 
-                                                onClick={addCunningStrike}
-                                                disabled={!cunningStrikeSelection}
-                                                className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${cunningStrikeSelection ? 'bg-yellow-600 text-white hover:bg-yellow-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
-                                            >
+                                            <button onClick={addCunningStrike} disabled={!cunningStrikeSelection} className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${cunningStrikeSelection ? 'bg-yellow-600 text-white hover:bg-yellow-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`} >
                                                 Aggiungi
                                             </button>
                                         </div>
-
                                         {/* Selected Cunning Strikes List */}
                                         <div className="space-y-3">
-                                            {charData.cunningStrikes.map(id => {
-                                                const strike = cunningStrikesMap[id];
+                                            {charData.cunningStrikes.map((item, idx) => {
+                                                // FIX: Supporta sia oggetti (nuovi) che stringhe (vecchi)
+                                                const strike = typeof item === 'object' ? item : cunningStrikesDb.find(s => s.id === item);
                                                 if (!strike) return null;
                                                 return (
-                                                    <div key={strike.id} className="bg-slate-950/80 border border-slate-700 rounded-lg p-3 relative group hover:border-yellow-500/30 transition-all">
-                                                        <button 
-                                                            onClick={() => removeCunningStrike(strike.id)}
-                                                            className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors"
-                                                            title="Rimuovi Strike"
-                                                        >
-                                                            <Icons.Trash />
-                                                        </button>
+                                                    <div key={`${strike.id}-${idx}`} className="bg-slate-950/80 border border-slate-700 rounded-lg p-3 relative group hover:border-yellow-500/30 transition-all">
+                                                        <button onClick={() => removeCunningStrike(strike.id)} className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors" title="Rimuovi Strike"><Icons.Trash /></button>
                                                         <div className="flex justify-between items-start pr-6 mb-1">
                                                             <div className="font-bold text-sm text-white">{strike.name}</div>
-                                                            {strike.costDice && strike.costDice !== '-' && (
-                                                                <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">Cost: {strike.costDice}</span>
-                                                            )}
+                                                            {strike.costDice && strike.costDice !== '-' && <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">Cost: {strike.costDice}</span>}
                                                         </div>
                                                         <div className="text-xs text-yellow-600 font-bold mb-1">Costo: 2 CP</div>
-                                                        <div className="text-xs text-slate-400 leading-relaxed">
-                                                            {strike.desc}
-                                                        </div>
+                                                        <div className="text-xs text-slate-400 leading-relaxed">{strike.desc}</div>
                                                     </div>
                                                 );
                                             })}
@@ -4408,7 +4405,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                                         </div>
                                     </div>
 
-                                    {/* METAMAGIC ADEPT (UPDATED) */}
+                                    {/* METAMAGIC ADEPT */}
                                     <div className="bg-slate-900 rounded-xl border border-slate-800 p-4 shadow-lg flex-1">
                                         <div className="flex justify-between items-center mb-3 border-b border-slate-800 pb-2">
                                             <h3 className="text-lg font-bold text-white flex items-center gap-2">
@@ -4418,77 +4415,50 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
                                                 {totalCPMetamagic} CP
                                             </div>
                                         </div>
-                                        
                                         {/* Dropdown Selection */}
                                         <div className="flex gap-2 mb-4">
                                             <div className="relative flex-1 bg-slate-950/50 border border-slate-700 rounded-lg flex items-center px-3 py-2">
-                                                <select 
-                                                    value={metamagicSelection} 
-                                                    onChange={(e) => setMetamagicSelection(e.target.value)}
-                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs"
-                                                >
+                                                <select value={metamagicSelection} onChange={(e) => setMetamagicSelection(e.target.value)} 
+                                                    className="bg-transparent w-full text-white outline-none appearance-none cursor-pointer text-xs" >
                                                     <option value="" className="bg-slate-900">Seleziona Metamagic...</option>
                                                     {availableMetamagic.map(s => (
                                                         <option key={s.id} value={s.id} className="bg-slate-900">{s.name} (2 CP)</option>
                                                     ))}
                                                 </select>
-                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6"/></svg>
-                                                </div>
+                                                <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-slate-500"><Icons.Filter /></div>
                                             </div>
-                                            <button 
-                                                onClick={addMetamagic}
-                                                disabled={!metamagicSelection}
-                                                className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${metamagicSelection ? 'bg-purple-600 text-white hover:bg-purple-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`}
-                                            >
+                                            <button onClick={addMetamagic} disabled={!metamagicSelection} className={`px-3 py-2 rounded-lg font-bold text-xs transition-colors ${metamagicSelection ? 'bg-purple-600 text-white hover:bg-purple-500' : 'bg-slate-800 text-slate-500 cursor-not-allowed'}`} >
                                                 Aggiungi
                                             </button>
                                         </div>
-
                                         {/* Selected Metamagic List */}
                                         <div className="space-y-3">
                                             {charData.metamagic.map((item, idx) => {
-                                                // Gestione retrocompatibilità (stringa vs oggetto)
-                                                const itemId = typeof item === 'string' ? item : item.id;
-                                                const isSorcerer = typeof item === 'string' ? false : item.isSorcerer;
-                                                const mm = metamagicMap[itemId];
+                                                // FIX: Supporta oggetti completi
+                                                const mm = typeof item === 'object' ? item : metamagicDb.find(m => m.id === item);
+                                                const isSorcerer = typeof item === 'object' ? item.isSorcerer : false;
+                                                const itemId = mm ? mm.id : idx;
                                                 
                                                 if (!mm) return null;
+
                                                 return (
                                                     <div key={`${itemId}-${idx}`} className={`bg-slate-950/80 border rounded-lg p-3 relative group transition-all ${isSorcerer ? 'border-purple-500/50 bg-purple-900/10' : 'border-slate-700 hover:border-purple-500/30'}`}>
-                                                        <button 
-                                                            onClick={() => removeMetamagic(itemId)}
-                                                            className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors"
-                                                            title="Rimuovi Metamagic"
-                                                        >
-                                                            <Icons.Trash />
-                                                        </button>
+                                                        <button onClick={() => removeMetamagic(itemId)} className="absolute top-2 right-2 text-slate-500 hover:text-red-400 p-1 rounded hover:bg-slate-800 transition-colors" title="Rimuovi Metamagic"><Icons.Trash /></button>
                                                         <div className="flex justify-between items-start pr-6 mb-1">
                                                             <div className="font-bold text-sm text-white">{mm.name}</div>
-                                                            {mm.spCost && mm.spCost !== '-' && (
-                                                                <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">Cost: {mm.spCost}</span>
-                                                            )}
+                                                            {mm.spCost && mm.spCost !== '-' && <span className="text-[9px] bg-slate-800 px-1.5 py-0.5 rounded text-slate-400 border border-slate-700 uppercase tracking-wide">Cost: {mm.spCost}</span>}
                                                         </div>
-                                                        
                                                         {/* Sorcerer Checkbox & Cost */}
                                                         <div className="flex items-center justify-between mb-2 mt-2 bg-slate-900/50 p-1.5 rounded border border-slate-800">
                                                             <label className="flex items-center gap-2 cursor-pointer select-none">
-                                                                <input 
-                                                                    type="checkbox" 
-                                                                    checked={isSorcerer} 
-                                                                    onChange={() => toggleSorcererMetamagic(itemId)}
-                                                                    className="accent-purple-500 w-3.5 h-3.5 rounded"
-                                                                />
+                                                                <input type="checkbox" checked={isSorcerer} onChange={() => toggleSorcererMetamagic(itemId)} className="accent-purple-500 w-3.5 h-3.5 rounded" />
                                                                 <span className={`text-xs font-bold ${isSorcerer ? 'text-purple-300' : 'text-slate-500'}`}>Sorcerer</span>
                                                             </label>
                                                             <div className={`text-xs font-bold ${isSorcerer ? 'text-slate-500 line-through' : 'text-yellow-500'}`}>
                                                                 {isSorcerer ? '0 CP' : '2 CP'}
                                                             </div>
                                                         </div>
-
-                                                        <div className="text-xs text-slate-400 leading-relaxed">
-                                                            {mm.desc}
-                                                        </div>
+                                                        <div className="text-xs text-slate-400 leading-relaxed">{mm.desc}</div>
                                                     </div>
                                                 );
                                             })}
