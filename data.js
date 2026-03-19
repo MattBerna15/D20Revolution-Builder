@@ -2328,13 +2328,13 @@ Slam the Maul (recharge 5-6),Combat,Martello Zormannu,5,12,Martellone,"Zormannu 
 ,Dungeon Delver,-,"Advantage to Perception and Investigation checks, to saving throws vs traps, and search for traps at normal pace.",4,
 ,Durable,-,"•+1 in Con
 • You have advantage on Death Saving Throws
-• As a Bonus Action, you can expend one of your Hit Point Dice: roll the die, and regaing a number of HP equal to the roll",4,1 AP
+• As 1 Action Points, you can expend one of your Hit Point Dice: roll the die, and regaing a number of HP equal to the roll",4,1 AP
 ,Dwarf Fortitude,Dwarf,"+1 in Con., and you can spend one Hit Die to heal yourself taking the Dodge action.",4,
 ,Eldritch Adept,Spellcasting or Pact Magic feature,You learn one Eldritch Invocation.,4,
 ,Elemental Adept,The ability to cast at least one spell,"Your spells ignore resistance to a damage type (acid, cold, fire, lightning, or thunder) and treat any 1 in damage as a 2.",4,
 ,Ember of the Fire Giant,"4th Level, Strike of the Giants (Fire Strike) feat","+1 in Str., Con., or Wis. ; resistance to fire damage ; 1d8+PB fire damage + blinded (15-ft-radius ; PB/day).",4,
-,Extra Ki Point,Ki Point,"•+2 K.P.
-•+1 Wis",4,
+,Extra Ki Point,Ki Point,"• You obtain 2 extra Ki Points.
+• Ability Score Increase. Increase your Wisdom by 1, to a maximum of 20",4,
 ,Fairy Trickster,,"• Ability Score Increase. Increase your Dexterity or Charisma by 1, to a maximum of 20.
 •Faerie Trod Trotter. When you take the Disengage action on your turn, Difficult Terrain doesn't cost you extra movement for the rest of that turn.
 • Flustering Strike. When you hit a creature with an attack roll, you can attempt to fluster the target. The target must succeed on a Wisdom saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or have Disadvantage on saving throws until the end of your next turn. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",5,
@@ -2369,13 +2369,17 @@ If the armor is magical, you gain resistance also on magical damage bludgeoning,
 ,Inspiring Leader,Charisma 13 or higher,Up to 6 creatures within 30 ft of you can gain temporary hp equal to your level + your Cha. modifier.,4,
 ,Keen Mind,-,"• +1 in Int.
 • Choose one of the following skills:arcana, History, Investigation, Nature or Religion. If you lack proficiency in the chosen skill, you gain proficiency in it, and if you already have proficiency in it, you gain Expert in it.
-• Quick study - you can take the Study action with 1 AP",4,1 AP
+• Quick study - you can take the Study action with 1 AP",5,1 AP
 ,Keenness of the Stone Giant,"4th Level, Strike of the Giants (Stone Strike) feat","+1 in Str., Con., or Wis. ; darkvision 60 ft ; 1d10 force damage with a range of 60 ft + prone (PB/day).",4,
 ,Lightly Armored,-,+1 in Str. or Dex. and you gain profociency with light armor.,3,
 ,Lingering Performance,Bardic Performance,"• CHA +1
 • The bonuses and penalties from your bardic performance continue for 2 rounds after you cease performing. Any other requirement, such as range or specific conditions, must still be met for the effect to continue. If you begin a new bardic performance during this time, the effects of the previous performance immediately cease.",4,
 ,Linguist,-,"+1 in Int., you learn three languages, and you can ably create ciphers.",4,
-,Lucky,-,You can reroll one d20 or force to reroll an attack roll against you (3/long rest).,5,
+,Lucky,-,"• Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.
+
+• Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
+
+• Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.",5,
 ,Mage Slayer,-,"You have practiced techniques useful in melee combat against spellcasters, gaining the following benefits:
 •When a creature within 5 feet of you casts a spell, you can use your reaction to make a melee weapon attack against that creature.
 • Quando si danneggia un caster che sta mantenendo la concentrazione ad un incantesimo, il caster deve effettuare un tiro di concentrazione anche se sta mantenendo la concentrazione su un solo incantesimo. Se il caster invece ha 2 incantesimi attivi deve effettuare una prova di concentrazione con svantaggio. Se la prova ha successo mantiene la concentrazione su tutti e due gli incantesimi attivi. Se la prova fallisce perde la concentrazione su uno dei due incantesimi e deve effettuare un'ulteriore prova di concentrazione, questa volta senza svantaggio, per mantenere la concentrazione sul secondo incantesimo. Se anche la seconda prova viene fallita, il caster perde la concentrazione anche sul secondo incantesimo.
@@ -2419,9 +2423,6 @@ You can cast the identify spell without expending a spell slot or material compo
 • Long Shots. Attacking at Long Range doesn’t impose Disadvantage on your ranged Attack Rolls with Weapons",5,
 ,Shield Master,-,"Attack also allows to shove, shield bonus to Dex. saving throws againts spells, and no 1/2 damage on successful saving throw.",4,Reaction
 ,Skill Expert,-,"+1 in one ability, proficiency in one skill and expertise in one other in which you have proficiency.",5,
-,Skill master,skill expert,"•Increase one ability score of your choice by 1, to a maximum of 20.
-•You gain Master with a skill you are Expert, which means your proficiency bonus is tripled for any ability check you make with it.",4,
-,Skilled,-,You gain proficiency with three skills or tools.,3,
 ,Skulker,Dexterity 13 or higher,"• Fog of  war: You exploit the distractions of battle, gaining Advage on any Dexterity  (Stealth) check you make as part of the Hide or Seek action during combat.
 • Sniper: If you make an attack roll while hidden and the roll misses, making the attack roll doesn't reveal your location.",4,
 ,Slasher,-,"+1 in Str. or Dex., reduce target's speed by 10 ft when you hit (slashing) and target has disadvantage on attacks rolls.",4,
@@ -2431,7 +2432,7 @@ You can cast the identify spell without expending a spell slot or material compo
 ,Spell Focus,Caster level,CD spell +1 for a class spellcasting.,4,
 ,Spell Sniper,The ability to cast at least one spell,"• Being within 5 feet of ana enemy does'nt impose Disadvantage on your attack rolls with spells.
 • Your attack rolls for spells ignore Half Cover and Three-Quarter Cover.
-• When you cast spell that has a range of at least 10 feet and requires you to make an attack roll, you can icnrease the spell's range by 60 feet.",4,
+• When you cast spell that has a range of at least 10 feet and requires you to make an attack roll, you can increase the spell's range by 60 feet.",4,
 ,Spell strike,,"FEAT: Spell strike (COSTO 5)
 • Una volta per turno è possibile castare e incanalare un cantrip che abbia un tiro per colpire in un colpo con l'arma. Gli attacchi in mischia (melee spell strike) possono essere incanalati in un'arma da mischia mentre quelli a distanza (ranged spell strike) possono essere incanalati in armi a distanza.
 L'attacco si svolge come un normale attacco in mischia o a distanza e gli effetti dell'incantesimo vanno aggiunti contemporaneamente a quelli dell'attacco.
@@ -2441,7 +2442,7 @@ Se l'attacco con l'arma è un critico (anche con critico migliorato) anche gli e
 ,Squat Nimbleness,Dwarf or a Small race,"+1 in Str. or Dex., your speed increases by 5 ft, and proficiency and advantage to escape with Acrobatics or Athletics checks.",4,
 ,Strike of the Giants,Proficiency with a martial weapon or Giant Foundling background,"Extra damage and additional effect when hit with a weapon attack, according to the giant type chosen (PB/day).",4,
 ,Superior Armor of Hexes,Armor of Hexes,"• +1 Cha
-• the Armor of Hexes. ",4,
+• During the round, you can use extra Armor of Hexes Reaction a number of times equal to half your proficiency bonus, rounded up.",4,
 ,Superior Deflect attack,Deflect attack,"• During the round, you can use 1 Ki Point and you can use extra Deflect Attack reaction a number of times equal to half your proficiency bonus, rounded down. However you can redirect only one attack per round using 1 ki point.",4,Reaction
 ,Superior Font of Magic,,• Ottieni un numero di S.P. pari a metà del tuo Casterl Level arrotondato per difetto.,4,
 ,Superior Parry,Battle Maneuver: Parry,"• During the round, you can use extra Parry reaction a number of times equal to half your proficiency bonus, rounded up. You expend only one dice of superiority and mantain the bonus for the rest of parries.",4,Reaction
