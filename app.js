@@ -1188,7 +1188,7 @@
                                                 </div>
                                                 <div className="sm:col-span-3 mb-2 sm:mb-0">
                                                     <div className={`font-bold text-sm ${isSelected ? 'text-blue-100' : canSelect ? 'text-slate-200' : 'text-slate-500'}`}>{feat.name}</div>
-                                                    <div className="text-xs text-slate-500 truncate sm:hidden">{feat.desc}</div>
+                                                    <div className={`text-xs sm:hidden transition-all duration-300 ${isSelected ? 'whitespace-pre-wrap mt-2 text-slate-300 leading-relaxed' : 'truncate text-slate-500'}`}>{feat.desc}</div>
                                                     {!canSelect && !isSelected && <div className="text-[10px] text-red-500 font-bold mt-1">{reqMsg}</div>}
                                                     {feat.pre && feat.pre !== '-' && (
                                                         <div className="sm:hidden mt-1 flex flex-wrap gap-1">
@@ -1210,7 +1210,7 @@
                                                     </div>
                                                     <div className="hidden sm:flex sm:col-span-1 sm:justify-end text-slate-600 group-hover:text-slate-400"><Icons.Info /></div>
                                                 </div>
-                                                <div className="hidden sm:block mt-2 text-xs text-slate-400 col-span-12 border-t border-slate-800 pt-2 opacity-0 h-0 overflow-hidden group-hover:opacity-100 group-hover:h-auto transition-all whitespace-pre-wrap">{feat.desc}</div>
+                                                <div className={`hidden sm:block text-xs col-span-12 overflow-hidden transition-all duration-300 whitespace-pre-wrap ${isSelected ? 'mt-2 pt-2 border-t border-slate-800 opacity-100 h-auto text-slate-300 leading-relaxed' : 'opacity-0 h-0 group-hover:mt-2 group-hover:pt-2 group-hover:border-t group-hover:border-slate-800 group-hover:opacity-100 group-hover:h-auto text-slate-400'}`}>{feat.desc}</div>
                                             </div>
                                         </div>
                                     );
