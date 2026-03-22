@@ -1110,7 +1110,7 @@ As 1 AP, you can touch a creature (which could be yourself) and draw power from 
 
 You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.",1 AP
 Divine Smite,Magic,Paladin,5,2,,"Starting at 2nd level, when you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage to the target, in addition to the weapon's damage. The extra damage is 2d8 for a 1st-level spell slot, plus 1d8 for each spell level higher than 1st, to a maximum of 5d8. The damage increases by 1d8 if the target is an undead or a fiend, to a maximum of 6d8.",
-"Channel Divinity, Paladin",Magic,Paladin,2,3,,"ou can channel divine energy directly from the Outer Planes, using it to fuel magical effects. You start with one such effect: Divine Sense, which is described below. Other Paladin features give additional Channel Divinity effect options. Each time you use this class's Channel Divinity, you choose which effect from this class to create.
+"Channel Divinity, Paladin",Magic,Paladin,2,3,,"You can channel divine energy directly from the Outer Planes, using it to fuel magical effects. You start with one such effect: Divine Sense, which is described below. Other Paladin features give additional Channel Divinity effect options. Each time you use this class's Channel Divinity, you choose which effect from this class to create.
 
 You can use this class's Channel Divinity twice. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain an additional use when you reach Paladin level 11.
 
@@ -1562,9 +1562,7 @@ Ambush Master,Combat,"Rogue, Scout",6,13,,"Starting at 13th level, you excel at 
 
 You have advantage on initiative rolls. In addition, the first creature you hit during the first round of a combat becomes easier for you and others to strike; attack rolls against that target have advantage until the start of your next turn.",
 Sudden Strike,Combat,"Rogue, Scout",6,17,Sneak Attack,"Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack using 1 AP. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn.",1 AP
-Psionic Power,Magic,"Rogue, Soulknife;
-Fighter, Psi Warrior;
-Psion",3,1,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
+Psionic Power,Magic,Psion; Rogue; Fighter,3,1,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
 
 Some of your powers expend the Psionic Energy die they use, as specified in a power's description, and you can't use a power if it requires you to use a die when your dice are all expended. You regain all your expended Psionic Energy dice when you finish a long rest. In addition, using 1 AP, you can regain one expended Psionic Energy die, but you can't do so again until you finish a short or long rest.
 
