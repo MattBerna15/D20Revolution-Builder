@@ -405,11 +405,23 @@
             }, [selectedFeatureNames]);
 
             const checkClassPrereq = React.useCallback((feature) => {
-                const baseClass = FIXED_CLASSES_LIST.find(cls => feature.tag.includes(cls));
-                if (!baseClass) return { allowed: true };
-                const userHas = charData.classes.find(c => c.className === baseClass);
-                if (!userHas) return { allowed: false, msg: `Richiede ${baseClass}` };
-                if (userHas.level < feature.req) return { allowed: false, msg: `Richiede ${baseClass} Lv ${feature.req}` };
+                // 1. Trova TUTTE le classi base associate a questa feature dal tag
+                const baseClasses = FIXED_CLASSES_LIST.filter(cls => feature.tag.includes(cls));
+                
+                // Se non ci sono classi specifiche associate (es. abilità generiche), è permessa
+                if (baseClasses.length === 0) return { allowed: true };
+
+                // 2. Controlla se l'utente ha ALMENO UNA delle classi richieste al livello giusto
+                const isAllowed = baseClasses.some(baseClass => {
+                    const userHas = charData.classes.find(c => c.className === baseClass);
+                    return userHas && userHas.level >= feature.req;
+                });
+
+                // 3. Se non ha nessuna delle classi valide, restituisce l'errore
+                if (!isAllowed) {
+                    return { allowed: false, msg: `Richiede ${baseClasses.join(' o ')} Lv. ${feature.req}` };
+                }
+
                 return { allowed: true, msg: '' };
             }, [charData.classes]);
 
