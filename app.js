@@ -500,16 +500,15 @@
                 }
             };
 
-            const classes = React.useMemo(() => [...new Set(db.flatMap(f => f.tag.split(';').map(t => t.trim())).filter(Boolean))].sort(), [db]);
-            
-            const filteredData = React.useMemo(() => db.filter(item => {
-                // MODIFICA: Check su id nell'array di oggetti
-                if (showSelectedOnly && !charData.features.some(f => f.id === item.id)) return false;
-                const tags = item.tag.split(';').map(t => t.trim());
-                const matchTag = selectedTags.length === 0 || selectedTags.some(t => tags.includes(t));
-                const matchSearch = (item.name + item.desc + item.pre).toLowerCase().includes(search.toLowerCase());
-                return matchTag && matchSearch;
-            }), [db, selectedTags, search, showSelectedOnly, charData.features]);
+            // Sostituiamo il controllo esatto con un .includes() per trovare anche le sottoclassi
+            const filteredData = db.filter(item => {
+                const matchesTag = selectedTags.length === 0 || selectedTags.some(selected => item.tag.includes(selected));
+                
+                const matchSearch = (item.name || "").toLowerCase().includes(search.toLowerCase()) || 
+                                    (item.desc || "").toLowerCase().includes(search.toLowerCase()) ||
+                                    (item.pre || "").toLowerCase().includes(search.toLowerCase());
+                return matchesTag && matchSearch;
+            });
 
             const toggleTag = (tag) => setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
 
@@ -1096,7 +1095,7 @@
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center mb-6">
                             <div className="flex justify-center md:justify-start">
                                 <h1 className="text-xl font-bold text-white flex items-center gap-2 whitespace-nowrap">
-                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.062</span>
+                                    <span className="bg-blue-600 w-2 h-6 rounded-full"></span> D20 Revolution Builder <span className="text-xs text-slate-500 font-normal self-end mb-1">v0.063</span>
                                 </h1>
                                 {totalCPSpent > totalCPAvailable && (
                                     <div className="text-red-500 animate-pulse ml-3 w-6 h-6" title="CP Exceeded!"><Icons.AlertLarge /></div>
@@ -1150,11 +1149,11 @@
                                         <Icons.Check /> Selezionati
                                     </button>
                                     <button onClick={() => setSelectedTags([])} className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors border flex items-center gap-1 ${selectedTags.length === 0 ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}`}>Tutti</button>
-                                    {classes.map(cls => (
-                                        <button key={cls} onClick={() => toggleTag(cls)} className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors border flex items-center gap-1 ${selectedTags.includes(cls) ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}`}>
-                                            {cls} {selectedTags.includes(cls) && <Icons.X />}
-                                        </button>
-                                    ))}
+                                    {FIXED_CLASSES_LIST.map(cls => (
+                                    <button key={cls} onClick={() => toggleTag(cls)} className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors border flex items-center gap-1 ${selectedTags.includes(cls) ? 'bg-blue-600 text-white border-blue-500' : 'bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-700'}`}>
+                                        {cls} {selectedTags.includes(cls) && <Icons.X />}
+                                    </button>
+									))}
                                 </div>
                             </div>
                         )}
