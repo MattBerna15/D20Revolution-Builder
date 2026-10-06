@@ -8,56 +8,127 @@ const SKILLS_DATA = [
         ];
 
         const SPELLCASTING_DATA = [
-            { name: "Spellcasting, Wizard", cost: 10 },
-            { name: "Spellcasting, Sorcerer", cost: 8 },
-            { name: "Spellcasting, Cleric", cost: 8 },
-            { name: "Spellcasting, Druid", cost: 8 },
-            { name: "Spellcasting, Warlock", cost: 6 },
-            { name: "Spellcasting, Ranger", cost: 4 },
-            { name: "Spellcasting, Bard", cost: 8 },
-            { name: "Spellcasting, Psion", cost: 8 },
-            { name: "Spellcasting, Artificer", cost: 4 },
-            { name: "Spellcasting, Paladin", cost: 4 },
-            { name: "Spellcasting, Eldritch Knight", cost: 4 },
-            { name: "Spellcasting, Arcane Trickster", cost: 4 }
+            { name: "Spellcasting, Wizard", cost: 10, ability: "INT", type: "full", spellList: "Wizard" },
+            { name: "Spellcasting, Sorcerer", cost: 8, ability: "CHA", type: "full", spellList: "Sorcerer" },
+            { name: "Spellcasting, Cleric", cost: 8, ability: "WIS", type: "full", spellList: "Cleric" },
+            { name: "Spellcasting, Druid", cost: 8, ability: "WIS", type: "full", spellList: "Druid" },
+            { name: "Spellcasting, Warlock", cost: 6, ability: "CHA", type: "pact", spellList: "Warlock" },
+            { name: "Spellcasting, Ranger", cost: 4, ability: "WIS", type: "half", spellList: "Ranger" },
+            { name: "Spellcasting, Bard", cost: 8, ability: "CHA", type: "full", spellList: "Bard" },
+            { name: "Spellcasting, Psion", cost: 8, ability: "INT", type: "full", spellList: "Psion" },
+            { name: "Spellcasting, Artificer", cost: 4, ability: "INT", type: "half", spellList: "Artificer" },
+            { name: "Spellcasting, Paladin", cost: 4, ability: "CHA", type: "half", spellList: "Paladin" },
+            { name: "Spellcasting, Eldritch Knight", cost: 4, ability: "INT", type: "third", spellList: "Wizard" },
+            { name: "Spellcasting, Arcane Trickster", cost: 4, ability: "INT", type: "third", spellList: "Wizard" },
+            { name: "Spellcasting, Monk (Warrior of the Mystic Arts)", cost: 4, ability: "WIS", type: "third", spellList: "Sorcerer", displayName: "Warrior of the Mystic Arts" }
         ];
 		
 		const APP_VERSION = "0.062";
 
         const PRELOADED_CSV = `Name,Element Type,Class Tag,Creation Points,Class Power,Prerequistes,Description,Action Points
-Extra Attack,Combat,Barbarian,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Bard,5,6,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Fighter,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Fighter,5,11,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Fighter,5,20,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Monk,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Paladin,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Ranger,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Warlock,2,5,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Warlock,5,11,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Wizard,5,6,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Artificier,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Vampire,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Psion,5,6,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
-Extra Attack,Combat,Blood-Hunter,5,5,,Non valgono le regole del multiclasse in questo caso. Si può prendere Extra Attack ogni volta che si vuole: l'unico vincolo è spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 può prendere Extra Attack 3 volte,
 Magical Tinkering,Magic,Artificier,1,1,,"As a Magic action while holding Tinker's Tools, you can create one item in an unoccupied space within 5 feet of yourself, choosing the item from the list:
 Ball Bearings, Net, Basket, Oil, Bedroll, Paper, Bell, Parchment, Blanket, Pole, Block and Tackle, Pouch, Bucket, Rope, Caltrops, Sack, Candle, Shovel, Crowbar, String, Flask, Tinderbox, Jug, Torch, Lamp, Vial.
 The item vanishes after 1 hour.
 You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",2 AP
 Replicate Magic Item,Magic,Artificier,5,2,,"You have learned arcane plans that you use to make magic items.
 
-Plans Known: 4
+***Plans Known***. When you gain this feature, choose four plans to learn from the Magic Item Plans (Artificer Level 2+) table (see the Dungeon Master's Guide for the items' descriptions). Bag of Holding, Cap of Water Breathing, Sending Stones, and Wand of the War Mage are recommended. Whenever you gain an Artificer level, you can replace one of the plans you know with a new plan for which you qualify.
 
-Creating an Item. When you finish a Long Rest, you can create one or two different magic items if you have Tinker's Tools in hand. Each item is based on one of the plans you know for this feature.
+You learn another plan of your choice when you reach certain Artificer levels, as shown in the Plans Known column of the Artificer Features table. When you choose a plan to learn, you choose it from any Magic Item Plans table for which you qualify; your qualification is based on your Artificer level.
+
+***Creating an Item***. When you finish a Long Rest, you can create one or two different magic items if you have Tinker's Tools in hand. Each item is based on one of the plans you know for this feature.
 
 If a created item requires Attunement, you can attune yourself to it the instant you create it. If you decide to attune to the item later, you must do so using the normal process for Attunement.
 
 When you reach certain Artificer levels specified in the Magic Items column of the Artificer Features table, the number of magic items you can create at the end of a Long Rest increases. Each item you create must be based on a different plan you know.
 
-If you try to exceed your maximum number of magic items for this feature, the oldest item vanishes, and then the new item appears.
+You can't have more magic items from this feature than the number shown in the Magic Items column of the Artificer Features table for your level. If you try to exceed your maximum number of magic items for this feature, the oldest item vanishes, and then the new item appears.
 
-Duration. A magic item created by this feature functions exactly like the normal magic item, except its magic isn't permanent. When you die, the magic item vanishes after 1d4 days. If an item that you created with this feature is a container, such as a Bag of Holding, and it vanishes, its contents harmlessly appear in and around its space.",
+***Duration***. A magic item created by this feature functions as the normal magic item, except its magic isn't permanent; when you die, the magic item vanishes after 1d4 days. If you replace a plan you know with a new plan, any magic item created with the replaced plan immediately vanishes.
+
+If an item that you created with this feature is a container, such as a Bag of Holding, and it vanishes, its contents harmlessly appear in and around its space.
+
+***Spellcasting Focus***. You can use any Wand or Weapon created by this feature as a Spellcasting Focus in lieu of using a set of Artisan's Tools.
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Piani di Replica Oggetti Magici (Livello 2+)</h4>
+<table class=""dnd-table"" style=""margin-bottom: 8px; max-width: 500px;"">
+  <thead>
+    <tr>
+      <th style=""width: 70%; text-align: left;"">Magic Item Plan</th>
+      <th style=""width: 30%; text-align: left;"">Attunement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Alchemy Jug</td><td>No</td></tr>
+    <tr><td>Bag of Holding</td><td>No</td></tr>
+    <tr><td>Cap of Water Breathing</td><td>No</td></tr>
+    <tr><td>Common magic item that isn't a Potion, a Scroll, or cursed*</td><td>Varies</td></tr>
+    <tr><td>Goggles of Night</td><td>No</td></tr>
+    <tr><td>Manifold Tool</td><td>Yes</td></tr>
+    <tr><td>Repeating Shot</td><td>Yes</td></tr>
+    <tr><td>Returning Weapon</td><td>No</td></tr>
+    <tr><td>Rope of Climbing</td><td>No</td></tr>
+    <tr><td>Sending Stones</td><td>No</td></tr>
+    <tr><td>Wand of Magic Detection</td><td>No</td></tr>
+    <tr><td>Wand of Secrets</td><td>No</td></tr>
+  </tbody>
+</table>
+<p style=""font-size: 0.85rem; font-style: italic; margin-top: 0; margin-bottom: 16px;"">*You can learn this option multiple times and must select a different item each time; each item selected counts as a different plan.</p>
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Piani di Replica Oggetti Magici (Livello 6+)</h4>
+<table class=""dnd-table"" style=""margin-bottom: 8px; max-width: 500px;"">
+  <thead>
+    <tr>
+      <th style=""width: 70%; text-align: left;"">Magic Item Plan</th>
+      <th style=""width: 30%; text-align: left;"">Attunement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Boots of Elvenkind</td><td>No</td></tr>
+    <tr><td>Boots of the Winding Path</td><td>Yes</td></tr>
+    <tr><td>Cloak of Elvenkind</td><td>Yes</td></tr>
+    <tr><td>Cloak of the Manta Ray</td><td>Yes</td></tr>
+    <tr><td>Dazzling Weapon</td><td>Yes</td></tr>
+    <tr><td>Eyes of Charming</td><td>Yes</td></tr>
+    <tr><td>Eyes of Minute Seeing</td><td>No</td></tr>
+    <tr><td>Gloves of Thievery</td><td>No</td></tr>
+    <tr><td>Helm of Awareness</td><td>No</td></tr>
+    <tr><td>Lantern of Revealing</td><td>No</td></tr>
+    <tr><td>Mind Sharpener</td><td>Yes</td></tr>
+    <tr><td>Necklace of Adaptation</td><td>Yes</td></tr>
+    <tr><td>Pipes of Haunting</td><td>No</td></tr>
+    <tr><td>Repulsion Shield</td><td>No</td></tr>
+    <tr><td>Ring of Swimming</td><td>No</td></tr>
+    <tr><td>Ring of Water Walking</td><td>No</td></tr>
+    <tr><td>Sentinel Shield</td><td>No</td></tr>
+    <tr><td>Spell-Refueling Ring</td><td>Yes</td></tr>
+    <tr><td>Wand of Magic Missiles</td><td>No</td></tr>
+    <tr><td>Wand of Web</td><td>Yes</td></tr>
+    <tr><td>Weapon of Warning</td><td>Yes</td></tr>
+  </tbody>
+</table>
+<p style=""font-size: 0.85rem; font-style: italic; margin-top: 0; margin-bottom: 16px;"">*You can learn this option multiple times and must select a different item each time; each item selected counts as a different plan.</p>
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Piani di Replica Oggetti Magici (Livello 10+)</h4>
+<table class=""dnd-table"" style=""margin-bottom: 8px; max-width: 500px;"">
+  <thead>
+    <tr>
+      <th style=""width: 70%; text-align: left;"">Magic Item Plan</th>
+      <th style=""width: 30%; text-align: left;"">Attunement</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Arrow-Catching Shield</td><td>Yes</td></tr>
+    <tr><td>Flame Tongue</td><td>Yes</td></tr>
+    <tr><td>Rare Wondrous Item that isn't cursed*</td><td>Varies</td></tr>
+    <tr><td>Ring of Free Action</td><td>Yes</td></tr>
+    <tr><td>Ring of Protection</td><td>Yes</td></tr>
+    <tr><td>Ring of the Ram</td><td>Yes</td></tr>
+  </tbody>
+</table>
+<p style=""font-size: 0.85rem; font-style: italic; margin-top: 0; margin-bottom: 16px;"">*You can learn this option multiple times and must select a different item each time; each item selected counts as a different plan.</p>",
 The Right Tool for the Job,General,Artificier,1,3,,"At 3rd level, you've learned how to produce exactly the tool you need: with thieves' tools or artisan's tools in hand, you can magically create one set of artisan's tools in an unoccupied space within 5 feet of you. This creation requires 1 hour of uninterrupted work, which can coincide with a short or long rest. Though the product of magic, the tools are nonmagical, and they vanish when you use this feature again.",
+Extra Attack,Combat,Artificier,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Tool Expertise,General,Artificier,3,6,,"At 6th level, your proficiency bonus is now doubled for any ability check you make that uses your proficiency with a tool.",
 Flash of Genius,General,Artificier,3,7,,"At 7th level, you've gained the ability to come up with solutions under pressure. When you or another creature you can see within 30 feet of you makes an ability check or a saving throw, you can use your reaction to add your Intelligence modifier to the roll.
 
@@ -70,198 +141,198 @@ While holding the object, a creature can take a Magic action to produce the spel
 The spell stays in the object until it's been used a number of times equal to twice your Intelligence modifier (minimum of twice) or until you use this feature again to store a spell in an object.",2 AP
 Magic Item Savant,Magic,Artificier,4,14,Magic Item Adept; Flash of Genius,"You gain the following benefits.
 
-• Magic Item Savant. You can now attune to up to five magic items at once.
+• ***Magic Item Savant***. You can now attune to up to five magic items at once.
 
-• Refreshed Genius. When you finish a Short Rest, you regain one expended use of your Flash of Genius feature.",
+• ***Refreshed Genius***. When you finish a Short Rest, you regain one expended use of your Flash of Genius feature.",
 Magic Item Master,Magic,Artificier,4,18,Magic Item Savant,You can now attune to up to six magic items at once.,
 Soul of Artifice,Magic,Artificier,6,20,Magic Item Master,"You have developed a mystical connection to your magic items, which you can draw on for aid. You gain the following benefits.
 
-• Cheat Death. If you're reduced to 0 Hit Points but not killed outright, you can disintegrate any number of Uncommon or Rare magic items created by your Replicate Magic Item feature. If you do so, your Hit Points instead change to a number equal to 20 times the number of magic items disintegrated.
+• ***Cheat Death***. If you're reduced to 0 Hit Points but not killed outright, you can disintegrate any number of Uncommon or Rare magic items created by your Replicate Magic Item feature. If you do so, your Hit Points instead change to a number equal to 20 times the number of magic items disintegrated.
 
-• Magical Guidance. When you finish a Short Rest, you regain all expended uses of your Flash of Genius if you have Attunement to at least one magic item.",Reaction
+• ***Magical Guidance***. When you finish a Short Rest, you regain all expended uses of your Flash of Genius if you have Attunement to at least one magic item.",Reaction
 Tools of the trade - Alchemist,Magic,"Artificier, Alchemist",1,3,,"• Tool Proficiency. You gain proficiency with Alchemist's Supplies and the Herbalism Kit. If you already have one of these proficiencies, you gain proficiency with one other type of Artisan's Tools of your choice (or with two other types if you have both).
-• Potion Crafting. When you brew a potion using the crafting rules in the Dungeon Master's Guide, the amount of time required to craft it is halved.",
+• ***Potion Crafting***. When you brew a potion using the crafting rules in the Dungeon Master's Guide, the amount of time required to craft it is halved.",
 Alchemist Spell,Magic,"Artificier, Alchemist",2,3,,"|3| Healing Word, Ray of Sickness 
 |5| Flaming Sphere, Melf's Acid Arrow 
-|9| Gaseous Form, Mass Healing Word 
+|9°| Gaseous Form, Mass Healing Word 
 |13| Death Ward, Vitriolic Sphere 
 |17| Cloudkill, Raise Dead",
 Experimental Elixir,Magic,"Artificier, Alchemist",4,3,,"Whenever you finish a Long Rest while holding Alchemist's Supplies, you can use that tool to magically produce two elixirs. For each elixir, roll on the Experimental Elixir table for the elixir's effect, which is triggered when someone drinks the elixir. The elixir appears in a vial, and the vial vanishes when the elixir is drunk or poured out. If any elixir remains when you finish a Long Rest, the elixir and its vial vanish.
 
-• Drinking an Elixir. As 1 Action Point, a creature can drink the elixir or administer it to another creature within 5 feet of itself.
+• ***Drinking an Elixir***. As 1 Action Point, a creature can drink the elixir or administer it to another creature within 5 feet of itself.
 
 • Creating Additional Elixirs. As a Magic action while holding Alchemist's Supplies, you can expend one spell slot to create another elixir. When you do so, you choose its effect from the Experimental Elixir table rather than rolling.
-When you reach certain Artificer levels, you can make an additional elixir at the end of each Long Rest: a total of three at level 5, four at level 9, and five at level 15.
+When you reach certain Artificer levels, you can make an additional elixir at the end of each Long Rest: a total of three at level 5, four at level 9°, and five at level 15.
 
-1. Healing. The drinker regains a number of Hit Points equal to 2d8 plus your Intelligence modifier. The number of Hit Points restored increases by 1d8 when you reach Artificer levels 9 (3d8) and 15 (4d8). 
-2. Swiftness. The drinker’s Speed increases by 10 feet for 1 hour. This bonus increases when you reach Artificer levels 9 (15 feet) and 15 (20 feet). 
-3. Resilience. The drinker gains a +1 bonus to AC for 10 minutes. The duration increases when you reach Artificer levels 9 (1 hour) and 15 (8 hours). 
-4. Boldness. The drinker can roll 1d4 and add the number rolled to every attack roll and saving throw they make for the next minute. The duration increases when you reach Artificer levels 9 (10 minutes) and 15 (1 hour). 
-5. Flight. The drinker gains a Fly Speed of 10 feet for 10 minutes. The Fly Speed increases when you reach Artificer levels 9 (20 feet) and 15 (30 feet). 
+1. Healing. The drinker regains a number of Hit Points equal to 2d8 plus your Intelligence modifier. The number of Hit Points restored increases by 1d8 when you reach Artificer levels 9° (3d8) and 15 (4d8). 
+2. Swiftness. The drinker’s Speed increases by 10 feet for 1 hour. This bonus increases when you reach Artificer levels 9° (15 feet) and 15 (20 feet). 
+3. Resilience. The drinker gains a +1 bonus to AC for 10 minutes. The duration increases when you reach Artificer levels 9° (1 hour) and 15 (8 hours). 
+4. Boldness. The drinker can roll 1d4 and add the number rolled to every attack roll and saving throw they make for the next minute. The duration increases when you reach Artificer levels 9° (10 minutes) and 15 (1 hour). 
+5. Flight. The drinker gains a Fly Speed of 10 feet for 10 minutes. The Fly Speed increases when you reach Artificer levels 9° (20 feet) and 15 (30 feet). 
 6. Choice. You determine the elixir’s effect by choosing one of the other rows in this table.",1 AP
 Alchemical Savant,Magic,"Artificier, Alchemist",2,5,,"Whenever you cast a spell using your Alchemist's Supplies as the Spellcasting Focus, you gain a bonus to one roll of the spell. That roll must restore Hit Points or be a damage roll that deals Acid, Fire, or Poison damage. The bonus equals your Intelligence modifier (minimum bonus of +1).",
 Restorative Reagents,Magic,"Artificier, Alchemist",2,9,,"You can cast Lesser Restoration without expending a spell slot and without preparing the spell, provided you use Alchemist's Supplies as the Spellcasting Focus. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",
 Chemical Mastery,Magic,"Artificier, Alchemist",3,15,,"You gain the following benefits.
 
-• Alchemical Eruption. When you cast an Artificer spell that deals Acid, Fire, or Poison damage to a target, you can also deal 2d8 Force damage to that target. You can use this benefit only once on each of your turns.
+• ***Alchemical Eruption***. When you cast an Artificer spell that deals Acid, Fire, or Poison damage to a target, you can also deal 2d8 Force damage to that target. You can use this benefit only once on each of your turns.
 
-• Chemical Resistance. You gain Resistance to Acid damage and Poison damage. You also gain Immunity to the Poisoned condition.
+• ***Chemical Resistance***. You gain Resistance to Acid damage and Poison damage. You also gain Immunity to the Poisoned condition.
 
-• Conjured Cauldron. You can cast Tasha's Bubbling Cauldron without expending a spell slot, without preparing the spell, and without Material components, provided you use Alchemist's Supplies as the Spellcasting Focus. Once you use this feature, you can't use it again until you finish a Long Rest.",
+• ***Conjured Cauldron***. You can cast Tasha's Bubbling Cauldron without expending a spell slot, without preparing the spell, and without Material components, provided you use Alchemist's Supplies as the Spellcasting Focus. Once you use this feature, you can't use it again until you finish a Long Rest.",
 Tools of the Trade - Armorer,Magic,"Artificier, Armorer",1,3,,"You gain the following benefits.
 
-• Armor Training. You gain training with Heavy armor.
+• ***Armor Training***. You gain training with Heavy armor.
 
-• Tool Proficiency. You gain proficiency with Smith's Tools. If you already have this tool proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.
+• ***Tool Proficiency***. You gain proficiency with Smith's Tools. If you already have this tool proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.
 
-• Armor Crafting. When you craft nonmagical or magic armor, the amount of time required to craft it is halved.",
-Armorer Spell,Magic,"Artificier, Armorer",2,3,,"|3| Magic Missile, Thunderwave 
-|5| Mirror Image, Shatter 
-|9| Hypnotic Pattern, Lightning Bolt 
-|13| Fire Shield, Greater Invisibility 
-|17| Passwall, Wall of Force",
+• ***Armor Crafting***. When you craft nonmagical or magic armor, the amount of time required to craft it is halved.",
 Arcane Armor,Magic,"Artificier, Armorer",1,3,,"As a Magic action while you have Smith's Tools in hand, you can turn a suit of armor you are wearing into Arcane Armor. The armor continues to be Arcane Armor until you don another suit of armor or you die.
 
 You gain the following benefits while wearing your Arcane Armor.
 
-•No Strength Requirement. If the armor normally has a Strength requirement, the Arcane Armor lacks this requirement for you.
+•***No Strength Requirement***. If the armor normally has a Strength requirement, the Arcane Armor lacks this requirement for you.
 
-•Quick Don and Doff. You can don or doff the armor as a Utilize action. The armor can't be removed against your will.
+•***Quick Don and Doff***. You can don or doff the armor as a Utilize action. The armor can't be removed against your will.
 
-•Spellcasting Focus. You can use the Arcane Armor as a Spellcasting Focus for your Artificer spells.","2 AP, 1 AP"
+•***Spellcasting Focus***. You can use the Arcane Armor as a Spellcasting Focus for your Artificer spells.","2 AP, 1 AP"
+Armorer Spell,Magic,"Artificier, Armorer",2,3,,"|3| Magic Missile, Thunderwave 
+|5| Mirror Image, Shatter 
+|9°| Hypnotic Pattern, Lightning Bolt 
+|13| Fire Shield, Greater Invisibility 
+|17| Passwall, Wall of Force",
 Armor Model,Magic,"Artificier, Armorer",5,3,Arcane Armor,"You can customize your Arcane Armor. When you do so, choose one of the following armor models: Dreadnaught, Guardian, or Infiltrator. The model you choose gives you special benefits while you wear it.
 
 Each model includes a special weapon. When you attack with that weapon, you can add your Intelligence modifier, instead of your Strength or Dexterity modifier, to the attack and damage rolls.
 
 You can change the armor's model whenever you finish a Short or Long Rest if you have Smith's Tools in hand.
 
-• Dreadnaught. You design your armor to become a towering juggernaut in battle. It has the following features:
+• ***Dreadnaught***. You design your armor to become a towering juggernaut in battle. It has the following features:
 
-- Force Demolisher. An arcane wrecking ball or sledgehammer projects from your armor. The demolisher counts as a Simple Melee weapon with the Reach property, and it deals 1d10 Force damage on a hit. If you hit a creature that is at least one size smaller than you with the demolisher, you can push the creature up to 10 feet straight away from yourself or pull the creature up to 10 feet toward yourself.
+- ***Force Demolisher***. An arcane wrecking ball or sledgehammer projects from your armor. The demolisher counts as a Simple Melee weapon with the Reach property, and it deals 1d10 Force damage on a hit. If you hit a creature that is at least one size smaller than you with the demolisher, you can push the creature up to 10 feet straight away from yourself or pull the creature up to 10 feet toward yourself.
 
-- Giant Stature. As a Bonus Action, you transform and enlarge your armor for 1 minute. For the duration, your reach increases by 5 feet, and if you are smaller than Large, you become Large, along with anything you are wearing. If there isn't enough room for you to increase your size, your size doesn't change. You can use this Bonus Action a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest.
+- ***Giant Stature***. As a 1 Action Point (1 AP), you transform and enlarge your armor for 1 minute. For the duration, your reach increases by 5 feet, and if you are smaller than Large, you become Large, along with anything you are wearing. If there isn't enough room for you to increase your size, your size doesn't change. You can use this 1 Action Point (1 AP) a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Long Rest.
 
-• Guardian. You design your armor to be in the front line of conflict. It has the following features:
+• ***Guardian***. You design your armor to be in the front line of conflict. It has the following features:
 
-- Thunder Pulse. You can discharge concussive blasts with strikes from your armor. The pulse counts as a Simple Melee weapon and deals 1d8 Thunder damage on a hit. A creature hit by the pulse has Disadvantage on attack rolls against targets other than you until the start of your next turn.
+- ***Thunder Pulse***. You can discharge concussive blasts with strikes from your armor. The pulse counts as a Simple Melee weapon and deals 1d8 Thunder damage on a hit. A creature hit by the pulse has Disadvantage on attack rolls against targets other than you until the start of your next turn.
 
-- Defensive Field. While Bloodied, you can take a Bonus Action to gain Temporary Hit Points equal to your Artificer level. You lose these Temporary Hit Points if you doff the armor.
+- ***Defensive Field***. While Bloodied, you can take a 1 Action Point (1 AP) to gain Temporary Hit Points equal to your Artificer level. You lose these Temporary Hit Points if you doff the armor.
 
-• Infiltrator. You customize your armor for subtler undertakings. It has the following features:
+• ***Infiltrator***. You customize your armor for subtler undertakings. It has the following features:
 
-- Lightning Launcher. A gemlike node appears on your armor, from which you can shoot bolts of lightning. The launcher counts as a Simple Ranged weapon with a normal range of 90 feet and a long range of 300 feet, and it deals 1d6 Lightning damage on a hit. Once on each of your turns when you hit a creature with the launcher, you can deal an extra 1d6 Lightning damage to that target.
+- ***Lightning Launcher***. A gemlike node appears on your armor, from which you can shoot bolts of lightning. The launcher counts as a Simple Ranged weapon with a normal range of 90 feet and a long range of 300 feet, and it deals 1d6 Lightning damage on a hit. Once on each of your turns when you hit a creature with the launcher, you can deal an extra 1d6 Lightning damage to that target.
 
-- Powered Steps. Your Speed increases by 5 feet.
+- ***Powered Steps***. Your Speed increases by 5 feet.
 
-- Dampening Field. You have Advantage on Dexterity (Stealth) checks. If the armor imposes Disadvantage on such checks, the Advantage and Disadvantage cancel each other, as normal.","2 AP, 1 AP"
+- ***Dampening Field***. You have Advantage on Dexterity (Stealth) checks. If the armor imposes Disadvantage on such checks, the Advantage and Disadvantage cancel each other, as normal.","2 AP, 1 AP"
 Armor Modifications,Magic,"Artificier, Armorer",3,9,Arcane Armor,"You gain the following benefits.
 
-• Armor Replication. You learn an additional plan for your Replicate Magic Item feature, and it must be in the Armor category. If you replace that plan, you must replace it with another Armor plan.
+• ***Armor Replication***. You learn an additional plan for your Replicate Magic Item feature, and it must be in the Armor category. If you replace that plan, you must replace it with another Armor plan.
 In addition, you can create an additional item with that feature, and the item must also be in the Armor category.
 
-• Improved Arsenal. You gain a +1 bonus to attack and damage rolls made with the special weapon of your Arcane Armor model.",
+• ***Improved Arsenal***. You gain a +1 bonus to attack and damage rolls made with the special weapon of your Arcane Armor model.",
 Perfected Armor,Magic,"Artificier, Armorer",4,15,Armor Model,"Your Arcane Armor gains additional benefits based on its model, as detailed below.
 
-• Dreadnaught. The damage die of your Force Demolisher increases to 2d6 Force damage.
+• ***Dreadnaught***. The damage die of your Force Demolisher increases to 2d6 Force damage.
 In addition, when you use your Giant Stature, your reach increases by 10 feet, your size can increase to Large or Huge (your choice), and you have Advantage on Strength checks and Strength saving throws for the duration.
 
-• Guardian. The damage die of your Thunder Pulse increases to 1d10 Thunder damage.
+• ***Guardian***. The damage die of your Thunder Pulse increases to 1d10 Thunder damage.
 In addition, when a Huge or smaller creature you can see ends its turn within 30 feet of you, you can take a Reaction to magically force that creature to make a Strength saving throw against your spell save DC. On a failed save, you pull the creature up to 25 feet directly toward you to an unoccupied space. If you pull the target to a space within 5 feet of yourself, you can make a melee weapon attack against it as part of this Reaction.
 You can take this Reaction a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
 
-• Infiltrator. The damage die of your Lightning Launcher increases to 2d6 Lightning damage. Any creature that takes Lightning damage from your Lightning Launcher glimmers with magical light until the start of your next turn. The glimmering creature sheds Dim Light in a 5-foot radius, and it has Disadvantage on attack rolls against you, as the light jolts it if it attacks you.
-Additionally, as 1 AP, you can gain a Fly Speed equal to twice your Speed until the end of the current turn. You can take this Bonus Action a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",Reaction
+• ***Infiltrator***. The damage die of your Lightning Launcher increases to 2d6 Lightning damage. Any creature that takes Lightning damage from your Lightning Launcher glimmers with magical light until the start of your next turn. The glimmering creature sheds Dim Light in a 5-foot radius, and it has Disadvantage on attack rolls against you, as the light jolts it if it attacks you.
+Additionally, as 1 AP, you can gain a Fly Speed equal to twice your Speed until the end of the current turn. You can take this 1 Action Point (1 AP) a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",Reaction
 Tools of the Trade - Artillerist,Magic,"Artificier, Artillerist",1,3,,"You gain the following benefits.
 
-• Ranged Weaponry. You gain proficiency with Martial Ranged weapons.
+• ***Ranged Weaponry***. You gain proficiency with Martial Ranged weapons.
 
-• Tool Proficiency. You gain proficiency with Woodcarver's Tools. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.
+• ***Tool Proficiency***. You gain proficiency with Woodcarver's Tools. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.
 
-• Wand Crafting. When you craft a magic Wand, the amount of time required to craft it is halved.",
+• ***Wand Crafting***. When you craft a magic Wand, the amount of time required to craft it is halved.",
 Artillerist Spells,Magic,"Artificier, Artillerist",3,3,,"|3| Shield, Thunderwave 
 |5| Scorching Ray, Shatter 
-|9| Fireball, Wind Wall 
+|9°| Fireball, Wind Wall 
 |13| Ice Storm, Wall of Fire 
 |17| Cone of Cold, Wall of Force",
 Eldritch Cannon,Magic,"Artificier, Artillerist",4,3,,"Using Smith's Tools or Woodcarver's Tools, you can take a Magic action to create a Small or Tiny Eldritch Cannon in an unoccupied space on a horizontal surface within 5 feet of yourself. You determine its appearance, including whether you carry it or not (and your choice of legs or wheels, for the latter). It disappears if it is reduced to 0 Hit Points or after 1 hour. You can dismiss it early as a Magic action.
 
 Once you create a cannon, you can't do so again until you finish a Long Rest or expend a spell slot to create one. You can have only one cannon at a time and can't create one while you already have one.",2 AP
-Arcane Firearm,Magic,"Artificier, Artillerist",2,5,Spellcastin,"When you finish a Long Rest, you can use Woodcarver's Tools to carve special sigils into a Rod, Staff, Wand, or Martial Ranged weapon and thereby turn it into your Arcane Firearm. The sigils disappear from the object if you later carve them on a different item. The sigils otherwise last indefinitely.
+Arcane Firearm,Magic,"Artificier, Artillerist",2,5,,"When you finish a Long Rest, you can use Woodcarver's Tools to carve special sigils into a Rod, Staff, Wand, or Martial Ranged weapon and thereby turn it into your Arcane Firearm. The sigils disappear from the object if you later carve them on a different item. The sigils otherwise last indefinitely.
 
 You can use your Arcane Firearm as a Spellcasting Focus for your Artificer spells. When you cast an Artificer spell through the firearm, roll 1d8, and you gain a bonus to one of the spell's damage rolls equal to the number rolled.",
 Explosive Cannon,Magic,"Artificier, Artillerist",2,9,Eldritch Cannon,"Every Eldritch Cannon you create is now more destructive. You gain the following benefits.
 
-• Detonate. When your cannon takes damage, you can take a Reaction to command the cannon to detonate if you are within 60 feet of it. Doing so destroys the cannon and forces each creature within 20 feet of it to make a Dexterity saving throw against your spell save DC, taking 3d10 Force damage on a failed save or half as much damage on a successful one.
+• ***Detonate***. When your cannon takes damage, you can take a Reaction to command the cannon to detonate if you are within 60 feet of it. Doing so destroys the cannon and forces each creature within 20 feet of it to make a Dexterity saving throw against your spell save DC, taking 3d10 Force damage on a failed save or half as much damage on a successful one.
 
-• Firepower. The cannon's damage rolls and the number of Temporary Hit Points granted by Protector increase by 1d8.",Reaction
+• ***Firepower***. The cannon's damage rolls and the number of Temporary Hit Points granted by Protector increase by 1d8.",Reaction
 Fortified Position,Magic,"Artificier, Artillerist",4,15,Eldritch Cannon,"You're a master at forming well-defended emplacements using your Eldritch Cannon. You gain the following benefits.
 
-• Double Firepower. You can now have two cannons at the same time, and you can create two with the same Magic action. (If you expend a spell slot to create the first cannon, you must expend another spell slot to create the second.) You can activate both of them with the same Action Point, ordering them to use the same activation option or different ones. You can't create a third cannon while you have two.
+• ***Double Firepower***. You can now have two cannons at the same time, and you can create two with the same Magic action. (If you expend a spell slot to create the first cannon, you must expend another spell slot to create the second.) You can activate both of them with the same Action Point, ordering them to use the same activation option or different ones. You can't create a third cannon while you have two.
 
 • Shimmering Field Projection. You and your allies have Half Cover while within 10 feet of your Eldritch Cannon.",
 Tools of the Trade - Battle Smith,Magic,"Artificier, Battle Smith",1,3,,"• Tool Proficiency. You gain proficiency with Smith's Tools. If you already have this proficiency, you gain proficiency with one other type of Artisan's Tools of your choice.
 
-• Weapon Crafting. When you craft a nonmagical or magic weapon, the amount of time required to craft it is halved.",
+• ***Weapon Crafting***. When you craft a nonmagical or magic weapon, the amount of time required to craft it is halved.",
 Battle Smith Spells,Magic,"Artificier, Battle Smith",3,3,,"|3| Heroism, Shield 
 |5| Shining Smite, Warding Bond 
-|9| Aura of Vitality, Conjure Barrage 
+|9°| Aura of Vitality, Conjure Barrage 
 |13| Aura of Purity, Fire Shield 
 |17| Banishing Smite, Mass Cure Wounds",
-Battle ready,Magic,"Artificier, Battle Smith",8,3,,"Your combat training and your experiments with magic have paid off in two ways.
-
-• Arcane Empowerment. When you attack with a magic weapon, you can use your Intelligence modifier, instead of your Strength or Dexterity modifier, for the attack and damage rolls.
-
-• Weapon Knowledge. You gain proficiency with Martial weapons. You can use a weapon with which you have proficiency as a Spellcasting Focus for your Artificer spells.",
 Steel Defender,Magic,"Artificier, Battle Smith",4,3,,"Your tinkering has borne you a companion, a Steel Defender. You determine the defender's appearance and whether it has two legs or four; your choices don't affect the defender's game statistics.
 
 The defender is Friendly to you and your allies and obeys you. It vanishes if you die.
 
-The Defender in Combat. In combat, the defender acts during your turn. It can move and take its Reaction on its own, but the only action it takes is the Dodge action unless you take a Bonus Action to command it to take an action. If you have the Incapacitated condition, the defender acts on its own and isn't limited to the Dodge action.
+***The Defender in Combat***. In combat, the defender acts during your turn. It can move and take its Reaction on its own, but the only action it takes is the Dodge action unless you take a 1 Action Point (1 AP) to command it to take an action. If you have the Incapacitated condition, the defender acts on its own and isn't limited to the Dodge action.
 
 Restoring or Replacing the Defender. If the defender has died within the last hour, you can take a Magic action to touch it and expend a spell slot. The defender returns to life after 1 minute with all its Hit Points restored.
 
 Whenever you finish a Long Rest, you can create a new defender if you have Smith's Tools in hand. If you already have a defender from this feature, the first one vanishes.",
+Battle ready,Magic,"Artificier, Battle Smith",8,3,,"Your combat training and your experiments with magic have paid off in two ways.
+
+• ***Arcane Empowerment***. When you attack with a magic weapon, you can use your Intelligence modifier, instead of your Strength or Dexterity modifier, for the attack and damage rolls.
+
+• ***Weapon Knowledge***. You gain proficiency with Martial weapons. You can use a weapon with which you have proficiency as a Spellcasting Focus for your Artificer spells.",
 Arcane Jolt,Magic,"Artificier, Battle Smith",3,9,,"When either you hit a target with an attack roll using a magic weapon or your Steel Defender hits a target, you can channel magical energy through the strike to create one of the following effects:
 
-• Destructive Energy. The target takes an extra 2d6 Force damage.
+• ***Destructive Energy***. The target takes an extra 2d6 Force damage.
 
-• Restorative Energy. Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 Hit Points to it.
+• ***Restorative Energy***. Choose one creature or object you can see within 30 feet of the target. Healing energy flows into the chosen recipient, restoring 2d6 Hit Points to it.
 
 You can use this energy a number of times equal to your Intelligence modifier (minimum of once), but you can do so no more than once per turn. You regain all expended uses when you finish a Long Rest.",
 Improved Defender,Magic,"Artificier, Battle Smith",2,15,Steel Defender; Arcane Jolt,"Your Arcane Jolt and Steel Defender have become more powerful, granting these benefits.
 
-• Improved Jolt. The extra damage and healing of your Arcane Jolt both increase to 4d6.
+• ***Improved Jolt***. The extra damage and healing of your Arcane Jolt both increase to 4d6.
 
-• Improved Deflection. Whenever your Steel Defender uses its Deflect Attack, the attacker takes Force damage equal to 1d4 plus your Intelligence modifier.",
+• ***Improved Deflection***. Whenever your Steel Defender uses its Deflect Attack, the attacker takes Force damage equal to 1d4 plus your Intelligence modifier.",
 Tools of the Trade - Cartographer,Magic,"Artificier, Cartographer",1,3,,"• Tool Proficiency. You gain proficiency with Calligrapher's Supplies and Cartographer's Tools. If you already have one of these proficiencies, you gain proficiency with one other type of Artisan's Tools of your choice (or with two other types if you have both).
 
-• Scroll Crafting. When you scribe a Spell Scroll using the crafting rules in the Player's Handbook, the amount of time required to craft it is halved.",
+• ***Scroll Crafting***. When you scribe a Spell Scroll using the crafting rules in the Player's Handbook, the amount of time required to craft it is halved.",
 Cartographer Spells,Magic,"Artificier, Cartographer",2,3,,"|3| Faerie Fire, Guiding Bolt, Healing Word 
 |5| Locate Object, Mind Spike 
-|9| Call Lightning, Clairvoyance
+|9°| Call Lightning, Clairvoyance
 |13| Banishment, Locate Creature 
 |17| Scrying, Teleportation Circle",
+Mapping Magic,Magic,"Artificier, Cartographer",2,3,,"You gain the following benefits.
+
+• ***Illuminated Cartography***. You can cast Faerie Fire without expending a spell slot, outlining the affected creatures as if in ink. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
+
+• ***Portal Jump***. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0.",
 Adventurer's Atlas,Magic,"Artificier, Cartographer",3,3,,"Whenever you finish a Long Rest while holding Cartographer's Tools, you can use that tool to create a set of magical maps by touching at least two creatures (one of whom can be yourself), up to a maximum number of creatures equal to 1 plus your Intelligence modifier (minimum of two creatures). Each target receives a magical map, which constantly updates to show the relative position of all the map holders but is illegible to all others. The maps last until you die or until you use this feature again, at which point any existing maps created by this feature immediately vanish.
 
 While carrying the map, a target gains the following benefits.
 
-• Awareness. The target adds 1d4 to its Initiative rolls.
+• ***Awareness***. The target adds 1d4 to its Initiative rolls.
 
-• Positioning. The target knows the location of all other map holders that are on the same plane of existence as itself. When casting a spell or creating another effect that requires being able to see the effect's target, a map holder can target another map holder regardless of sight or cover, so long as the other map holder is still within the effect's range.",
-Mapping Magic,Magic,"Artificier, Cartographer",2,3,,"You gain the following benefits.
-
-• Illuminated Cartography. You can cast Faerie Fire without expending a spell slot, outlining the affected creatures as if in ink. You can do so a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
-
-• Portal Jump. On your turn, you can spend an amount of movement equal to half your Speed (round down) to teleport to an unoccupied space you can see within 10 feet of yourself or within 5 feet of a creature that is within 30 feet of you and holding one of your Adventurer's Atlas maps. You can't use this benefit if your Speed is 0.",
+• ***Positioning***. The target knows the location of all other map holders that are on the same plane of existence as itself. When casting a spell or creating another effect that requires being able to see the effect's target, a map holder can target another map holder regardless of sight or cover, so long as the other map holder is still within the effect's range.",
 Guided Precision,Magic,"Artificier, Cartographer",2,5,Mapping Magic,"Once per turn, whenever you cast a spell from your Cartographer Spells list or hit a creature affected by your Faerie Fire with an attack roll, you can add your Intelligence modifier to one damage roll of the spell or attack.
 
 In addition, taking damage can't cause you to lose Concentration on Faerie Fire.",
 Ingenious Movement,Magic,"Artificier, Cartographer",4,9,Flash of Genius,"When you use your Flash of Genius, you or a willing creature of your choice that you can see within 30 feet of yourself can teleport up to 30 feet to an unoccupied space you can see as part of that same Reaction.",
 Superior Atlas,Magic,"Artificier, Cartographer",3,15,Adventurer's Atlas,"Your Adventurer's Atlas improves, gaining the following benefits.
 
-• Safe Haven. When a map holder would be reduced to 0 Hit Points but not killed outright, that creature can destroy its map. The creature's Hit Points instead change to a number equal to twice your Artificer level, and the creature is teleported to an unoccupied space within 5 feet of you or another map holder of its choice.
+• ***Safe Haven***. When a map holder would be reduced to 0 Hit Points but not killed outright, that creature can destroy its map. The creature's Hit Points instead change to a number equal to twice your Artificer level, and the creature is teleported to an unoccupied space within 5 feet of you or another map holder of its choice.
 
-• Unerring Path. If you are one of the map holders for your Adventurer's Atlas, you can cast Find the Path without expending a spell slot, without preparing the spell, and without needing spell components. Once you use this benefit, you can't use it again until you finish a Long Rest.",
+• ***Unerring Path***. If you are one of the map holders for your Adventurer's Atlas, you can cast Find the Path without expending a spell slot, without preparing the spell, and without needing spell components. Once you use this benefit, you can't use it again until you finish a Long Rest.",
 Rage,Combat,Barbarian,4,1,,"In battle, you fight with primal ferocity. On your turn, you can enter a rage using 1 AP.
 
 While raging, you gain the following benefits if you aren't wearing heavy armor:
@@ -273,85 +344,92 @@ If you are able to cast spells, you can't cast them or concentrate on them while
 Your rage lasts for 1 minute. It ends early if you are knocked unconscious or if your turn ends and you haven't attacked a hostile creature since your last turn or taken damage since then. You can also end your rage on your turn using 1 AP.
 Once you have raged the number of times shown for your barbarian level in the Rages column of the Barbarian table, you must finish a long rest before you can rage again or you can regain one use of rage after you finish a short rest.",1 AP
 "Unarmored defense, barbarian",Combat,Barbarian,8,1,,"While you are not wearing any armor, your armor class equals 10 + your Dexterity modifier + your Constitution modifier. You can use a shield and still gain this benefit.",
-Danger Sense,Combat,Barbarian,4,2,,"At 2nd level, you gain an uncanny sense of when things nearby aren't as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws unles you have the Incapacitated condition.",
 Reckless Attack,Combat,Barbarian,4,2,,"Starting at 2nd level, you can throw aside all concern for defense to attack with fierce desperation. When you make your first attack on your turn, you can decide to attack recklessly. Doing so gives you advantage on melee weapon attack rolls using Strength during this turn, but attack rolls against you have advantage until your next turn.",
+Danger Sense,Combat,Barbarian,4,2,,"At 2nd level, you gain an uncanny sense of when things nearby aren't as they should be, giving you an edge when you dodge away from danger. You have advantage on Dexterity saving throws unles you have the Incapacitated condition.",
 Primal Knowledge,Skill,Barbarian,3,3,,"When you reach 3rd level and again at 10th level, you gain proficiency in one skill of your choice from the list of skills available to barbarians at 1st level.
 In addition, while your Rage is active, you can channel primal power when you attempt certain tasks; whenever you make an ability check using one of the following skills, you can make it as a Strength check even if it normally uses a different ability: Acrobatics, Intimidation, Perception, Stealth, or Survival. When you use this ability, your Strength represents primal power coursing through you, honing your agility, bearing, and senses.",
 Fast Movement,General,Barbarian,3,5,,"Starting at 5th level, your speed increases by 10 feet while you aren't wearing heavy armor.",
-Feral Instinct,Combat,Barbarian,4,7,Rage,"By 7th level, your instincts are so honed that you have advantage on initiative rolls.",
+Extra Attack,Combat,Barbarian,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Instinctive Pounce,Combat,Barbarian,3,7,Rage,"At 7th level, as part of the action you take to enter your rage, you can move up to half your speed.",
+Feral Instinct,Combat,Barbarian,4,7,Rage,"By 7th level, your instincts are so honed that you have advantage on initiative rolls.",
 Brutal Strike,Combat,Barbarian,2,9,Reckless Attack,"If you use Reckless Attack, you can forgo any Advantage on one Strength-based attack roll of your choice on your turn. The chosen attack roll mustn't have Disadvantage. If the chosen attack roll hits, the target takes an extra 1d10 damage of the same type dealt by the weapon or Unarmed Strike, and you can cause one Brutal Strike effect of your choice. You have the following effect options.
 
-• Forceful Blow. The target is pushed 15 feet straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.
+• ***Forceful Blow***. The target is pushed 15 feet straight away from you. You can then move up to half your Speed straight toward the target without provoking Opportunity Attacks.
 
-• Hamstring Blow. The target's Speed is reduced by 15 feet until the start of your next turn. A target can be affected by only one Hamstring Blow at a time—the most recent one.",
+• ***Hamstring Blow***. The target's Speed is reduced by 15 feet until the start of your next turn. A target can be affected by only one Hamstring Blow at a time—the most recent one.",
 Relentless Rage,Combat,Barbarian,4,11,Rage,"Starting at 11th level, your rage can keep you fighting despite grievous wounds. If you drop to 0 hit points while you're raging and don't die outright, you can make a DC 10 Constitution saving throw. If you succeed, your Hit Points instead change to a number equal to twice your Barbarian level.
 Each time you use this feature after the first, the DC increases by 5. When you finish a short or long rest, the DC resets to 10.",
 Improved Brutal Strike,Combat,Barbarian,2,13,Brutal Strike,"You have honed new ways to attack furiously. The following effects are now among your Brutal Strike options.
 
-• Staggering Blow. The target has Disadvantage on the next saving throw it makes, and it can't make Opportunity Attacks until the start of your next turn.
+• ***Staggering Blow***. The target has Disadvantage on the next saving throw it makes, and it can't make Opportunity Attacks until the start of your next turn.
 
-• Sundering Blow. Before the start of your next turn, the next attack roll made by another creature against the target gains a +5 bonus to the roll. An attack roll can gain only one Sundering Blow bonus.",
+• ***Sundering Blow***. Before the start of your next turn, the next attack roll made by another creature against the target gains a +5 bonus to the roll. An attack roll can gain only one Sundering Blow bonus.",
 Persistent Rage,Combat,Barbarian,2,15,Rage,"When you roll Initiative, you can regain all expended uses of Rage. After you regain uses of Rage in this way, you can't do so again until you finish a Long Rest.
 
 In addition, your Rage is so fierce that it now lasts for 10 minutes without you needing to do anything to extend it from round to round. Your Rage ends early if you have the Unconscious condition (not just the Incapacitated condition) or don Heavy armor.",
 Indomitable Might,Combat,Barbarian,5,18,,"Beginning at 18th level, if your total for a Strength check is less than your Strength score, you can use that score in place of the total.",
 Primal Champion,Combat,Barbarian,8,20,,"At 20th level, you embody the power of the wilds. Your Strength and Constitution scores increase by 4. Your maximum for your primary score is now 30 and for your secondary score is 24.",
+Ancestral Protectors,Combat,"Barbarian, Path of the Ancestral Guardian",3,3,,"Starting when you choose this path at 3rd level, spectral warriors appear when you enter your rage. While you're raging, the first creature you hit with an attack on your turn becomes the target of the warriors, which hinder its attacks. Until the start of your next turn, that target has disadvantage on any attack roll that isn't against you, and when the target hits a creature other than you with an attack, that creature has resistance to the damage dealt by the attack. The effect on the target ends early if your rage ends.",
+Spirit Shield,Combat,"Barbarian, Path of the Ancestral Guardian",3,6,Rage,"Beginning at 6th level, the guardian spirits that aid you can provide supernatural protection to those you defend. If you are raging and another creature you can see within 30 feet of you takes damage, you can use your reaction to reduce that damage by 2d6.",Reaction
+Consult the Spirits,Combat,"Barbarian, Path of the Ancestral Guardian",2,10,,"At 10th level, you gain the ability to consult with your ancestral spirits. When you do so, you cast the Augury or Clairvoyance spell, without using a spell slot or material components. Rather than creating a spherical sensor, this use of clairvoyance invisibly summons one of your ancestral spirits to the chosen location. Wisdom is your spellcasting ability for these spells. After you cast either spell in this way, you can't use this feature again until you finish a short or long rest.",
+Vengeful Ancestors,Combat,"Barbarian, Path of the Ancestral Guardian",3,14,,"At 14th level, your ancestral spirits grow powerful enough to retaliate. When you use your Spirit Shield to reduce the damage of an attack, the attacker takes an amount of force damage that your Spirit Shield prevents.",
+Frenzy,Combat,"Barbarian, Path of the Berserker",5,3,Rage,"If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack.",1 AP
+Mindless Rage,Combat,"Barbarian, Path of the Berserker",3,6,Rage,"You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you.",
+Retaliation,Combat,"Barbarian, Path of the Berserker",3,10,Rage,"When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike.",Reaction
+Intimidating Presence,Combat,"Barbarian, Path of the Berserker",3,14,Rage,"As 1 AP you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a 30-foot Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.
+
+Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it.",1 AP
 Giant’s Power,Combat,"Barbarian, Path of the Giant",2,3,Rage,"When you choose this path, you learn to speak, read, and write Giant or one other language of your choice if you already know Giant. Additionally, you learn a cantrip of your choice: either druidcraft or thaumaturgy. Wisdom is your spellcasting ability for this spell.",
 Giant’s Havoc,Combat,"Barbarian, Path of the Giant",4,3,Rage,"Your rages pull strength from the primal might of giants, transforming you into a hulking force of destruction. While raging, you gain the following benefits: Crushing Throw. When you make a successful ranged attack with a thrown weapon using Strength, you can add your Rage Damage bonus to the attack’s damage roll. Giant Stature. Your reach increases by 5 feet, and if you are smaller than Large, you become Large, along with anything you are wearing. If there isn’t enough room for you to increase your size, your size doesn’t change.",
 Elemental Cleaver,Combat,"Barbarian, Path of the Giant",4,6,Rage,"Your bond with the elemental might of giants grows, and you learn to infuse weapons with primordial energy. When you enter your rage, you can choose one weapon that you are holding and infuse it with one of the following damage types: acid, cold, fire, thunder, or lightning. While you wield the infused weapon during your rage, the weapon’s damage type changes to the chosen type, it deals an extra 1d6 damage of the chosen type when it hits, and it gains the thrown property, with a normal range of 20 feet and a long range of 60 feet. If you throw the weapon, it reappears in your hand the instant after it hits or misses a target. The infused weapon’s benefits are suppressed while a creature other than you wields it. While raging and holding the infused weapon, you can use 1 AP to change the infused weapon’s current damage type to another one from the damage type options above.",1 AP
 Mighty Impel,Combat,"Barbarian, Path of the Giant",4,10,Rage,"Your connection to giant strength allows you to hurl both allies and enemies on the battlefield. using 1 AP while raging, you can choose one Medium or smaller creature within your reach and move it to an unoccupied space you can see within 30 feet of yourself. An unwilling creature must succeed on a Strength saving throw (DC equals 8 + your proficiency bonus + your Strength modifier) to avoid the effect. If, at the end of this movement, the thrown creature isn’t on a surface or liquid that can support it, the creature falls, taking damage as normal and landing prone.",1 AP
 Demiurgic Colossus,Combat,"Barbarian, Path of the Giant",5,14,Elemental cleaver; Mighty Impel,"The primordial power of your rage intensifies. When you rage, your reach increases by 10 feet, your size can increase to Large or Huge (your choice), and you can use your Mighty Impel to move creatures that are Large or smaller.In addition, the extra damage dealt by your Elemental Cleaver feature increases to 2d6.",
-Animal Speaker,Combat,"Barbarian, Wild Heart",2,3,,You can cast the Beast Sense and Speak with Animals spells but only as Rituals. Wisdom is your spellcasting ability for them.,
-Rage of the Wilds,Combat,"Barbarian, Wild Heart",3,3,Rage,"Your Rage taps into the primal power of animals. Whenever you activate your Rage, you gain one of the following options of your choice.
+Vitality of the Tree,Combat,"Barbarian, Path of the World of the Tree",3,3,Rage,"Your Rage taps into the life force of the World Tree. You gain the following benefits.
 
-Bear. While your Rage is active, you have Resistance to every damage type except Force, Necrotic, Psychic, and Radiant.",
-Aspect of the Wilds,"Combat, Skill","Barbarian, Wild Heart",2,6,Rage of the Wilds,"You gain one of the following options of your choice. Whenever you finish a Long Rest, you can change your choice.
+• ***Vitality Surge***. When you activate your Rage, you gain a number of Temporary Hit Points equal to your Barbarian level.
 
-Owl. You have Darkvision with a range of 60 feet. If you already have Darkvision, its range increases by 60 feet.",
-Nature Speaker,Combat,"Barbarian, Wild Heart",2,10,,You can cast the Commune with Nature spell but only as a Ritual. Wisdom is your spellcasting ability for it.,
-Power of the Wilds,Combat,"Barbarian, Wild Heart",3,14,Aspect of the Wilds,"Whenever you activate your Rage, you gain one of the following options of your choice.
-
-Falcon. While your Rage is active, you have a Fly Speed equal to your Speed if you aren't wearing any armor.",
-Ancestral Protectors,Combat,Barbarian: Path of the Ancestral Guardian,3,3,,"Starting when you choose this path at 3rd level, spectral warriors appear when you enter your rage. While you're raging, the first creature you hit with an attack on your turn becomes the target of the warriors, which hinder its attacks. Until the start of your next turn, that target has disadvantage on any attack roll that isn't against you, and when the target hits a creature other than you with an attack, that creature has resistance to the damage dealt by the attack. The effect on the target ends early if your rage ends.",
-Spirit Shield,Combat,Barbarian: Path of the Ancestral Guardian,3,6,Rage,"Beginning at 6th level, the guardian spirits that aid you can provide supernatural protection to those you defend. If you are raging and another creature you can see within 30 feet of you takes damage, you can use your reaction to reduce that damage by 2d6.",Reaction
-Consult the Spirits,Combat,Barbarian: Path of the Ancestral Guardian,2,10,,"At 10th level, you gain the ability to consult with your ancestral spirits. When you do so, you cast the Augury or Clairvoyance spell, without using a spell slot or material components. Rather than creating a spherical sensor, this use of clairvoyance invisibly summons one of your ancestral spirits to the chosen location. Wisdom is your spellcasting ability for these spells. After you cast either spell in this way, you can't use this feature again until you finish a short or long rest.",
-Vengeful Ancestors,Combat,Barbarian: Path of the Ancestral Guardian,3,14,,"At 14th level, your ancestral spirits grow powerful enough to retaliate. When you use your Spirit Shield to reduce the damage of an attack, the attacker takes an amount of force damage that your Spirit Shield prevents.",
-Frenzy,Combat,Barbarian: Path of the Berserker,5,3,Rage,"If you use Reckless Attack while your Rage is active, you deal extra damage to the first target you hit on your turn with a Strength-based attack. To determine the extra damage, roll a number of d6s equal to your Rage Damage bonus, and add them together. The damage has the same type as the weapon or Unarmed Strike used for the attack.",1 AP
-Mindless Rage,Combat,Barbarian: Path of the Berserker,3,6,Rage,"You have Immunity to the Charmed and Frightened conditions while your Rage is active. If you're Charmed or Frightened when you enter your Rage, the condition ends on you.",
-Retaliation,Combat,Barbarian: Path of the Berserker,3,10,Rage,"When you take damage from a creature that is within 5 feet of you, you can take a Reaction to make one melee attack against that creature, using a weapon or an Unarmed Strike.",Reaction
-Intimidating Presence,Combat,Barbarian: Path of the Berserker,3,14,Rage,"As 1 AP you can strike terror into others with your menacing presence and primal power. When you do so, each creature of your choice in a 30-foot Emanation originating from you must make a Wisdom saving throw (DC 8 plus your Strength modifier and Proficiency Bonus). On a failed save, a creature has the Frightened condition for 1 minute. At the end of each of the Frightened creature's turns, the creature repeats the save, ending the effect on itself on a success.
-
-Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it.",1 AP
-Vitality of the Tree,Combat,Barbarian: Path of the World of the Tree,3,3,Rage,"Your Rage taps into the life force of the World Tree. You gain the following benefits.
-
-• Vitality Surge. When you activate your Rage, you gain a number of Temporary Hit Points equal to your Barbarian level.
-
-• Life-Giving Force. At the start of each of your turns while your Rage is active, you can choose another creature within 10 feet of yourself to gain Temporary Hit Points. To determine the number of Temporary Hit Points, roll a number of d6s equal to your Rage Damage bonus, and add them together. If any of these Temporary Hit Points remain when your Rage ends, they vanish.",
-Branches of the Tree,Magic,Barbarian: Path of the World of the Tree,5,6,Rage,"Whenever a creature you can see starts its turn within 30 feet of you while your Rage is active, you can take a Reaction to summon spectral branches of the World Tree around it. The target must succeed on a Strength saving throw (DC 8 plus your Strength modifier and Proficiency Bonus) or be teleported to an unoccupied space you can see within 5 feet of yourself or in the nearest unoccupied space you can see. After the target teleports, you can reduce its Speed to 0 until the end of the current turn.",Reaction
-Battering Roots,Combat,Barbarian: Path of the World of the Tree,3,10,Rage,"During your turn, your reach is 10 feet greater with any Melee weapon that has the Heavy or Versatile property, as tendrils of the World Tree extend from you. When you hit with such a weapon on your turn, you can activate the Push or Topple mastery property in addition to a different mastery property you're using with that weapon.",
-Travel Along The Tree,Magic,Barbarian: Path of the World of the Tree,7,14,Rage,"When you activate your Rage and as 1 AP while your Rage is active, you can teleport up to 60 feet to an unoccupied space you can see.
+• ***Life-Giving Force***. At the start of each of your turns while your Rage is active, you can choose another creature within 10 feet of yourself to gain Temporary Hit Points. To determine the number of Temporary Hit Points, roll a number of d6s equal to your Rage Damage bonus, and add them together. If any of these Temporary Hit Points remain when your Rage ends, they vanish.",
+Branches of the Tree,Magic,"Barbarian, Path of the World of the Tree",5,6,Rage,"Whenever a creature you can see starts its turn within 30 feet of you while your Rage is active, you can take a Reaction to summon spectral branches of the World Tree around it. The target must succeed on a Strength saving throw (DC 8 plus your Strength modifier and Proficiency Bonus) or be teleported to an unoccupied space you can see within 5 feet of yourself or in the nearest unoccupied space you can see. After the target teleports, you can reduce its Speed to 0 until the end of the current turn.",Reaction
+Battering Roots,Combat,"Barbarian, Path of the World of the Tree",3,10,Rage,"During your turn, your reach is 10 feet greater with any Melee weapon that has the Heavy or Versatile property, as tendrils of the World Tree extend from you. When you hit with such a weapon on your turn, you can activate the Push or Topple mastery property in addition to a different mastery property you're using with that weapon.",
+Travel Along The Tree,Magic,"Barbarian, Path of the World of the Tree",7,14,Rage,"When you activate your Rage and as 1 AP while your Rage is active, you can teleport up to 60 feet to an unoccupied space you can see.
 
 In addition, once per Rage, you can increase the range of that teleport to 150 feet. When you do so, you can also bring up to six willing creatures who are within 10 feet of you. Each creature teleports to an unoccupied space of your choice within 10 feet of your destination space.",1 AP
-Divine Fury,Combat,Barbarian: Path of the Zealot,4,3,Rage,"You can channel divine power into your strikes. On each of your turns while your Rage is active, the first creature you hit with a weapon or an Unarmed Strike takes extra damage equal to 1d6 plus half your Barbarian level (round down). The extra damage is Necrotic or Radiant; you choose the type each time you deal the damage.",
-Warrior of the Gods,Combat,Barbarian: Path of the Zealot,2,3,Rage,"A divine entity helps ensure you can continue the fight. You have a pool of four d12s that you can spend to heal yourself. As 1 AP, you can expend dice from the pool, roll them, and regain a number of Hit Points equal to the roll's total.
+Warrior of the Gods,Combat,"Barbarian, Path of the Zealot",2,3,Rage,"A divine entity helps ensure you can continue the fight. You have a pool of four d12s that you can spend to heal yourself. As 1 AP, you can expend dice from the pool, roll them, and regain a number of Hit Points equal to the roll's total.
 
 Your pool regains all expended dice when you finish a Long Rest.
 
 The pool's maximum number of dice increases by one when you reach Barbarian levels 6 (5 dice), 12 (6 dice), and 17 (7 dice).",1 AP
-Fanatical Focus,Combat,Barbarian: Path of the Zealot,4,6,Rage,"Once per active Rage, if you fail a saving throw, you can reroll it with a bonus equal to your Rage Damage bonus, and you must use the new roll.",
-Zealous Presence,Combat,Barbarian: Path of the Zealot,5,10,Rage,"As 1 AP, you unleash a battle cry infused with divine energy. Up to ten other creatures of your choice within 60 feet of you gain Advantage on attack rolls and saving throws until the start of your next turn.
+Divine Fury,Combat,"Barbarian, Path of the Zealot",4,3,Rage,"You can channel divine power into your strikes. On each of your turns while your Rage is active, the first creature you hit with a weapon or an Unarmed Strike takes extra damage equal to 1d6 plus half your Barbarian level (round down). The extra damage is Necrotic or Radiant; you choose the type each time you deal the damage.",
+Fanatical Focus,Combat,"Barbarian, Path of the Zealot",4,6,Rage,"Once per active Rage, if you fail a saving throw, you can reroll it with a bonus equal to your Rage Damage bonus, and you must use the new roll.",
+Zealous Presence,Combat,"Barbarian, Path of the Zealot",5,10,Rage,"As 1 AP, you unleash a battle cry infused with divine energy. Up to ten other creatures of your choice within 60 feet of you gain Advantage on attack rolls and saving throws until the start of your next turn.
 
 Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a use of your Rage (no action required) to restore your use of it.",1 AP
-Rage of the Gods,Combat,Barbarian: Path of the Zealot,3,14,Rage,"When you activate your Rage, you can assume the form of a divine warrior. This form lasts for 1 minute or until you drop to 0 Hit Points. Once you use this feature, you can't do so again until you finish a Long Rest.
+Rage of the Gods,Combat,"Barbarian, Path of the Zealot",3,14,Rage,"When you activate your Rage, you can assume the form of a divine warrior. This form lasts for 1 minute or until you drop to 0 Hit Points. Once you use this feature, you can't do so again until you finish a Long Rest.
 
 While in this form, you gain the benefits below.
 
-• Flight. You have a Fly Speed equal to your Speed and can hover.
+• ***Flight***. You have a Fly Speed equal to your Speed and can hover.
 
-• Resistance. You have Resistance to Necrotic, Psychic, and Radiant damage.
+• ***Resistance***. You have Resistance to Necrotic, Psychic, and Radiant damage.
 
-• Revivification. When a creature within 30 feet of you would drop to 0 Hit Points, you can take a Reaction to expend a use of your Rage to instead change the target's Hit Points to a number equal to your Barbarian level.",Reaction
+• ***Revivification***. When a creature within 30 feet of you would drop to 0 Hit Points, you can take a Reaction to expend a use of your Rage to instead change the target's Hit Points to a number equal to your Barbarian level.",Reaction
+Animal Speaker,Combat,"Barbarian, Wild Heart",2,3,,You can cast the Beast Sense and Speak with Animals spells but only as Rituals. Wisdom is your spellcasting ability for them.,
+Rage of the Wilds,Combat,"Barbarian, Wild Heart",3,3,Rage,"Your Rage taps into the primal power of animals. Whenever you activate your Rage, you gain one of the following options of your choice.
+
+***Bear***. While your Rage is active, you have Resistance to every damage type except Force, Necrotic, Psychic, and Radiant.
+***Eagle***. When you activate your Rage, you can take the Disengage and Dash actions as part of that 1 Action Point. While your Rage is active, you can take a 1 Action Point to take both of those actions.
+***Wolf***. While your Rage is active, your allies have Advantage on attack rolls against any enemy of yours within 5 feet of you.",
+Aspect of the Wilds,"Combat, Skill","Barbarian, Wild Heart",2,6,Rage of the Wilds,"You gain one of the following options of your choice. Whenever you finish a Long Rest, you can change your choice.
+
+***Owl***. You have Darkvision with a range of 60 feet. If you already have Darkvision, its range increases by 60 feet.
+***Panther***. You have a Climb Speed equal to your Speed.
+***Salmon***. You have a Swim Speed equal to your Speed.",
+Nature Speaker,Magic,"Barbarian, Wild Heart",2,10,,You can cast the Commune with Nature spell but only as a Ritual. Wisdom is your spellcasting ability for it.,
+Power of the Wilds,Combat,"Barbarian, Wild Heart",3,14,Aspect of the Wilds,"Whenever you activate your Rage, you gain one of the following options of your choice.
+
+***Falcon***. While your Rage is active, you have a Fly Speed equal to your Speed if you aren't wearing any armor.
+***Lion***. While your Rage is active, any of your enemies within 5 feet of you have Disadvantage on attack rolls against targets other than you or another Barbarian who has this option active.
+***Ram***. While your Rage is active, you can cause a Large or smaller creature to have the Prone condition when you hit it with a melee attack.",
 Bardic Inspiration,Magic,Bard,4,1,,"You can inspire others through stirring words or music. To do so, you use 1 AP on your turn to choose one creature other than yourself within 60 feet of you who can hear you. That creature gains one Bardic Inspiration die, a d6.
 
 Once within the next 10 minutes, the creature can roll the die and add the number rolled to one ability check, attack roll, or saving throw it makes. The creature can wait until after it rolls the d20 before deciding to use the Bardic Inspiration die, but must decide before the DM says whether the roll succeeds or fails. Once the Bardic Inspiration die is rolled, it is lost. A creature can have only one Bardic Inspiration die at a time.
@@ -359,7 +437,6 @@ Once within the next 10 minutes, the creature can roll the die and add the numbe
 You can use this feature a number of times equal to your Charisma modifier (a minimum of once). You regain any expended uses when you finish a long rest.
 
 Your Bardic Inspiration die changes when you reach certain levels in this class. The die becomes a d8 at 5th level, a d10 at 10th level, and a d12 at 15th level.",1 AP
-Jack of All Trade,General,Bard,4,3,,"Starting at 2nd level, you can add half your proficiency bonus, rounded down, to any ability check you make that doesn't already include your proficiency bonus.",
 Song of Rest,Magic,Bard,1,2,,"Beginning at 2nd level, you can use soothing music or oration to help revitalize your wounded allies during a short rest. If you or any friendly creatures who can hear your performance regain hit points at the end of the short rest by spending one or more Hit Dice, each of those creatures regains an extra 1d6 hit points.
 
 The extra Hit Points increase when you reach certain levels in this class: to 1d8 at 9th level, to 1d10 at 13th level, and to 1d12 at 17th level.",
@@ -367,8 +444,10 @@ Magical Inspiration,Magic,Bard,2,2,,"At 2nd level, if a creature has a Bardic In
 "Expertise, Bard",Skill,Bard,3,3,,"At 3rd level, choose two of your skill proficiencies. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.
 
 At 10th level, you can choose another two skill proficiencies to gain this benefit.",
+Jack of All Trade,General,Bard,4,3,,"Starting at 2nd level, you can add half your proficiency bonus, rounded down, to any ability check you make that doesn't already include your proficiency bonus.",
 Font of Inspiration,Magic,Bard,1,5,Bardic Inspiration,"Beginning when you reach 5th level, you regain all of your expended uses of Bardic Inspiration when you finish a short or long rest.",
 Countercharm,Magic,Bard,1,6,,"At 6th level, you gain the ability to use musical notes or words of power to disrupt mind-influencing effects. using 2 AP, you can start a performance that lasts until the end of your next turn. During that time, you and any friendly creatures within 30 feet of you have advantage on saving throws against being frightened or charmed. A creature must be able to hear you to gain this benefit. The performance ends early if you are incapacitated or silenced or if you voluntarily end it (no action required).",2 AP
+Extra Attack,Combat,Bard,5,6,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Magical Secrets,Magic,Bard,2,10,,"By 10th level, you have plundered magical knowledge from a wide spectrum of disciplines. Choose two spells from any classes, including this one. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip.
 
 The chosen spells count as bard spells for you and are included in the number in the Spells Known column of the Bard table.
@@ -376,43 +455,44 @@ The chosen spells count as bard spells for you and are included in the number in
 You learn two additional spells from any classes at 14th level and again at 18th level.",
 Superior Inspiration,Magic,Bard,3,18,Bardic Inspiration,"At 18th level, when you roll initiative and have no uses of Bardic Inspiration left, you regain two uses.",
 Words of Creation,Magic,Bard,3,20,,"You have mastered two of the prime Words of Creation: the words of life and death. You therefore always have the Power Word Heal and Power Word Kill spells prepared, and when you cast either spell, you can target a second creature with the spell, provided that creature is within 10 feet of the first target.",
-Dazzling Footwork,Combat,"Bard, Collage of Dance",6,3,,"Your practice of dance gives you the ability to gracefully dodge and make agile strikes. While you aren’t wearing armor or wielding a Shield, you gain the following benefits:
-Unarmored Defense. Your base Armor Class equals 10 + your Dexterity modifier + your Charisma modifier.",
 Inspiring Movement,Magic,"Bard, Collage of Dance",3,3,,"When an enemy you can see ends its turn within 5 feet of an ally of yours who is within 60 feet of you, you can use your Reaction and expend one use of your Bardic Inspiration to move up to half your Speed. Then roll your Bardic Inspiration die, and the ally can move up to a number of feet equal to 5 times the number rolled. None of this feature’s movement provokes Opportunity Attacks.",Reaction
+Dazzling Footwork,Combat,"Bard, Collage of Dance",6,3,,"Your practice of dance gives you the ability to gracefully dodge and make agile strikes. While you aren’t wearing armor or wielding a Shield, you gain the following benefits:
+***Unarmored Defense***. Your base Armor Class equals 10 + your Dexterity modifier + your Charisma modifier.",
 Leading Evasion,Magic,"Bard, Collage of Dance",4,6,,"When you are subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw, and you take only half damage if you fail. If any creatures within 5 feet of you are making the same Dexterity saving throw, you can share this benefit with them for that save.
 You can’t use this feature if you have the Incapacitated condition.",
 Tandem Footwork,Magic,"Bard, Collage of Dance",4,6,,"When you roll Initiative, you can spend one use of your Bardic Inspiration if you don’t have the Incapacitated condition. When you do so, roll your Bardic Inspiration die, and choose a number of creatures within 60 feet of yourself (you can choose yourself), up to a number equal to your Charisma modifier (minimum of one creature). Each of them gains a bonus to their Initiative equal to the number rolled.",
 Irresistible Dance,Magic,"Bard, Collage of Dance",2,14,,"You always have the Otto’s Irresistible Dance spell prepared. You can cast it without expending a spell slot. Once you cast the spell in this way, you can’t do so again until you finish a Long Rest. You can also restore your use of the feature by expending four uses of your Bardic Inspiration (no action required).",
-Bonus Proficiency,Skill,"Bard, college of Lore",2,3,,"When you join the College of Lore at 3rd level, you gain proficiency with three skills of your choice.",
-Cutting Word,Magic,"Bard, college of Lore",2,3,,"Also at 3rd level, you learn how to use your wit to distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of you makes an attack roll, an ability check, or a damage roll, you can use your reaction to expend one of your uses of Bardic Inspiration, rolling a Bardic Inspiration die and subtracting the number rolled from the creature's roll. You can choose to use this feature after the creature makes its roll, but before the DM determines whether the attack roll or ability check succeeds or fails, or before the creature deals its damage. The creature is immune if it can't hear you or if it's immune to being charmed.",Reaction
-Additional Magical Secret,Magic,"Bard, college of Lore",1,6,,"At 6th level, you learn two spells of your choice from any class. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you but don't count against the number of bard spells you know.",
-Peerless skill,Magic,"Bard, college of Lore",2,14,,"Starting at 14th level, when you make an ability check, you can expend one use of Bardic Inspiration. Roll a Bardic Inspiration die and add the number rolled to your ability check. You can choose to do so after you roll the die for the ability check, but before the DM tells you whether you succeed or fail.",
-Bardic Knowledge,General,"Bard, Pathfinder",2,2,,"I bardi accumulano conoscenze viaggiando e chiacchierando con la gente più che studiando sui libri. Qualunque sia l’argomento è possibile che il bardo ne abbia sentito parlare o ne sia a conoscenza. Per 3 volte al giorno, quando fallisci una qualsiasi prova di abilità fatta per verificare la conoscenza di un argomento, puoi sostituire il risultato del tiro con un check di conoscenze bardiche. Le conoscenze bardiche sono un check di carisma nel quale si somma 2 volte il bonus di competenza",
-Top Performer,General,"Bard, Pathfinder",1,1,,Guadagni la competenza nell’abilità Performance. Se hai già la competenza applichi due volte il bonus di competenza al tiro. Se applichi già due volte il bonus di competenza al tiro guadagni vantaggio alle prove.,
-Bardic Performance as Path,Magic,"Bard, Pathfinder",2,1,,"Usi per round as pathfinder 0 in bard performer. Richiede 2 AP per fare le performance. CD delle performance 8+prof+CHA. Mantenere una performance richiede concentrazione come se fosse uno spell.
-• al livello 7 1 AP
-• al livello 13 during Move Action",
-Distraction,Magic,"Bard, Pathfinder",1,1,Bardic Performance as Path,"Distraction (Su): At 1st level, a bard can use his performance to counter magic effects that depend on sight. Each round of the Distraction, he makes a performance skill check. Any creature within 30 feet of the bard (including the bard himself) that is affected by an illusion magical attack may use the bard’s performance check result in place of its saving throw if, after the saving throw is rolled, the performance check result proves to be higher. If a creature within range of the Distraction is already under the effect of a non-instantaneous illusion magical attack, it gains another saving throw against the effect each round it sees the Distraction, but it must use the bard’s performance check result for the save. Distraction does not work on effects that don’t allow saves. Distraction relies on visual components.",
-Charme,Magic,"Bard, Pathfinder",3,1,Bardic Performance as Path,"Charm (Su): At 1st level, a bard can use his performance to cause one or more creatures to become charmed with him. Each creature to be Charmed must be within 90 feet, able to see and hear the bard, and capable of paying attention to him. The bard must also be able to see the creatures affected. The distraction of a nearby combat or other dangers prevents the ability from working. For every three levels a bard has attained beyond 1st, he can target one additional creature with this ability. Each creature within range receives a Wisdom to negate the effect. If a creature’s saving throw succeeds, the bard cannot attempt to charmed that creature again for 24 hours. If its saving throw fails, the creature sits quietly and observes the performance for as long as the bard continues to maintain it. Any potential threat to the target allows the target to make a new saving throw against the effect. Any obvious threat, such as someone drawing a weapon, casting a spell, or aiming a weapon at the target, automatically breaks the effect.",
-Countersong,Magic,"Bard, Pathfinder",1,1,Bardic Performance as Path,"Mentre hai una qualsiasi performance attiva, puoi usare una reazione per effettuare un check di performance contro gli effetti di un incantesimo o una capacità magica dipendente dal linguaggio o dal suono. Tutte le creature nel raggio di 9 metri da te possono usare il risultato del tuo check al posto del loro tiro salvezza. Countersong non ha effetto contro gli incantesimi che non prevedono un tiro salvezza. Per utilizzare Countersong è richiesta al bardo la capacità di fornire componente uditiva (ad esempio uno strumento musicale in mano o la possibilità di cantare, ecc). La Performance in corso non viene interrotta.",
-Inspire Courage,Magic,"Bard, Pathfinder",4,1,Bardic Performance as Path,"While performing, you and all allies within 30 feet gain the following benefits: 
-• vantaggio ai tiri salvezza contro illusioni e incantamenti 
-• a bonus to the attack roll of one attack of choice each turn, equal to half your proficiency bonus (Rounded down. Min 1)",
-Inspire Competence,Magic,"Bard, Pathfinder",2,3,Bardic Performance as Path,"Your performance inspires others to excel at their tasks. You can grant all allies within 30 feet the following benefit: 
-• advantage on any skill check",
-Dirge of Doom,Magic,"Bard, Pathfinder",3,8,Bardic Performance as Path,"Dirge of Doom (Su): A bard of 8th level or higher can use his performance to foster a sense of growing dread in his enemies, causing them to take become Frightened. To be affected, an enemy must be within 30 feet and able to see and hear the bard’s performance. The effect persists for as long as the enemy is within 30 feet and the bard continues the performance. Dirge of doom is a mind-affecting fear effect, and it relies on audible and visual components.",
-Inspire greatness,Magic,"Bard, Pathfinder",3,9,Bardic Performance as Path,"Your performance inspires greatness in others, allowing them to push beyond their limits. When you start a performance, you can grant you and all allies within 30 feet the following benefits: 
-• 20 temporary hit points
-• advantage on Constitution-based saving throws
-• a bonus on damage for attack of one attack of choice each turn, equal to your proficiency",
-Inspire Heroism,Magic,"Bard, Pathfinder",3,10,Bardic Performance as Path,"Your performance is capable of inspiring tremendous heroism in others, greatly increasing their chances in combat. Quando inizi una performance, tu e tutti gli alleati entro i 30ft potete trattare i risultati 2 e 3 come se fossero 20 sui tiri per colpire. Si somma con effetti simili.",
-Soothing performance,Magic,"Bard, Pathfinder",3,12,Bardic Performance as Path,"Soothing Performance (Su): A bard of 12th level or higher can use his performance to create an effect equivalent to the mass cure wounds, using the bard’s level as the caster level. In addition, this performance removes the poisoned and frightnened condition from all those affected and reduces by 1 the exhausted condition. Using this ability requires 4 rounds of continuous performance, and the targets must be able to see and hear the bard throughout the performance. Soothing performance relies on audible and visual components.",
-Deadly Performance,Magic,"Bard, Pathfinder",3,20,Bardic Performance as Path,"Deadly Performance (Su): A bard of 20th level or higher can use his performance to cause one enemy to die from joy or sorrow. To be affected, the target must be able to see and hear the bard performance and be within 30 feet. The target receives a Charisma save (DC 10 + 1/2 the bard’s level + the bard’s Cha modifier) to negate the effect. If a creature’s saving throw succeeds, the target is stunned for 1d4 rounds, and the bard cannot use deadly performance on that creature again for 24 hours. If a creature’s saving throw fails, it dies. Deadly performance is a mind-effecting death effect that relies on audible and visual components.",
-Mantle of Inspiration,Magic,"Bard, College of Glamour",2,3,Bardic Inspiration,"When you join the College of Glamour at 3rd level, you gain the ability to weave a song of fey magic that imbues your allies with vigor and speed.
+Bonus Proficiency,Combat,"Bard, Collage of Sword",1,3,,"When you join the College of Swords at 3rd level, you gain proficiency with medium armor and the scimitar.
 
-using 1 AP, you can expend one use of your Bardic Inspiration to grant yourself a wondrous appearance. When you do so, choose a number of creatures you can see and who can see you within 60 feet of you, up to a number equal to your Charisma modifier (minimum of one). Each of them gains 5 temporary hit points. When a creature gains these temporary hit points, it can immediately use its reaction to move up to its speed, without provoking opportunity attacks.
+If you're proficient with a simple or martial melee weapon, you can use it as a spellcasting focus for your bard spells.",
+Blade Flourish,Combat,"Bard, Collage of Sword",6,3,Badric Inspiration,"At 3rd level, you learn to perform impressive displays of martial prowess and speed.
 
-The number of temporary hit points increases when you reach certain levels in this class, increasing to 8 at 5th level, 11 at 10th level, and 14 at 15th level.",1 AP
+Whenever you take the Attack action on your turn, your walking speed increases by 10 feet until the end of the turn, and if a weapon attack that you make as part of this action hits a creature, you can use one of the following Blade Flourish options of your choice. You can use only one Blade Flourish option per turn.
+
+• ***Defensive Flourish***. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit. The damage equals the number you roll on the Bardic Inspiration die. You also add the number rolled to your AC until the start of your next turn.
+
+• ***Mobile Flourish***. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit. The damage equals the number you roll on the Bardic Inspiration die. You can also push the target up to 5 feet away from you, plus a number of feet equal to the number you roll on that die. You can then immediately use your reaction to move up to your walking speed to an unoccupied space within 5 feet of the target.
+
+• ***Slashing Flourish***. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit and to any other creature of your choice that you can see within 5 feet of you. The damage equals the number you roll on the Bardic Inspiration die.",
+Master's Flourish,Combat,"Bard, Collage of Sword",4,6,Blade Flourish,"Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die.",
+Martial Training,Combat,"Bard, Collage of Valor",2,3,,"You gain proficiency with Martial weapons and training with Medium armor and Shields.
+
+In addition, you can use a Simple or Martial weapon as a Spellcasting Focus to cast spells from your Bard spell list.",
+Combatant Inspiration,Magic,"Bard, Collage of Valor",3,3,Bardic Inspiration,"You can use your wit to turn the tide of battle. A creature that has a Bardic Inspiration die from you can use it for one of the following effects.
+
+***Defense***. When the creature is hit by an attack roll, that creature can use its Reaction to roll the Bardic Inspiration die and add the number rolled to its AC against that attack, potentially causing the attack to miss.
+
+***Offense***. Immediately after the creature hits a target with an attack roll, the creature can roll the Bardic Inspiration die and add the number rolled to the attack's damage against the target.",Reaction
+Battle Magic,Combat,"Bard, Collage of Valor",2,14,,"After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a 1 AP.",1 AP
+Sivler Tongue,Magic,"Bard, College of Eloquence",2,3,,"Starting at 3rd level, you are a master at saying the right thing at the right time. When you make a Charisma (Persuasion) or Charisma (Deception) check, you can treat a d20 roll of 9 or lower as a 10.",
+Unsettling Words,Magic,"Bard, College of Eloquence",3,3,Bardic Inspiration,"Also at 3rd level, you can spin words laced with magic that unsettle a creature and cause it to doubt itself. using 1 AP, you can expend one use of your Bardic Inspiration and choose one creature you can see within 60 feet of you. Roll the Bardic Inspiration die. The creature must subtract the number rolled from the next saving throw it makes before the start of your next turn.",1 AP
+Universal Speech,Magic,"Bard, College of Eloquence",1,6,,"Also at 6th level, you have gained the ability to make your speech intelligible to any creature. using 2 AP, choose one or more creatures within 60 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). The chosen creatures can magically understand you, regardless of the language you speak, for 1 hour.
+
+Once you use this feature, you can't use it again until you finish a long rest, unless you expend a spell slot to use it again.",2 AP
+unfailing Inspiration,Magic,"Bard, College of Eloquence",3,6,Bardic Inspiration,"At 6th level, your inspiring words are so persuasive that others feel driven to succeed. When a creature adds one of your Bardic Inspiration dice to its ability check, attack roll, or saving throw and the roll fails, the creature can keep the Bardic Inspiration die.",
+Infectious Inspiration,Magic,"Bard, College of Eloquence",2,14,Bardic Inspiration,"At 14th level, when you successfully inspire someone, the power of your eloquence can now spread to someone else. When a creature within 60 feet of you adds one of your Bardic Inspiration dice to its ability check, attack roll, or saving throw and the roll succeeds, you can use your reaction to encourage a different creature (other than yourself) that can hear you within 60 feet of you, giving it a Bardic Inspiration die without expending any of your Bardic Inspiration uses.
+
+You can use this reaction a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a long rest.",Reaction
 Enthralling Performance,Magic,"Bard, College of Glamour",2,3,,"Starting at 3rd level, you can charge your performance with seductive, fey magic.
 
 If you perform for at least 1 minute, you can attempt to inspire wonder in your audience by singing, reciting a poem, or dancing. At the end of the performance, choose a number of humanoids within 60 feet of you who watched and listened to all of it, up to a number equal to your Charisma modifier (minimum of one). Each target must succeed on a Wisdom saving throw against your spell save DC or be charmed by you. While charmed in this way, the target idolizes you, it speaks glowingly of you to anyone who speaks to it, and it hinders anyone who opposes you, avoiding violence unless it was already inclined to fight on your behalf. This effect ends on a target after 1 hour, if it takes any damage, if you attack it, or if it witnesses you attacking or damaging any of its allies.
@@ -420,6 +500,11 @@ If you perform for at least 1 minute, you can attempt to inspire wonder in your 
 If a target succeeds on its saving throw, the target has no hint that you tried to charm it.
 
 Once you use this feature, you can’t use it again until you finish a short or long rest.",
+Mantle of Inspiration,Magic,"Bard, College of Glamour",2,3,Bardic Inspiration,"When you join the College of Glamour at 3rd level, you gain the ability to weave a song of fey magic that imbues your allies with vigor and speed.
+
+using 1 AP, you can expend one use of your Bardic Inspiration to grant yourself a wondrous appearance. When you do so, choose a number of creatures you can see and who can see you within 60 feet of you, up to a number equal to your Charisma modifier (minimum of one). Each of them gains 5 temporary hit points. When a creature gains these temporary hit points, it can immediately use its reaction to move up to its speed, without provoking opportunity attacks.
+
+The number of temporary hit points increases when you reach certain levels in this class, increasing to 8 at 5th level, 11 at 10th level, and 14 at 15th level.",1 AP
 Mantle of Majesty,Magic,"Bard, College of Glamour",2,6,,"At 6th level, you gain the ability to cloak yourself in a fey magic that makes others want to serve you. using 1 AP, you cast Command, without expending a spell slot, and you take on an appearance of unearthly beauty for 1 minute or until your concentration ends (as if you were concentrating on a spell). During this time, you can cast Command using 1 AP on each of your turns, without expending a spell slot.
 
 Any creature charmed by you automatically fails its saving throw against the Command you cast with this feature.
@@ -430,93 +515,164 @@ Unbreakable Majesty,Magic,"Bard, College of Glamour",4,14,,"At 14th level, your 
 In addition, using 1 AP, you can assume a magically majestic presence for 1 minute or until you are incapacitated. For the duration, whenever any creature tries to attack you for the first time on a turn, the attacker must make a Charisma saving throw against your spell save DC. On a failed save, it can't attack you on this turn, and it must choose a new target for its attack or the attack is wasted. On a successful save, it can attack you on this turn, but it has disadvantage on any saving throw it makes against your spells on your next turn.
 
 Once you assume this majestic presence, you can't do so again until you finish a short or long rest.",1 AP
-Sivler Tongue,Magic,"Bard, College of Eloquence",2,3,,"Starting at 3rd level, you are a master at saying the right thing at the right time. When you make a Charisma (Persuasion) or Charisma (Deception) check, you can treat a d20 roll of 9 or lower as a 10.",
-Unsettling Words,Magic,"Bard, College of Eloquence",3,3,Bardic Inspiration,"Also at 3rd level, you can spin words laced with magic that unsettle a creature and cause it to doubt itself. using 1 AP, you can expend one use of your Bardic Inspiration and choose one creature you can see within 60 feet of you. Roll the Bardic Inspiration die. The creature must subtract the number rolled from the next saving throw it makes before the start of your next turn.",1 AP
-unfailing Inspiration,Magic,"Bard, College of Eloquence",3,6,Bardic Inspiration,"At 6th level, your inspiring words are so persuasive that others feel driven to succeed. When a creature adds one of your Bardic Inspiration dice to its ability check, attack roll, or saving throw and the roll fails, the creature can keep the Bardic Inspiration die.",
-Universal Speech,Magic,"Bard, College of Eloquence",1,6,,"Also at 6th level, you have gained the ability to make your speech intelligible to any creature. using 2 AP, choose one or more creatures within 60 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). The chosen creatures can magically understand you, regardless of the language you speak, for 1 hour.
+Cutting Word,Magic,"Bard, college of Lore",2,3,,"Also at 3rd level, you learn how to use your wit to distract, confuse, and otherwise sap the confidence and competence of others. When a creature that you can see within 60 feet of you makes an attack roll, an ability check, or a damage roll, you can use your reaction to expend one of your uses of Bardic Inspiration, rolling a Bardic Inspiration die and subtracting the number rolled from the creature's roll. You can choose to use this feature after the creature makes its roll, but before the DM determines whether the attack roll or ability check succeeds or fails, or before the creature deals its damage. The creature is immune if it can't hear you or if it's immune to being charmed.",Reaction
+Bonus Proficiency,Skill,"Bard, college of Lore",2,3,,"When you join the College of Lore at 3rd level, you gain proficiency with three skills of your choice.",
+Additional Magical Secret,Magic,"Bard, college of Lore",1,6,,"At 6th level, you learn two spells of your choice from any class. A spell you choose must be of a level you can cast, as shown on the Bard table, or a cantrip. The chosen spells count as bard spells for you but don't count against the number of bard spells you know.",
+Peerless skill,Magic,"Bard, college of Lore",2,14,,"Starting at 14th level, when you make an ability check, you can expend one use of Bardic Inspiration. Roll a Bardic Inspiration die and add the number rolled to your ability check. You can choose to do so after you roll the die for the ability check, but before the DM tells you whether you succeed or fail.",
+Top Performer,General,"Bard, Pathfinder",1,1,,Guadagni la competenza nell’abilit&agrave; Performance. Se hai gi&agrave; la competenza applichi due volte il bonus di competenza al tiro. Se applichi gi&agrave; due volte il bonus di competenza al tiro guadagni vantaggio alle prove.,
+Distraction,Magic,"Bard, Pathfinder",1,1,Bardic Performance as Path,"Distraction (Su): At 1st level, a bard can use his performance to counter magic effects that depend on sight. Each round of the Distraction, he makes a performance skill check. Any creature within 30 feet of the bard (including the bard himself) that is affected by an illusion magical attack may use the bard’s performance check result in place of its saving throw if, after the saving throw is rolled, the performance check result proves to be higher. If a creature within range of the Distraction is already under the effect of a non-instantaneous illusion magical attack, it gains another saving throw against the effect each round it sees the Distraction, but it must use the bard’s performance check result for the save. Distraction does not work on effects that don’t allow saves. Distraction relies on visual components.",
+Countersong,Magic,"Bard, Pathfinder",1,1,Bardic Performance as Path,"Mentre hai una qualsiasi performance attiva, puoi usare una reazione per effettuare un check di performance contro gli effetti di un incantesimo o una capacit&agrave; magica dipendente dal linguaggio o dal suono. Tutte le creature nel raggio di 9 metri da te possono usare il risultato del tuo check al posto del loro tiro salvezza. Countersong non ha effetto contro gli incantesimi che non prevedono un tiro salvezza. Per utilizzare Countersong &egrave; richiesta al bardo la capacit&agrave; di fornire componente uditiva (ad esempio uno strumento musicale in mano o la possibilit&agrave; di cantare, ecc). La Performance in corso non viene interrotta.",
+Bardic Performance as Path,Magic,"Bard, Pathfinder",2,1,,"Usi per round as pathfinder 0 in bard performer. Richiede 2 AP per fare le performance. CD delle performance 8+prof+CHA. Mantenere una performance richiede concentrazione come se fosse uno spell.
+• al livello 7 1 AP
+• al livello 13 during Move Action",
+Charme,Magic,"Bard, Pathfinder",3,1,Bardic Performance as Path,"Charm (Su): At 1st level, a bard can use his performance to cause one or more creatures to become charmed with him. Each creature to be Charmed must be within 90 feet, able to see and hear the bard, and capable of paying attention to him. The bard must also be able to see the creatures affected. The distraction of a nearby combat or other dangers prevents the ability from working. For every three levels a bard has attained beyond 1st, he can target one additional creature with this ability. Each creature within range receives a Wisdom to negate the effect. If a creature’s saving throw succeeds, the bard cannot attempt to charmed that creature again for 24 hours. If its saving throw fails, the creature sits quietly and observes the performance for as long as the bard continues to maintain it. Any potential threat to the target allows the target to make a new saving throw against the effect. Any obvious threat, such as someone drawing a weapon, casting a spell, or aiming a weapon at the target, automatically breaks the effect.",
+Inspire Courage,Magic,"Bard, Pathfinder",4,1,Bardic Performance as Path,"While performing, you and all allies within 30 feet gain the following benefits: 
+• vantaggio ai tiri salvezza contro illusioni e incantamenti 
+• a bonus to the attack roll of one attack of choice each turn, equal to half your proficiency bonus (Rounded down. Min 1)",
+Bardic Knowledge,General,"Bard, Pathfinder",2,2,,"I bardi accumulano conoscenze viaggiando e chiacchierando con la gente pi&ugrave; che studiando sui libri. Qualunque sia l’argomento &egrave; possibile che il bardo ne abbia sentito parlare o ne sia a conoscenza. Per 3 volte al giorno, quando fallisci una qualsiasi prova di abilit&agrave; fatta per verificare la conoscenza di un argomento, puoi sostituire il risultato del tiro con un check di conoscenze bardiche. Le conoscenze bardiche sono un check di carisma nel quale si somma 2 volte il bonus di competenza",
+Inspire Competence,Magic,"Bard, Pathfinder",2,3,Bardic Performance as Path,"Your performance inspires others to excel at their tasks. You can grant all allies within 30 feet the following benefit: 
+• advantage on any skill check",
+Dirge of Doom,Magic,"Bard, Pathfinder",3,8,Bardic Performance as Path,"Dirge of Doom (Su): A bard of 8th level or higher can use his performance to foster a sense of growing dread in his enemies, causing them to take become Frightened. To be affected, an enemy must be within 30 feet and able to see and hear the bard’s performance. The effect persists for as long as the enemy is within 30 feet and the bard continues the performance. Dirge of doom is a mind-affecting fear effect, and it relies on audible and visual components.",
+Inspire greatness,Magic,"Bard, Pathfinder",3,9,Bardic Performance as Path,"Your performance inspires greatness in others, allowing them to push beyond their limits. When you start a performance, you can grant you and all allies within 30 feet the following benefits: 
+• 20 temporary hit points
+• advantage on Constitution-based saving throws
+• a bonus on damage for attack of one attack of choice each turn, equal to your proficiency",
+Inspire Heroism,Magic,"Bard, Pathfinder",3,10,Bardic Performance as Path,"Your performance is capable of inspiring tremendous heroism in others, greatly increasing their chances in combat. Quando inizi una performance, tu e tutti gli alleati entro i 30ft potete trattare i risultati 2 e 3 come se fossero 20 sui tiri per colpire. Si somma con effetti simili.",
+Soothing performance,Magic,"Bard, Pathfinder",3,12,Bardic Performance as Path,"Soothing Performance (Su): A bard of 12th level or higher can use his performance to create an effect equivalent to the mass cure wounds, using the bard’s level as the caster level. In addition, this performance removes the poisoned and frightnened condition from all those affected and reduces by 1 the exhausted condition. Using this ability requires 4 rounds of continuous performance, and the targets must be able to see and hear the bard throughout the performance. Soothing performance relies on audible and visual components.",
+Deadly Performance,Magic,"Bard, Pathfinder",3,20,Bardic Performance as Path,"Deadly Performance (Su): A bard of 20th level or higher can use his performance to cause one enemy to die from joy or sorrow. To be affected, the target must be able to see and hear the bard performance and be within 30 feet. The target receives a Charisma save (DC 10 + 1/2 the bard’s level + the bard’s Cha modifier) to negate the effect. If a creature’s saving throw succeeds, the target is stunned for 1d4 rounds, and the bard cannot use deadly performance on that creature again for 24 hours. If a creature’s saving throw fails, it dies. Deadly performance is a mind-effecting death effect that relies on audible and visual components.",
+Hunter's Bane,Magic,Blood-Hunter,3,1,,"At 1st level, you have survived the Hunter’s Bane—a dangerous, long-guarded ritual that alters your life’s blood, forever binding you to the darkness and honing your senses against it. You have advantage on Wisdom (Survival) checks to track fey, fiends, or undead, as well as on Intelligence checks to recall information about such creatures.
 
-Once you use this feature, you can't use it again until you finish a long rest, unless you expend a spell slot to use it again.",2 AP
-Infectious Inspiration,Magic,"Bard, College of Eloquence",2,14,Bardic Inspiration,"At 14th level, when you successfully inspire someone, the power of your eloquence can now spread to someone else. When a creature within 60 feet of you adds one of your Bardic Inspiration dice to its ability check, attack roll, or saving throw and the roll succeeds, you can use your reaction to encourage a different creature (other than yourself) that can hear you within 60 feet of you, giving it a Bardic Inspiration die without expending any of your Bardic Inspiration uses.
+The Hunter’s Bane also empowers your body to control and shape hemocraft magic, using your own blood and life essence to fuel your abilities. Some of your features require your target to make a saving throw to resist the feature’s effects. The saving throw DC is calculated as follows:
 
-You can use this reaction a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a long rest.",Reaction
-Combatant Inspiration,Magic,"Bard, Collage of Valor",3,3,Bardic Inspiration,"You can use your wit to turn the tide of battle. A creature that has a Bardic Inspiration die from you can use it for one of the following effects.
+Hemocraft save DC = 8 + your proficiency bonus + your Hemocraft modifier (your choice between Intelligence and Wisdom)",
+Blood Maledict,Magic,Blood-Hunter,6,1,,"Also at 1st level, you gain the ability to channel—or sometimes sacrifice—a part of your vital essence to curse and manipulate creatures through hemocraft magic. You know one Blood Curse of your choice. You learn one additional blood curse of your choice at 6th, 10th, 14th, and 18th level. Each time you learn a new blood curse, you can also choose one of the blood curses you know and replace it with another blood curse.
 
-Defense. When the creature is hit by an attack roll, that creature can use its Reaction to roll the Bardic Inspiration die and add the number rolled to its AC against that attack, potentially causing the attack to miss.
+Each time you use your Blood Maledict feature, you choose which curse to invoke from the curses you know. While invoking a blood curse, but before it affects the target, you can choose to amplify the curse by taking necrotic damage equal to one roll of your hemocraft die. This damage can’t be reduced in any way. An amplified curse gains an additional effect, noted in the curse’s description. Creatures that do not have blood are immune to blood curses unless you have amplified the curse.
 
-Offense. Immediately after the creature hits a target with an attack roll, the creature can roll the Bardic Inspiration die and add the number rolled to the attack's damage against the target.",Reaction
-Martial Training,Combat,"Bard, Collage of Valor",2,3,,"You gain proficiency with Martial weapons and training with Medium armor and Shields.
+Once you use this feature, you must finish a short or long rest before you can use it again. You can use Blood Maledict twice between rests starting at 6th level, three times starting at 13th level, and four times starting at 17th level.",
+Crimson Rite,Magic,Blood-Hunter,4,2,,"Also at 2nd level, you learn to invoke a rite of hemocraft that infuses your weapon strikes with elemental energy. using 1 AP, you can activate any rite you know on one weapon you’re holding. The effect of the rite lasts until you finish a short or long rest. When you activate a rite, you take necrotic damage equal to one roll of your hemocraft die. This damage can’t be reduced in any way.
 
-In addition, you can use a Simple or Martial weapon as a Spellcasting Focus to cast spells from your Bard spell list.",
-Battle Magic,Combat,"Bard, Collage of Valor",2,14,,"After you cast a spell that has a casting time of an action, you can make one attack with a weapon as a 1 AP.",1 AP
-Bonus Proficiency,Combat,"Bard, Collage of Sword",1,3,,"When you join the College of Swords at 3rd level, you gain proficiency with medium armor and the scimitar.
+While the rite is in effect, attacks you make with this weapon are magical, and deal extra damage equal to your hemocraft die of the type determined by the chosen rite. A weapon can hold only one active rite at a time. Other creatures can’t gain the benefit of your rite.
 
-If you're proficient with a simple or martial melee weapon, you can use it as a spellcasting focus for your bard spells.",
-Blade Flourish,Combat,"Bard, Collage of Sword",6,3,Badric Inspiration,"At 3rd level, you learn to perform impressive displays of martial prowess and speed.
+You choose one rite from the crimson rites below when you first gain this feature. You learn an additional crimson rite at 7th level, and again at 14th level.",1 AP
+Extra Attack,Combat,Blood-Hunter,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
+Brand of Castigation,Magic,Blood-Hunter,3,6,Crimson Rite,"At 6th level, when you damage a creature with a weapon for which you have an active crimson rite, you can channel hemocraft magic to sear an arcane brand into that creature (no action required). You always know the direction to the branded creature as long as it’s on the same plane as you. Further, each time the branded creature deals damage to you or a creature you can see within 5 feet of you, the branded creature takes psychic damage equal to your Hemocraft modifier (minimum of 1).
 
-Whenever you take the Attack action on your turn, your walking speed increases by 10 feet until the end of the turn, and if a weapon attack that you make as part of this action hits a creature, you can use one of the following Blade Flourish options of your choice. You can use only one Blade Flourish option per turn.
+Your brand lasts until you dismiss it or until you use this feature to apply a brand to another creature. Your brand can be dispelled with Dispel Magic, and is treated as a spell with a level equal to half your Blood-Hunter level (maximum 9th level).
 
-• Defensive Flourish. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit. The damage equals the number you roll on the Bardic Inspiration die. You also add the number rolled to your AC until the start of your next turn.
+Once you use this feature, you can’t use it again until you finish a short or long rest.",
+Grim Psychometry,Magic,Blood-Hunter,1,9,,"When you reach 9th level, you gain a supernatural talent for discerning the secrets surrounding mysterious relics or places touched by evil. Whenever you make an Intelligence (History) check to recall information about the sinister or tragic history of an object you are touching or your current location, you have advantage on the check. At the DM’s discretion, a suitably high roll might cause your character to experience brief visions of the past connected to the object or location.",
+Dark Augmentation,Magic,Blood-Hunter,6,10,,"Starting at 10th level, the magic of hemocraft suffuses your body to permanently reinforce your resilience. Your speed increases by 5 feet, and you have a bonus to Strength, Dexterity, and Constitution saving throws equal to your Hemocraft modifier (minimum of +1).",
+Brand of Tethering,Magic,Blood-Hunter,5,13,Brand of Castigation,"Starting at 13th level, the psychic damage from your Brand of Castigation increases to twice your Hemocraft modifier (minimum of 2). Additionally, a branded creature can’t take the Dash action, and if it attempts to teleport or to leave its current plane by any means, it takes 4d6 psychic damage and must make a Wisdom saving throw. On a failure, the attempt to teleport or leave the plane fails.",
+Hardened Soul,Magic,Blood-Hunter,2,14,,"When you reach 14th level, you have advantage on saving throws against being charmed and frightened.",
+Sanguine Mastery,Magic,Blood-Hunter,5,20,Crimson Rite,"Upon reaching 20th level, your mastery of blood magic reaches its height, mitigating your sacrifice and empowering your expertise. Once per turn, whenever a Blood-Hunter feature requires you to roll a hemocraft die, you can reroll the die and use either roll.
 
-• Mobile Flourish. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit. The damage equals the number you roll on the Bardic Inspiration die. You can also push the target up to 5 feet away from you, plus a number of feet equal to the number you roll on that die. You can then immediately use your reaction to move up to your walking speed to an unoccupied space within 5 feet of the target.
+Additionally, whenever you score a critical hit with a weapon for which you have an active crimson rite, you regain one expended use of your Blood Maledict feature.",
+Curse Specialist,Magic,"Blood-Hunter, Ghostslayer",3,3,Blood Maledict,"Starting at 3rd level, you learn to master blood curses. You gain an additional use of your Blood Maledict feature. In addition, your blood curses can target any creature, whether it has blood or not.",
+Rite of the Dawn,Magic,"Blood-Hunter, Ghostslayer",4,3,Crimson Rite,"When you join this order at 3rd level, you learn the Rite of the Dawn as part of your Crimson Rite feature. When you activate the Rite of the Dawn, the extra damage dealt by your rite is radiant damage. Additionally, while that rite is active on your weapon, you gain the following benefits:
 
-• Slashing Flourish. You can expend one use of your Bardic Inspiration to cause the weapon to deal extra damage to the target you hit and to any other creature of your choice that you can see within 5 feet of you. The damage equals the number you roll on the Bardic Inspiration die.",
-Master's Flourish,Combat,"Bard, Collage of Sword",4,6,Blade Flourish,"Starting at 14th level, whenever you use a Blade Flourish option, you can roll a d6 and use it instead of expending a Bardic Inspiration die.",
+•Your weapon sheds bright light out to a radius of 20 feet.
+•You have resistance to necrotic damage.
+•When you hit an undead creature with a weapon for which the Rite of the Dawn is active, you roll an additional hemocraft die when determining the extra damage from the rite.",
+Aether Walk,Magic,"Blood-Hunter, Ghostslayer",3,7,,"Upon reaching 7th level, at the start of your turn, you can magically step into the veil between the planes as long as you aren’t incapacitated. You can move through other creatures and objects as if they were difficult terrain, as well as see and affect creatures and objects on the Ethereal Plane. You take 1d10 force damage if you end your turn inside an object.
+
+This feature lasts for a number of rounds equal to your Hemocraft modifier (minimum of 1 round). If you are inside an object when it ends, you are immediately shunted to the nearest unoccupied space and you take force damage equal to twice the number of feet you moved.
+
+Once you use this feature, you must finish a short or long rest before you can use it again. You can use Aether Walk twice between rests starting at 15th level.",
+Brand of Sundering,Magic,"Blood-Hunter, Ghostslayer",4,11,Crimson Rite,"Starting at 11th level, your Brand of Castigation exposes a fragment of your foe’s essence, leaving them vulnerable to your Crimson Rite feature. Whenever you hit a creature with a weapon for which you have an active crimson rite, you roll an additional hemocraft die when determining the extra damage from the rite. Additionally, if a branded creature has the Incorporeal Movement trait or a similar feature, it can’t move through creatures or objects while branded.",
+Blood Curse of the Exorcist,Magic,"Blood-Hunter, Ghostslayer",2,15,Blood Maledict,"At 15th level, you hone your hemocraft to tear corruption from the minds and bodies of your allies — and to punish those responsible for it. You gain the Blood Curse of the Exorcist for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
+Rite Revival,Magic,"Blood-Hunter, Ghostslayer",3,18,,"Upon reaching 18th level, you learn to protect your fading life by reabsorbing the energy you feed to your weapons. If you have one or more crimson rites active and you are reduced to 0 hit points but don’t die outright, you can choose to have all your active crimson rites end and drop to 1 hit point instead.",
+Heightened Senses,Magic,"Blood-Hunter, Lycan",3,3,,"When you choose this archetype at 3rd level, you gain the improved senses of a natural predator. You have advantage on Wisdom (Perception) checks that rely on hearing or smell.",
+Hybrid Transformation,Magic,"Blood-Hunter, Lycan",6,3,,"Also at 3rd level, you learn to control the lycanthropic curse that courses through your veins. using 1 AP, you transform into a special hybrid form for up to 1 hour. You can speak, use equipment, and wear armor while in this form, and can revert to your normal form using 1 AP. You automatically revert to your normal form if you fall unconscious or die.
+
+This feature replaces the rules for lycanthropy in the Monster Manual. Once you use this feature, you must finish a short or long rest before you can use it again. While you are transformed, you gain the following features:
+
+•***Feral Might***. You have advantage on Strength checks and Strength saving throws, and you have a +1 bonus to melee damage rolls. This bonus increases to +2 at 11th level and to +3 at 18th level.
+•***Resilient Hide***. You have resistance to bludgeoning, piercing, and slashing damage from nonmagical attacks not made with silvered weapons. Additionally, while you are not wearing heavy armor, you have a +1 bonus to AC.
+•***Predatory Strikes***. You can apply your Crimson Rite feature to your unarmed strikes, which you treat as one weapon. You can use Dexterity instead of Strength for the attack and damage rolls of your unarmed strikes, which deal 1d6 bludgeoning or slashing damage (your choice). This damage increases to 1d8 at 11th level.
+Additionally, when you use the Attack action to make an unarmed strike, you can make one additional unarmed strike using 1 AP.
+•***Bloodlust***. If you start your turn with fewer hit points than half your hit point maximum, you must succeed on a DC 8 Wisdom saving throw or move directly toward the nearest creature and use the Attack action against that creature. If you’re concentrating on a spell or are under an effect that prevents you from concentrating (such as the barbarian’s Rage feature), you automatically fail this saving throw.
+If you have your Extra Attack feature, you can choose whether to use it for this frenzied attack. If more than one creature is equally near to you, roll randomly to determine your target. Once your attack is resolved, you regain control of yourself.",1 AP
+Stalker's Prowess,Magic,"Blood-Hunter, Lycan",5,7,Hybrid Transformation,"At 7th level, your speed increases by 10 feet, and you add 10 feet to your long jump distance and 3 feet to your high jump distance. Your hybrid form also gains the following additional benefit.
+
+***Improved Predatory Strikes***. You have a +1 bonus to attack rolls made with your unarmed strike. This bonus increases to +2 at 11th level and to +3 at 18th level. Additionally, when you have an active crimson rite on your unarmed strike while in your hybrid form, your unarmed strikes are considered magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage.",
+Advanced Transformation,Magic,"Blood-Hunter, Lycan",3,11,Hybrid Transformation,"At 11th level, you learn to unleash and control more of the beast within. You can use your Hybrid Transformation feature twice, regaining all expended uses when you finish a short or long rest. Your hybrid form also gains the following additional benefit.
+
+***Lycan Regeneration***. At the start of each of your turns when you have at least 1 hit point but fewer hit points than half your hit point maximum, you gain hit points equal to 1 + your Constitution modifier (minimum of 1). If you are in hybrid form, you gain these hit points before you must make the saving throw for your bloodlust.",
+Brand of the Voracious,Magic,"Blood-Hunter, Lycan",4,15,Hybrid Transformation; Brand of Castigation,"Starting at 15th level, you have advantage on the saving throw for your bloodlust while in hybrid form. Additionally, your Brand of Castigation can now bind a foe to your hunter’s ferocity. While in your hybrid form, you have advantage on attack rolls against a creature branded by you.",
+Hybrid Transformation Mastery,Magic,"Blood-Hunter, Lycan",4,18,Hybrid Transformation,"At 18th level, you have mastered your inner predator. You can use your Hybrid Transformation feature an unlimited number of times, and your hybrid form lasts until you revert to your normal form, fall unconscious, or die.
+
+You also gain the Blood Curse of the Howl for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
+Formulas,Magic,"Blood-Hunter, Mutant",1,3,Mutagencraft,"The number of mutagens you can concoct when you finish a rest, and the number of formulas you know, increases as you gain levels in the Blood-Hunter class, as shown on the Mutagencraft table above. Additionally, when you learn a new mutagen formula, you can replace one formula you already know with a new mutagen formula. You choose four mutagen formulas to learn, and you can concoct one mutagen when you finish a short or long rest.",
+Mutagencraft,Magic,"Blood-Hunter, Mutant",4,3,,"When you choose this archetype at 3rd level, you learn to master forbidden alchemical formulas—known as mutagens—that can temporarily alter your mental and physical abilities.
+
+using 1 AP, you consume a mutagen, whose effects and side effects last until you finish a short or long rest unless otherwise specified. While one or more mutagens are affecting you, you can use an action to focus and flush all mutagens from your system, ending their effects and side effects.
+
+Mutagens are designed for the specific biology of the character who concocted them, and your mutagens have no effect on other creatures. They are also unstable by nature, losing their potency over time and becoming inert if not used before you finish your next short or long rest.","2 AP, 1 AP"
+Strange Metabolism,Magic,"Blood-Hunter, Mutant",3,7,Mutagencraft,"When you reach 7th level, your body begins to adapt to toxins and venoms, ignoring their corrupting effects. You gain immunity to poison damage and the poisoned condition.
+
+Additionally, you can trigger a burst of adrenaline that lets you temporarily resist the negative effects of a mutagen. using 1 AP, you can ignore the negative side effect of one mutagen affecting you for 1 minute. Once you do so, you can’t do so again until you finish a long rest.",1 AP
+Brand of Axiom,Magic,"Blood-Hunter, Mutant",3,11,Brand of Castigation,"At 11th level, your mutagenic hemocraft lets your Brand of Castigation reveal a foe’s true nature. Any illusion or invisibility in effect on a creature when you brand it ends, and the creature can’t benefit from invisibility or illusion effects while branded by you. If a creature branded by you is in an alternative form (by way of the Polymorph spell, the Change Shape action or Shapechanger trait, the Wild Shape feature, and similar effects), it must succeed on a Wisdom saving throw or revert to its true form and be stunned until the end of your next turn. Whenever a branded creature attempts to alter its form, it must succeed on a Wisdom saving throw or have the attempt fail, and it is stunned until the end of your next turn.",
+Blood Curse of Corrosion,Magic,"Blood-Hunter, Mutant",3,15,Blood Maledict,"Starting at 15th level, your blood curse can infuse a creature’s body with terrible toxins. You gain the Blood Curse of Corrosion for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
+Exalted Mutation,Magic,"Blood-Hunter, Mutant",2,18,Mutagencraft,"At 18th level, your body has adapted to produce mutagens naturally in a moment of need. using 1 AP, choose one mutagen currently affecting you. Its effects and side effects end, and you can immediately have a mutagen you know the formula for take effect in its place.
+
+You can use this feature a number of times equal to your Hemocraft modifier (minimum of once). You regain all expended uses when you finish a long rest.",1 AP
 Divine Order,General,Cleric,2,1,,"You have dedicated yourself to one of the following sacred roles of your choice.
 
-Thaumaturge - You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1).",
+***Protector***. Trained for battle, you gain proficiency with Martial weapons and training with Heavy armor.
+
+***Thaumaturge***. You know one extra cantrip from the Cleric spell list. In addition, your mystical connection to the divine gives you a bonus to your Intelligence (Arcana or Religion) checks. The bonus equals your Wisdom modifier (minimum of +1).",
 Channel Divinity,Magic,Cleric,1,2,,"You can channel divine energy directly from the Outer Planes to fuel magical effects. You start with two such effects: Divine Spark and Turn Undead, each of which is described below. Each time you use this class's Channel Divinity, choose which Channel Divinity effect from this class to create. You gain additional effect options at higher Cleric levels.
 
 You can use this class's Channel Divinity twice. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain additional uses when you reach certain Cleric levels, as shown in the Channel Divinity column of the Cleric Features table.
 
 If a Channel Divinity effect requires a saving throw, the DC equals the spell save DC from this class's Spellcasting feature.
 
-• Divine Spark. As a Magic action, you point your Holy Symbol at another creature you can see within 30 feet of yourself and focus divine energy at it. Roll 1d8 and add your Wisdom modifier. You either restore Hit Points to the creature equal to that total or force the creature to make a Constitution saving throw. On a failed save, the creature takes Necrotic or Radiant damage (your choice) equal to that total. On a successful save, the creature takes half as much damage (round down).
+• ***Divine Spark***. As a Magic action, you point your Holy Symbol at another creature you can see within 30 feet of yourself and focus divine energy at it. Roll 1d8 and add your Wisdom modifier. You either restore Hit Points to the creature equal to that total or force the creature to make a Constitution saving throw. On a failed save, the creature takes Necrotic or Radiant damage (your choice) equal to that total. On a successful save, the creature takes half as much damage (round down).
 You roll an additional d8 when you reach Cleric levels 7 (2d8), 13 (3d8), and 18 (4d8).
 
-• Turn Undead. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die.",2 AP
+• ***Turn Undead***. As a Magic action, you present your Holy Symbol and censure Undead creatures. Each Undead of your choice within 30 feet of you must make a Wisdom saving throw. If the creature fails its save, it has the Frightened and Incapacitated conditions for 1 minute. For that duration, it tries to move as far from you as it can on its turns. This effect ends early on the creature if it takes any damage, if you have the Incapacitated condition, or if you die.",2 AP
 Sear Undead,Magic,Cleric,2,2,Channel Divinity,"Whenever you use Turn Undead, you can roll a number of d8s equal to your Wisdom modifier (minimum of 1d8) and add the rolls together. Each Undead that fails its saving throw against that use of Turn Undead takes Radiant damage equal to the roll's total. This damage doesn't end the turn effect.",
 Blessed Strike,Magic,Cleric,2,7,,"Divine power infuses you in battle. You gain one of the following options of your choice (if you get either option from a Cleric subclass in an older book, use only the option you choose for this feature).
 
-• Divine Strike. Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice).
+• ***Divine Strike***. Once on each of your turns when you hit a creature with an attack roll using a weapon, you can cause the target to take an extra 1d8 Necrotic or Radiant damage (your choice).
 
-• Potent Spellcasting. Add your Wisdom modifier to the damage you deal with any Cleric cantrip.",
+• ***Potent Spellcasting***. Add your Wisdom modifier to the damage you deal with any Cleric cantrip.",
 Divine Intervention,Magic,Cleric,2,10,,"You can call on your deity or pantheon to intervene on your behalf. As a Magic action, choose any Cleric spell of level 5 or lower that doesn't require a Reaction to cast. As part of the same action, you cast that spell without expending a spell slot or needing Material components. You can't use this feature again until you finish a Long Rest.",2 AP
 Improved Blessed Strike,Magic,Cleric,2,14,Blessed Strike,"The option you chose for Blessed Strikes grows more powerful.
 
-• Divine Strike. The extra damage of your Divine Strike increases to 2d8.
+• ***Divine Strike***. The extra damage of your Divine Strike increases to 2d8.
 
-• Potent Spellcasting. When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier.",
+• ***Potent Spellcasting***. When you cast a Cleric cantrip and deal damage to a creature with it, you can give vitality to yourself or another creature within 60 feet of yourself, granting a number of Temporary Hit Points equal to twice your Wisdom modifier.",
 Greater Divine Intervention,Magic,Cleric,4,20,Divine Intervention,"You can call on even more powerful divine intervention. When you use your Divine Intervention feature, you can choose Wish when you select a spell. If you do so, you can't use Divine Intervention again until you finish 2d4 Long Rests.",
-"Domain Spell, Arcana",Magic,"Cleric, Arcana Domain",2,1,"Spellcasting, cleric","|1| detect magic, magic missile 
-|3| magic weapon, Nystul's magic aura 
-|5| dispel magic, magic circle 
+"Domain Spell, Arcana",Magic,"Cleric, Arcana Domain",3,3,,"|3|  detect magic, magic missile, magic weapon, Nystul's magic aura 
+|5| dispel magic, Counter Spell 
 |7| arcane eye, Leomund's secret chest 
-|9| planar binding, teleportation circle",
-Arcana Initiate,Magic,"Cleric, Arcana Domain",3,1,,"When you choose this domain at 1st level, you gain proficiency in the Arcana skill, and you gain two cantrips of your choice from the wizard spell list. For you, these cantrips count as cleric cantrips.",
-Channel Divinity: Arcane Abjuration,Magic,"Cleric, Arcana Domain",3,2,Channel Divinity,"Starting at 2nd level, you can use your Channel Divinity to abjure otherworldly creatures.
+|9| Bigby's Hand, Teleportation Circle",
+Student of Arcana,Magic,"Cleric, Arcana Domain",2,3,,"You gain the following benefits.
 
-using 2 AP, you present your holy symbol, and one celestial, elemental, fey, or fiend of your choice that is within 30 feet of you must make a Wisdom saving throw, provided that the creature can see or hear you. If the creature fails its saving throw, it is turned for 1 minute or until it takes any damage.
+• **Magical Knowledge.** You gain proficiency in the Arcana skill or one skill of your choice from the skills available to Clerics at level 1.
 
-A turned creature must spend its turns trying to move as far away from you as it can, and it can't willingly end its move in a space within 30 feet of you. It also can't take reactions. For its action, it can only use the Dash action or try to escape from an effect that prevents it from moving. If there's nowhere to move, the creature can use the Dodge action.
+• **Cantrips.** You learn two Wizard cantrips of your choice. Whenever you gain a Cleric level, you can replace one of these cantrips with another Wizard cantrip.",
+Channel Divinity: Modify Magic,Magic,"Cleric, Arcana Domain",5,3,Channel Divinity,"You can use your Channel Divinity to alter your spells as you cast them. When you cast a spell, you can expend one use of your Channel Divinity and change the spell in one of the following ways (no action required).
 
-After you reach 5th level, when a creature fails its saving throw against your Arcane Abjuration feature, the creature is banished for 1 minute (as in the Banishment spell, no concentration required) if it isn't on its plane of origin and its challenge rating is at or below a certain threshold, as shown on the Arcane Banishment table.",2 AP
-Spell Breaker,Magic,"Cleric, Arcana Domain",4,6,,"Starting at 6th level, when you restore hit points to an ally with a spell of 1st level or higher, you can also end one spell of your choice on that creature. The level of the spell you end must be equal to or lower than the level of the spell slot you use to cast the healing spell.",
-Arcana Mastery,Magic,"Cleric, Arcana Domain",5,17,,"At 17th level, you choose four spells from the wizard spell list, one from each of the following levels: 6th, 7th, 8th, and 9th. You add them to your list of domain spells. Like your other domain spells, they are always prepared and count as cleric spells for you.",
-"Domain Spell, Death",Magic,"Cleric, Death Domain",4,3,"Spellcasting, cleric","|1| false life, ray of sickness 
+• **Fortifying Spell.** One target of the spell gains a number of Temporary Hit Points equal to 2d8 plus your Cleric level.
+
+• **Tenacious Spell.** When you cast a spell that forces a creature to make a saving throw, and a creature you can see succeeds on that saving throw, roll 1d6 and subtract the number rolled from the target's first saving throw against the spell's effect.",2 AP
+Dispelling Recovery,Magic,"Cleric, Arcana Domain",5,6,Channel Divinity,"Immediately after you cast a spell with a spell slot that restores Hit Points to a creature or ends a condition on a creature, you can cast Dispel Magic as part of that action, and without expending a spell slot.
+
+Once you use this feature, you can't use it again until you finish a Short or Long Rest. You also restore your use of it by expending one use of Channel Divinity (no action required).",
+Magical Mastery,Magic,"Cleric, Arcana Domain",2,17,,"You learn four Wizard spells, one from each of levels 6, 7, 8, and 9. You thereafter always have those spells prepared. Whenever you gain a Cleric level, you can replace one of these spells with another Wizard spell of the same level.",
+"Bonus Proficiency, Death Domain",General,"Cleric, Death Domain",1,1,,,
+Reaper,Magic,"Cleric, Death Domain",3,1,,"At 1st level, you learn one necromancy cantrip of your choice from any spell list. When you cast a necromancy cantrip that normally targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other.",
+Channel Divinity: Touch of Death,Magic,"Cleric, Death Domain",4,2,Channel Divinity,"Starting at 2nd level, you can use Channel Divinity to destroy another creature's life force by touch. When you hit a creature with a melee attack, you can use Channel Divinity to deal extra necrotic damage to the target. The damage equals 5 + twice your cleric level.",
+"Domain Spell, Death",Magic,"Cleric, Death Domain",4,3,,"|1| false life, ray of sickness 
 |3| blindness/deafness, ray of enfeeblement 
 |5| animate dead, vampiric touch 
 |7| blight, death ward 
-|9| antilife shell, cloudkill",
-"Bonus Proficiency, Death Domain",General,"Cleric, Death Domain",1,1,,,
-Reaper,Magic,"Cleric, Death Domain",3,1,"Spellcasting, cleric","At 1st level, you learn one necromancy cantrip of your choice from any spell list. When you cast a necromancy cantrip that normally targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other.",
-Channel Divinity: Touch of Death,Magic,"Cleric, Death Domain",4,2,Channel Divinity,"Starting at 2nd level, you can use Channel Divinity to destroy another creature's life force by touch. When you hit a creature with a melee attack, you can use Channel Divinity to deal extra necrotic damage to the target. The damage equals 5 + twice your cleric level.",
+|9°| antilife shell, cloudkill",
 Inescapable Destruction,Magic,"Cleric, Death Domain",2,6,Channel Divinity: Touch of Death,"Starting at 6th level, your ability to channel negative energy becomes more potent. Necrotic damage dealt by your cleric spells and Channel Divinity options ignores resistance to necrotic damage.",
 Improved Reaper,Magic,"Cleric, Death Domain",3,17,Reaper,"Starting at 17th level, when you cast a necromancy spell of 1st through 5th level that targets only one creature, the spell can instead target two creatures within range and within 5 feet of each other. If the spell consumes its material components, you must provide them for each target.",
-"Domain Spell, Forge",Magic,"Cleric, Forge Domain",3,3,"Spellcasting, cleric","|1| identify, searing smite 
-|3| heat metal, magic weapon 
-|5| elemental weapon, protection from energy 
-|7| fabricate, wall of fire 
-|9| animate objects, creation",
 "Bonus Proficiency, Forge Domain",General,"Cleric, Forge Domain",2,1,,"When you choose this domain at 1st level, you gain proficiency with heavy armor and smith's tools.",
 Blessing of the forge,Magic,"Cleric, Forge Domain",2,1,,"At 1st level, you gain the ability to imbue magic into a weapon or armor. At the end of a long rest, you can touch one nonmagical object that is a suit of armor or a simple or martial weapon. Until the end of your next long rest or until you die, the object becomes a magic item, granting a +1 bonus to AC if it's armor or a +1 bonus to attack and damage rolls if it's a weapon.
 
@@ -525,6 +681,11 @@ Channel Divinity: Artisan's Blessing,Magic,"Cleric, Forge Domain",2,2,Channel Di
 You conduct an hour-long ritual that crafts a nonmagical item that must include some metal: a simple or martial weapon, a suit of armor, ten pieces of ammunition, a set of tools, or another metal object. The creation is completed at the end of the hour, coalescing in an unoccupied space of your choice on a surface within 5 feet of you.
 The thing you create can be something that is worth no more than 100 gp. As part of this ritual, you must lay out metal, which can include coins, with a value equal to the creation. The metal irretrievably coalesces and transforms into the creation at the ritual's end, magically forming even nonmetal parts of the creation.
 The ritual can create a duplicate of a nonmagical item that contains metal, such as a key, if you possess the original during the ritual.",
+"Domain Spell, Forge",Magic,"Cleric, Forge Domain",3,3,,"|1| identify, searing smite 
+|3| heat metal, magic weapon 
+|5| elemental weapon, protection from energy 
+|7| fabricate, wall of fire 
+|9°| animate objects, creation",
 Soul of the Forge,Magic,"Cleric, Forge Domain",4,6,,"Starting at 6th level, your mastery of the forge grants you special abilities:
 You gain resistance to fire damage.
 While wearing heavy armor, you gain a +1 bonus to AC.",
@@ -532,55 +693,58 @@ Saint of Forge and Fire,Magic,"Cleric, Forge Domain",7,17,Soul of the Forge,"At 
 
 You gain immunity to fire damage.
 While wearing heavy armor, you have resistance to bludgeoning, piercing, and slashing damage.",
-"Domain Spell, Grave",Magic,"Cleric, Grave Domain",3,3,"Spellcasting, cleric","|3| Bane, Chill Touch, Detect Evil and Good, Gentle Repose, Ray of Enfeeblement 
-|5| Revivify, Vampiric Touch 
-|7| Blight, Dispel Evil and Good 
-|9| Hold Monster, Raise Dead",
-Circle of Mortality,Magic,"Cleric, Grave Domain",1,1,"Spellcasting, cleric","At 1st level, you gain the ability to manipulate the line between life and death. When you would normally roll one or more dice to restore hit points with a spell to a creature at 0 hit points, you instead use the highest number possible for each die.
-
-In addition, you learn the Spare the Dying cantrip, which doesn't count against the number of cleric cantrips you know. For you, it has a range of 30 feet, and you can cast it using 1 AP.",1 AP
-Eyes of the Grave,Magic,"Cleric, Grave Domain",2,1,,"At 1st level, you gain the ability to occasionally sense the presence of the undead, whose existence is an insult to the natural cycle of life. using 2 AP, you can open your awareness to magically detect undead. Until the end of your next turn, you know the location of any undead within 60 feet of you that isn't behind total cover and that isn't protected from divination magic. This sense doesn't tell you anything about a creature's capabilities or identity.
+Eyes of the Grave,Magic,"Cleric, Grave Domain",2,3,,"At 1st level, you gain the ability to occasionally sense the presence of the undead, whose existence is an insult to the natural cycle of life. using 2 AP, you can open your awareness to magically detect undead. Until the end of your next turn, you know the location of any undead within 60 feet of you that isn't behind total cover and that isn't protected from divination magic. This sense doesn't tell you anything about a creature's capabilities or identity.
 
 You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a long rest.",2 AP
-Channel Divinity: Path to the Grave,Magic,"Cleric, Grave Domain",4,2,Channel Divinity,"Starting at 2nd level, you can use your Channel Divinity to mark another creature’s life force for termination.
+"Domain Spell, Grave",Magic,"Cleric, Grave Domain",3,3,,"|3| Detect Evil and Good, False Life, Gentle Repose, Ray of Enfeeblement, Spare the Dying
+|5| Revivify, Vampiric Touch 
+|7| Blight, Death Ward
+|9°| Dispel Evil and Good, Raise Dead",
+Circle of Mortality,Magic,"Cleric, Grave Domain",3,3,,"You can manipulate the balance between life and death, granting you the following benefits.
 
-using 2 AP, you choose one creature you can see within 30 feet of you, cursing it until the end of your next turn. The next time you or an ally of yours hits the cursed creature with an attack, the creature has vulnerability to all of that attack's damage, and then the curse ends.",2 AP
-Sentinel at Death's Door,Magic,"Cleric, Grave Domain",2,6,,"At 6th level, you gain the ability to impede death’s progress. As a reaction when you or an ally that you can see within 30 feet of you suffers a critical hit, you can turn that attack into a normal hit. Any effects triggered by a critical hit are canceled.
+• ***Pull of Death***. Once per turn, when you deal damage to a creature that's missing any Hit Points by casting a spell or by hitting with an attack roll, that creature takes an extra 1d4 Necrotic damage. This extra damage increases to 1d6 when you reach Cleric level 11.
 
-You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a long rest.",Reaction
-Keeper of Souls,Magic,"Cleric, Grave Domain",2,17,,"At 17th level, you can seize a trace of vitality from a parting soul and use it to heal the living. When an enemy you can see dies within 30 feet of you, you or one ally of your choice that is within 30 feet of you regains hit points equal to the enemy’s number of Hit Dice. You can use this feature only if you aren't incapacitated. Once you use it, you can't do so again until the start of your next turn.",
-"Domain Spell, knowledge",Magic,"Cleric, Knowledge Domain",3,3,"Spellcasting, cleric","|3| Command, Comprehend Languages*, Detect Magic*, Detect Thoughts*, Identify*, Mind Spike* 
+• ***Return to Life***. You can cast Spare the Dying 1 Action Point.
+Additionally, when you would normally roll one or more dice to restore Hit Points to a creature at 0 Hit Points with a spell or Channel Divinity, don't roll those dice for the healing; instead, use the highest number possible for each die. For example, instead of restoring 2d4 Hit Points to a creature at 0 Hit Points with a spell, you restore 8.",1 AP
+Channel Divinity: Path to the Grave,Magic,"Cleric, Grave Domain",4,3,Channel Divinity,"As 1 AP, you present your Holy Symbol and expend a use of Channel Divinity to curse one creature you can see within 30 feet of yourself until the start of your next turn. While cursed, the creature has Disadvantage on attack rolls and saving throws.
+
+When you or an ally you can see hits the cursed target with an attack roll, you can end the curse early (no action required) to make the attack deal extra Necrotic or Radiant damage (your choice) equal to your Cleric level.",1 AP
+Sentinel at Death's Door,Magic,"Cleric, Grave Domain",3,6,,"When you or a Bloodied creature you can see within 60 feet of yourself is hit with an attack roll, you can take a Reaction to halve that attack's damage (round down). If the triggering attack roll was a Critical Hit, any effects triggered by a Critical Hit are canceled.
+
+You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest.",Reaction
+Divine Reaper,Magic,"Cleric, Grave Domain",4,17,Channel Divinity,"Your deep connection to this domain renders you a hallowed harbinger of death, granting you the following benefits.
+
+• ***Enhanced Necromancy***. When you cast a spell of level 5 or lower from the Necromancy school that targets one creature, or when you cast a spell from the Grave Domain Spells table, you can expend a use of Channel Divinity to target a second creature within the spell's range. If the spell requires costly or consumed Material components, you must provide Material components for each target.
+
+• ***Keeper of Souls***. When an enemy dies within 60 feet of you, you or one creature you can see within 60 feet of yourself regains Hit Points equal to twice your Cleric level. You can't use this feature if you have the Incapacitated condition. Once you use this feature, you can't use it again until you finish a Short or Long Rest, unless you expend a level 6+ spell slot (no action required) to restore your use of it.",
+Channel Divinity: Mind Magic,Magic,"Cleric, Knowledge Domain",2,3,Channel Divinity,"As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components.",2 AP
+"Domain Spell, knowledge",Magic,"Cleric, Knowledge Domain",3,3,,"|3| Command, Comprehend Languages*, Detect Magic*, Detect Thoughts*, Identify*, Mind Spike* 
 |5| Dispel Magic, Nondetection, Tongues* 
 |7| Arcane Eye*, Banishment, Confusion 
-|9| Legend Lore*, Scrying*, Synaptic Static",
+|9°| Legend Lore*, Scrying*, Synaptic Static",
 Blessings of Knowledge,Skill,"Cleric, Knowledge Domain",4,3,,"You gain proficiency with one type of Artisan's Tools of your choice and in two of the following skills of your choice: Arcana, History, Nature, or Religion. You have Expertise in those two skills.",
-Channel Divinity: Mind Magic,Magic,"Cleric, Knowledge Domain",2,3,Channel Divinity,"As a Magic action, you can expend one use of your Channel Divinity to manifest your magical knowledge. Choose one spell from the Divination school on the Knowledge Domain Spells table that you have prepared. As part of that action, you cast that spell without expending a spell slot or needing Material components.",2 AP
 Unfettered Mind,Magic,"Cleric, Knowledge Domain",4,6,,"You gain telepathy out to 60 feet. When you use this telepathy, you can simultaneously contact a number of creatures equal to your Wisdom modifier (minimum of one).
 
 Additionally, you gain proficiency in Intelligence saving throws. If you already have this proficiency, you instead gain saving throw proficiency with one ability in which you lack it.",2 AP
-Divine Foreknowledge,Magic,"Cleric, Knowledge Domain",10,17,,"As 1 AP, you magically expand your mind to the future. For 1 hour, you have Advantage on D20 Tests. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of this feature by expending a level 6+ spell slot (no action required).",1 AP
 Visions of the Past,Magic,"Cleric, Knowledge Domain",3,17,,"Starting at 17th level, you can call up visions of the past that relate to an object you hold or your immediate surroundings. You spend at least 1 minute in meditation and prayer, then receive dreamlike, shadowy glimpses of recent events. You can meditate in this way for a number of minutes equal to your Wisdom score and must maintain concentration during that time, as if you were casting a spell.
 
 Once you use this feature, you can't use it again until you finish a short or long rest.
 
-Object Reading. Holding an object as you meditate, you can see visions of the object's previous owner. After meditating for 1 minute, you learn how the owner acquired and lost the object, as well as the most recent significant event involving the object and that owner. If the object was owned by another creature in the recent past (within a number of days equal to your Wisdom score), you can spend 1 additional minute for each owner to learn the same information about that creature.
+***Object Reading***. Holding an object as you meditate, you can see visions of the object's previous owner. After meditating for 1 minute, you learn how the owner acquired and lost the object, as well as the most recent significant event involving the object and that owner. If the object was owned by another creature in the recent past (within a number of days equal to your Wisdom score), you can spend 1 additional minute for each owner to learn the same information about that creature.
 
-Area Reading. As you meditate, you see visions of recent events in your immediate vicinity (a room, street, tunnel, clearing, or the like, up to a 50-foot cube), going back a number of days equal to your Wisdom score. For each minute you meditate, you learn about one significant event, beginning with the most recent. Significant events typically involve powerful emotions, such as battles and betrayals, marriages and murders, births and funerals. However, they might also include more mundane events that are nevertheless important in your current situation.",1 minute
-"Domain Spell, Life",Magic,"Cleric, Life Domain",3,3,"Spellcasting, cleric","|3| Aid, Bless, Cure Wounds, Lesser Restoration
-|5| Mass Healing Word, Revivify
-|7| Aura of Life, Death Ward
-|9| Greater Restoration, Mass Cure Wounds",
+***Area Reading***. As you meditate, you see visions of recent events in your immediate vicinity (a room, street, tunnel, clearing, or the like, up to a 50-foot cube), going back a number of days equal to your Wisdom score. For each minute you meditate, you learn about one significant event, beginning with the most recent. Significant events typically involve powerful emotions, such as battles and betrayals, marriages and murders, births and funerals. However, they might also include more mundane events that are nevertheless important in your current situation.",1 minute
+Divine Foreknowledge,Magic,"Cleric, Knowledge Domain",10,17,,"As 1 AP, you magically expand your mind to the future. For 1 hour, you have Advantage on D20 Tests. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of this feature by expending a level 6+ spell slot (no action required).",1 AP
 "Bonus Proficiency, Life Domain",General,"Cleric, Life Domain",1,1,,,
 Disciple of Life,Magic,"Cleric, Life Domain",3,3,,"Also starting at 1st level, your healing spells are more effective. Whenever you use a spell of 1st level or higher to restore hit points to a creature, the creature regains additional hit points equal to 2 + the spell's level.",
+"Domain Spell, Life",Magic,"Cleric, Life Domain",3,3,,"|3| Aid, Bless, Cure Wounds, Lesser Restoration
+|5| Mass Healing Word, Revivify
+|7| Aura of Life, Death Ward
+|9°| Greater Restoration, Mass Cure Wounds",
 Channel Divinity: Preserve Life,Magic,"Cleric, Life Domain",3,3,Channel Divinity,"Starting at 2nd level, you can use your Channel Divinity to heal the badly injured.
 
 using 2 AP, you present your holy symbol and evoke healing energy that can restore a number of hit points equal to five times your cleric level. Choose any creatures within 30 feet of you, and divide those hit points among them. This feature can restore a creature to no more than half of its hit point maximum. You can't use this feature on an undead or a construct.",2 AP
 Blessed Healer,Magic,"Cleric, Life Domain",3,6,Disciple of Life,"Beginning at 6th level, the healing spells you cast on others heal you as well. When you cast a spell of 1st level or higher that restores hit points to a creature other than you, you regain hit points equal to 2 + the spell's level.",
-Supreme Healing,Magic,"Cleric, Life Domain",4,17,"Spellcasting, cleric","Starting at 17th level, when you would normally roll one or more dice to restore hit points with a spell, you instead use the highest number possible for each die. For example, instead of restoring 2d6 hit points to a creature, you restore 12.",
-"Domain Spell, Light",Magic,"Cleric, Light Domain",3,3,"Spellcasting, cleric","|3| Burning Hands, Faerie Fire, Scorching Ray, See Invisibility 
-|5| Daylight, Fireball 
-|7| Arcane Eye, Wall of Fire 
-|9| Flame Strike, Scrying",
+Supreme Healing,Magic,"Cleric, Life Domain",4,17,,"Starting at 17th level, when you would normally roll one or more dice to restore hit points with a spell, you instead use the highest number possible for each die. For example, instead of restoring 2d6 hit points to a creature, you restore 12.",
 "Bonus Cantrip, Light Domain",Magic,"Cleric, Light Domain",0,1,,"When you choose this domain at 1st level, you gain the Light cantrip if you don't already know it. This cantrip doesn’t count against the number of cleric cantrips you know.",
 Wardin Flare,Magic,"Cleric, Light Domain",2,1,,"Also at 1st level, you can interpose divine light between yourself and an attacking enemy. When you are attacked by a creature within 30 feet of you that you can see, you can use your reaction to impose disadvantage on the attack roll, causing light to flare before the attacker before it hits or misses. An attacker that can't be blinded is immune to this feature.
 
@@ -588,13 +752,12 @@ You can use this feature a number of times equal to your Wisdom modifier (a mini
 Channel Divinity: Radiance of the Dawn,Magic,"Cleric, Light Domain",2,2,,"Starting at 2nd level, you can use your Channel Divinity to harness sunlight, banishing darkness and dealing radiant damage to your foes.
 
 using 2 AP, you present your holy symbol, and any magical darkness within 30 feet of you is dispelled. Additionally, each hostile creature within 30 feet of you must make a Constitution saving throw. A creature takes radiant damage equal to 2d10 + your cleric level on a failed saving throw, and half as much damage on a successful one. A creature that has total cover from you is not affected.",
+"Domain Spell, Light",Magic,"Cleric, Light Domain",3,3,,"|3| Burning Hands, Faerie Fire, Scorching Ray, See Invisibility 
+|5| Daylight, Fireball 
+|7| Arcane Eye, Wall of Fire 
+|9°| Flame Strike, Scrying",
 Improved Flare,Magic,"Cleric, Light Domain",1,6,Wardinf Flare,"Starting at 6th level, you can also use your Warding Flare feature when a creature that you can see within 30 feet of you attacks a creature other than you.",
 Corona of Light,Magic,"Cleric, Light Domain",3,17,,"Starting at 17th level, you can use 1 AP to activate an aura of sunlight that lasts for 1 minute or until you dismiss it using another 1 AP. You emit bright light in a 60-foot radius and dim light 30 feet beyond that. Your enemies in the bright light have disadvantage on saving throws against any spell that deals fire or radiant damage.",1 AP
-"Domain Spell, Order",Magic,"Cleric, Order Domain",3,3,"Spellcasting, cleric","|1| command, heroism 
-|3| hold person, zone of truth 
-|5| mass healing word, slow 
-|7| compulsion, locate creature 
-|9| commune, dominate person",
 "Bonus Proficiency, Order Domain","Combat, Skill","Cleric, Order Domain",2,1,,"When you choose this domain at 1st level, you gain proficiency with heavy armor. You also gain proficiency in the Intimidation or Persuasion skill (your choice).",
 Voice of Autorithy,Magic,"Cleric, Order Domain",4,1,,"Starting at 1st level, you can invoke the power of law to embolden an ally to attack. If you cast a spell with a spell slot of 1st level or higher and target an ally with the spell, that ally can use their reaction immediately after the spell to make one weapon attack against a creature of your choice that you can see.
 
@@ -602,47 +765,47 @@ If the spell targets more than one ally, you choose the ally who can make the at
 Channel Divinity: Order's Demand,Magic,"Cleric, Order Domain",3,2,,"Starting at 2nd level, you can use your Channel Divinity to exert an intimidating presence over others.
 
 using 2 AP, you present your holy symbol, and each creature of your choice that can see or hear you within 30 feet of you must succeed on a Wisdom saving throw or be charmed by you until the end of your next turn or until the charmed creature takes any damage. You can also cause any of the charmed creatures to drop what they are holding when they fail the saving throw.",
+"Domain Spell, Order",Magic,"Cleric, Order Domain",3,3,,"|1| command, heroism 
+|3| hold person, zone of truth 
+|5| mass healing word, slow 
+|7| compulsion, locate creature 
+|9°| commune, dominate person",
 Embodiment of the Law,Magic,"Cleric, Order Domain",5,6,,"At 6th level, you become remarkably adept at channeling magical energy to compel others.
 
 If you cast a spell of the enchantment school using a spell slot of 1st level or higher, you can change the spell's casting time to 1 AP for this casting, provided the spell's casting time is normally 2 AP.
 
 You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses of it when you finish a long rest.",1 AP
 Order's Wrath,Magic,"Cleric, Order Domain",3,17,Blessed Strike,"Starting at 17th level, enemies you designate for destruction wilt under the combined efforts of you and your allies. If you deal your Divine Strike damage to a creature on your turn, you can curse that creature until the start of your next turn. The next time one of your allies hits the cursed creature with an attack, the target also takes 2d8 psychic damage, and the curse ends. You can curse a creature in this way only once per turn.",
-"Domain Spell, Tempest",Magic,"Cleric, Tempest Domain",2,3,"Spellcasting, cleric","|1| fog cloud, thunderwave 
+Wrath of the storm,Magic,"Cleric, Tempest Domain",3,1,,"Also at 1st level, you can thunderously rebuke attackers. When a creature within 5 feet of you that you can see hits you with an attack, you can use your reaction to cause the creature to make a Dexterity saving throw. The creature takes 2d8 lightning or thunder damage (your choice) on a failed saving throw, and half as much damage on a successful one.
+You can use this feature a number of times equal to your Wisdom modifier (a minimum of once). You regain all expended uses when you finish a long rest.",Reaction
+"Bonus Proficiency, Tempest",General,"Cleric, Tempest Domain",3,1,,"At 1st level, you gain proficiency with martial weapons and heavy armor.",
+Channel Divinity: Destructive Wrath,Magic,"Cleric, Tempest Domain",5,2,Channel Divinity,"Starting at 2nd level, you can use your Channel Divinity to wield the power of the storm with unchecked ferocity.
+When you roll lightning or thunder damage, you can use your Channel Divinity to deal maximum damage, instead of rolling.",
+"Domain Spell, Tempest",Magic,"Cleric, Tempest Domain",2,3,,"|1| fog cloud, thunderwave 
 |3| gust of wind, shatter 
 |5| call lightning, sleet storm 
 |7| control water, ice storm 
-|9| destructive wave, insect plague",
-"Bonus Proficiency, Tempest",General,"Cleric, Tempest Domain",3,1,,"At 1st level, you gain proficiency with martial weapons and heavy armor.",
-Wrath of the storm,Magic,"Cleric, Tempest Domain",3,1,,"Also at 1st level, you can thunderously rebuke attackers. When a creature within 5 feet of you that you can see hits you with an attack, you can use your reaction to cause the creature to make a Dexterity saving throw. The creature takes 2d8 lightning or thunder damage (your choice) on a failed saving throw, and half as much damage on a successful one.
-You can use this feature a number of times equal to your Wisdom modifier (a minimum of once). You regain all expended uses when you finish a long rest.",Reaction
-Channel Divinity: Destructive Wrath,Magic,"Cleric, Tempest Domain",5,2,Channel Divinity,"Starting at 2nd level, you can use your Channel Divinity to wield the power of the storm with unchecked ferocity.
-When you roll lightning or thunder damage, you can use your Channel Divinity to deal maximum damage, instead of rolling.",
+|9°| destructive wave, insect plague",
 Thunderous Strike,Magic,"Cleric, Tempest Domain",4,6,,"At 6th level, when you deal lightning damage to a Large or smaller creature, you can also push it up to 10 feet away from you.",
 Stormborn,Magic,"Cleric, Tempest Domain",3,17,,"At 17th level, you have a flying speed equal to your current walking speed whenever you are not underground or indoors.",
-"Domain Spell, Trickery",Magic,"Cleric, Trickery Domain",3,3,"Spellcasting, cleric","|3| Charm Person, Disguise Self, Invisibility, Pass without Trace 
-|5| Hypnotic Pattern, Nondetection 
-|7| Confusion, Dimension Door 
-|9| Dominate Person, Modify Memory",
 Blessing of the Tricker,Magic,"Cleric, Trickery Domain",2,3,,"As a Magic action, you can choose yourself or a willing creature within 30 feet of yourself to have Advantage on Dexterity (Stealth) checks. This blessing lasts until you finish a Long Rest or you use this feature again.",2 AP
 Invoke Dupliciity,Magic,"Cleric, Trickery Domain",2,3,Channel Divinity,"As 1 Action Point, you can expend one use of your Channel Divinity to create a perfect visual illusion of yourself in an unoccupied space you can see within 30 feet of yourself. The illusion is intangible and doesn't occupy its space. It lasts for 1 minute, but it ends early if you dismiss it (no action required) or have the Incapacitated condition. The illusion is animated and mimics your expressions and gestures. While it persists, you gain the following benefits.
 
-• Cast Spells. You can cast spells as though you were in the illusion's space, but you must use your own senses.
+• ***Cast Spells***. You can cast spells as though you were in the illusion's space, but you must use your own senses.
 
-• Distract. When both you and your illusion are within 5 feet of a creature that can see the illusion, you have Advantage on attack rolls against that creature, given how distracting the illusion is to the target.
+• ***Distract***. When both you and your illusion are within 5 feet of a creature that can see the illusion, you have Advantage on attack rolls against that creature, given how distracting the illusion is to the target.
 
-• Move. As 1 Action Point, you can move the illusion up to 30 feet to an unoccupied space you can see that is within 120 feet of yourself.",1 AP
+• ***Move***. As 1 Action Point, you can move the illusion up to 30 feet to an unoccupied space you can see that is within 120 feet of yourself.",1 AP
+"Domain Spell, Trickery",Magic,"Cleric, Trickery Domain",3,3,,"|3| Charm Person, Disguise Self, Invisibility, Pass without Trace 
+|5| Hypnotic Pattern, Nondetection 
+|7| Confusion, Dimension Door 
+|9°| Dominate Person, Modify Memory",
 Trickster's Transposition,Magic,"Cleric, Trickery Domain",2,6,Invoke Dupliciity,"Whenever you take 1 AP to create or move the illusion of your Invoke Duplicity, you can teleport, swapping places with the illusion.",1 AP
 Improved Duplicity,Magic,"Cleric, Trickery Domain",2,17,Invoke Dupliciity,"The illusion of your Invoke Duplicity has grown more powerful in the following ways.
 
-• Shared Distraction. When you and your allies make attack rolls against a creature within 5 feet of the illusion, the attack rolls have Advantage.
+• ***Shared Distraction***. When you and your allies make attack rolls against a creature within 5 feet of the illusion, the attack rolls have Advantage.
 
-• Healing Illusion. When the illusion ends, you or a creature of your choice within 5 feet of it regains a number of Hit Points equal to your Cleric level.",No AP
-"Domain Spell, Twilight",Magic,"Cleric, Twilight Domain",3,3,"Spellcasting, cleric","|1| faerie fire, sleep 
-|3| moonbeam, see invisibility 
-|5| aura of vitality, Leomund's tiny hut 
-|7| aura of life, greater invisibility 
-|9| circle of power, mislead",
+• ***Healing Illusion***. When the illusion ends, you or a creature of your choice within 5 feet of it regains a number of Hit Points equal to your Cleric level.",No AP
 Eye of the Night,Magic,"Cleric, Twilight Domain",3,1,,"Starting at 1st level, you can see through the deepest gloom. You have darkvision out to a range of 300 feet. In that radius, you can see in dim light as if it were bright light and in darkness as if it were dim light.
 
 using 2 AP, you can magically share the darkvision of this feature with willing creatures you can see within 10 feet of you, up to a number of creatures equal to your Wisdom modifier (minimum of one creature). The shared darkvision lasts for 1 hour. Once you share it, you can't do so again until you finish a long rest, unless you expend a spell slot of any level to share it again.",
@@ -653,15 +816,20 @@ using 2 AP, you present your holy symbol, and a sphere of twilight emanates from
 
 • You grant it temporary hit points equal to 1d6 plus your cleric level.
 • You end one effect on it causing it to be charmed or frightened.",2 AP
+"Domain Spell, Twilight",Magic,"Cleric, Twilight Domain",3,3,,"|1| faerie fire, sleep 
+|3| moonbeam, see invisibility 
+|5| aura of vitality, Leomund's tiny hut 
+|7| aura of life, greater invisibility 
+|9°| circle of power, mislead",
 Steps of Night,Magic,"Cleric, Twilight Domain",3,6,,"Starting at 6th level, you can draw on the mystical power of night to rise into the air. using 1 AP when you are in dim light or darkness, you can magically give yourself a flying speed equal to your walking speed for 1 minute. You can use this action a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",1 AP
 Twilight Shroud,Magic,"Cleric, Twilight Domain",2,17,Channel Divinity: Twilight Sanctuary,"At 17th level, the twilight that you summon offers a protective embrace: you and your allies have half cover while in the sphere created by your Twilight Sanctuary.",
-"Domain Spell, Cleric",Magic,"Cleric, War Domain",3,3,"Spellcasting, cleric","|3| Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon 
+"Bonus Proficiency, War",Combat,"Cleric, War Domain",2,1,,"At 1st level, you gain proficiency with martial weapons and heavy armor.",
+Channel Divinity: Guided Strike,Combat,"Cleric, War Domain",3,3,Channel Divinity,"When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so.",
+"Domain Spell, Cleric",Magic,"Cleric, War Domain",3,3,,"|3| Guiding Bolt, Magic Weapon, Shield of Faith, Spiritual Weapon 
 |5| Crusader's Mantle, Spirit Guardians 
 |7| Fire Shield, Freedom of Movement 
-|9| Hold Monster, Steel Wind Strike",
-"Bonus Proficiency, War",Combat,"Cleric, War Domain",2,1,,"At 1st level, you gain proficiency with martial weapons and heavy armor.",
-War Priest,Combat,"Cleric, War Domain",4,3,,"As 1 Action Point, you can make one attack with a weapon or an Unarmed Strike. You can use this Bonus Action a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest.",1 AP
-Channel Divinity: Guided Strike,Combat,"Cleric, War Domain",3,3,Channel Divinity,"When you or a creature within 30 feet of you misses with an attack roll, you can expend one use of your Channel Divinity and give that roll a +10 bonus, potentially causing it to hit. When you use this feature to benefit another creature's attack roll, you must take a Reaction to do so.",
+|9°| Hold Monster, Steel Wind Strike",
+War Priest,Combat,"Cleric, War Domain",4,3,,"As 1 Action Point, you can make one attack with a weapon or an Unarmed Strike. You can use this 1 Action Point (1 AP) a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest.",1 AP
 Channel Divinity: War God's Blessing,Combat,"Cleric, War Domain",3,8,,"At 6th level, when a creature within 30 feet of you makes an attack roll, you can use your reaction to grant that creature a +10 bonus to the roll, using your Channel Divinity. You make this choice after you see the roll, but before the DM says whether the attack hits or misses.",Reaction
 Avatar of Battle,Combat,"Cleric, War Domain",5,17,,"At 17th level, you gain resistance to bludgeoning, piercing, and slashing damage.",
 Druidic,General,Druid,0,1,,"You know Druidic, the secret language of Druids. While learning this ancient tongue, you also unlocked the magic of communicating with animals; you always have the Speak with Animals spell prepared.
@@ -669,38 +837,40 @@ Druidic,General,Druid,0,1,,"You know Druidic, the secret language of Druids. Whi
 You can use Druidic to leave hidden messages. You and others who know Druidic automatically spot such a message. Others spot the message's presence with a successful DC 15 Intelligence (Investigation) check but can't decipher it without magic.",
 Primal Order,General,Druid,2,1,,"You have dedicated yourself to one of the following sacred roles of your choice.
 
-Magician - You know one extra cantrip from the Druid spell list. In addition, your mystical connection to nature gives you a bonus to your Intelligence (Arcana or Nature) checks. The bonus equals your Wisdom modifier (minimum bonus of +1).",
+***Magician***. You know one extra cantrip from the Druid spell list. In addition, your mystical connection to nature gives you a bonus to your Intelligence (Arcana or Nature) checks. The bonus equals your Wisdom modifier (minimum bonus of +1).
+
+***Warden***. Trained for battle, you gain proficiency with Martial weapons and training with Medium armor.",
 Wild Companion,Magic,Druid,2,2,,"You can summon a nature spirit that assumes an animal form to aid you. As a Magic action, you can expend a spell slot or a use of Wild Shape to cast the Find Familiar spell without Material components.
 
 When you cast the spell in this way, the familiar is Fey and disappears when you finish a Long Rest.",
 Wild Shape,Magic,Druid,3,2,,"The power of nature allows you to assume the form of an animal. As 1 AP, you shape-shift into a Beast form that you have learned for this feature (see ""Known Forms"" below). You stay in that form for a number of hours equal to half your Druid level or until you use Wild Shape again, have the Incapacitated condition, or die. You can also leave the form early as a 1AP.
 
-Number of Uses. You can use Wild Shape twice. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.
+***Number of Uses***. You can use Wild Shape twice. You regain one expended use when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest.
 
 You gain additional uses when you reach certain Druid levels, as shown in the Wild Shape column of the Druid Features table.
 
-Known Forms. You know four Beast forms for this feature, chosen from among Beast stat blocks that have a maximum Challenge Rating of 1/4 and that lack a Fly Speed (see appendix B for stat block options). The Rat, Riding Horse, Spider, and Wolf are recommended. Whenever you finish a Long Rest, you can replace one of your known forms with another eligible form.",1 AP
+***Known Forms***. You know four Beast forms for this feature, chosen from among Beast stat blocks that have a maximum Challenge Rating of 1/4 and that lack a Fly Speed (see appendix B for stat block options). The Rat, Riding Horse, Spider, and Wolf are recommended. Whenever you finish a Long Rest, you can replace one of your known forms with another eligible form.",1 AP
 Wild Resurgence,Magic,Druid,2,5,Wild Shape,"Once on each of your turns, if you have no uses of Wild Shape left, you can give yourself one use by expending a spell slot (no action required).
 
 In addition, you can expend one use of Wild Shape (no action required) to give yourself a level 1 spell slot, but you can't do so again until you finish a Long Rest.",No AP
 Elemental Fury,Magic,Druid,2,7,,"The might of the elements flows through you. You gain one of the following options of your choice.
 
-•Potent Spellcasting. Add your Wisdom modifier to the damage you deal with any Druid cantrip.
+•***Potent Spellcasting***. Add your Wisdom modifier to the damage you deal with any Druid cantrip.
 
-•Primal Strike. Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit).",
+•***Primal Strike***. Once on each of your turns when you hit a creature with an attack roll using a weapon or a Beast form's attack in Wild Shape, you can cause the target to take an extra 1d8 Cold, Fire, Lightning, or Thunder damage (choose when you hit).",
 Improved Elemental Fury,Magic,Druid,2,15,Elemental Fury,"The option you chose for Elemental Fury grows more powerful, as detailed below.
 
-• Potent Spellcasting. When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet.
+• ***Potent Spellcasting***. When you cast a Druid cantrip with a range of 10 feet or greater, the spell's range increases by 300 feet.
 
-• Primal Strike. The extra damage of your Primal Strike increases to 2d8.",
+• ***Primal Strike***. The extra damage of your Primal Strike increases to 2d8.",
 Beast Spells,Magic,Druid,2,18,Wild Shape,"While using Wild Shape, you can cast spells in Beast form, except for any spell that has a Material component with a cost specified or that consumes its Material component.",
 Archdruid,Magic,Druid,3,20,Beast Spells,"The vitality of nature constantly blooms within you, granting you the following benefits.
 
-• Evergreen Wild Shape. Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.
+• ***Evergreen Wild Shape***. Whenever you roll Initiative and have no uses of Wild Shape left, you regain one expended use of it.
 
-• Nature Magician. You can convert uses of Wild Shape into a spell slot (no action required). Choose a number of your unexpended uses of Wild Shape and convert them into a single spell slot, with each use contributing 2 spell levels. For example, if you convert two uses of Wild Shape, you produce a level 4 spell slot. Once you use this benefit, you can't do so again until you finish a Long Rest.
+• ***Nature Magician***. You can convert uses of Wild Shape into a spell slot (no action required). Choose a number of your unexpended uses of Wild Shape and convert them into a single spell slot, with each use contributing 2 spell levels. For example, if you convert two uses of Wild Shape, you produce a level 4 spell slot. Once you use this benefit, you can't do so again until you finish a Long Rest.
 
-• Longevity. The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year.",
+• ***Longevity***. The primal magic that you wield causes you to age more slowly. For every ten years that pass, your body ages only one year.",
 Balm of the Summer Court,Magic,"Druid, Circle of Dreams",2,2,,"At 2nd level, you become imbued with the blessings of the Summer Court. You are a font of energy that offers respite from injuries. You have a pool of fey energy represented by a number of d6s equal to your druid level.
 
 using 1 AP, you can choose an ally you can see within 120 feet of you and spend a number of those dice equal to half your druid level or less. Roll the spent dice and add them together. The target regains a number of hit points equal to the total. The target also gains 1 temporary hit point per die spent.
@@ -721,25 +891,25 @@ When you finish a short rest, you can cast one of the following spells, without 
 This use of Teleportation Circle is special. Rather than opening a portal to a permanent teleportation circle, it opens a portal to the last location where you finished a long rest on your current plane of existence. If you haven't taken a long rest on your current plane, the spell fails but isn't wasted.
 
 Once you use this feature, you can't use it again until you finish a long rest.",
-Circle of Ice Spells,Magic,"Druid, Circle of Ice",3,3,,"I Druidi di questo circolo vedono la natura nel suo stato di quiete più potente: il freddo eterno dei ghiacciai e delle vette innevate. Essi incarnano la resistenza inamovibile del ghiaccio e la capacità di rallentare i nemici in un mondo gelido.
+Circle of Ice Spells,Magic,"Druid, Circle of Ice",3,3,,"I Druidi di questo circolo vedono la natura nel suo stato di quiete pi&ugrave; potente: il freddo eterno dei ghiacciai e delle vette innevate. Essi incarnano la resistenza inamovibile del ghiaccio e la capacit&agrave; di rallentare i nemici in un mondo gelido.
 |3| Ray of frost, Armor of Agathys, Ice Knife, Rime's Blinding Ice, Snilloc's Snowball Swarm
 |5| Spirit Shroud (only Cold), Elemental Weapon (only Cold)
 |7| Ice Storm, Fire Shield (only Cold)
-|9| Cone of Cold, Conjure Elemental (only Cold)",
-Glacial Grip,Magic,"Druid, Circle of Ice",3,3,,"La tua magia da Freddo è particolarmente efficace nel rallentare e bloccare i nemici.
-• Quando lanci un incantesimo che infligge danno da Freddo, puoi scegliere una creatura che ha subito il danno. Quella creatura deve superare un Tiro Salvezza su Costituzione contro la CD dei tuoi Incantesimi o la creatura sarà Restrained fino alla fine del suo prossimo turno.
+|9°| Cone of Cold, Conjure Elemental (only Cold)",
+Glacial Grip,Magic,"Druid, Circle of Ice",3,3,,"La tua magia da Freddo &egrave; particolarmente efficace nel rallentare e bloccare i nemici.
+• **Quando lanci un incantesimo che infligge danno da Freddo, puoi scegliere una creatura che ha subito il danno.** Quella creatura deve superare un Tiro Salvezza su Costituzione contro la CD dei tuoi Incantesimi o la creatura sar&agrave; Restrained fino alla fine del suo prossimo turno.
 • ottieni Resistenza al danno da Freddo.",
 Fire to Ice,Magic,"Druid, Circle of Ice",3,6,,"Quando lanci uno spell che fa danni da fuoco, puoi modificare questo spell per rendere il danno da ghiaccio",
 Absolute Zero,Magic,"Druid, Circle of Ice",4,10,Glacial Grip,"Quando usi il potere Glacial Grip e rendi un nemico Restrained, puoi decidere di renderlo Pietrificato. Il nemico ripete il Tiro Salvezza fino allla fine di ogni turno oppure se subisce danno.",
 Glacial Gift,Magic,"Druid, Circle of Ice",5,14,Wild Shape; Circle of Ice Spells,"Spendendo un uso di Wild Shape puoi entrare in una forma glaciale.
-• You are immune to cold damage and have resistance to fire damage.
-• You can move across difficult terrain created by ice or snow without spending extra movement.
-• Quando sei in questa forma e lanci o hai già attivo uno degli spell del Circle of Ice, non perdi la concentrazione dopo aver subito un danno",
+• **You are immune to cold damage and have resistance to fire damage.**
+• **You can move across difficult terrain created by ice or snow without spending extra movement.**
+• Quando sei in questa forma e lanci o hai gi&agrave; attivo uno degli spell del Circle of Ice, non perdi la concentrazione dopo aver subito un danno",
 "Bonus Cantrip, Druid",Magic,"Druid, Circle of Land",1,2,,"When you choose this circle at 2nd level, you learn one additional druid cantrip of your choice. This cantrip doesn’t count against the number of druid cantrips you know.",
 Natural Recovery,Magic,"Druid, Circle of Land",2,2,,"Starting at 2nd level, you can regain some of your magical energy by sitting in meditation and communing with nature. During a short rest, you choose expended spell slots to recover. The spell slots can have a combined level that is equal to or less than half your druid level (rounded up), and none of the slots can be 6th level or higher. You can't use this feature again until you finish a long rest.
 
 For example, when you are a 4th-level druid, you can recover up to two levels worth of spell slots. You can recover either a 2nd-level slot or two 1st-level slots.",
-"Circle Spells, Land",Magic,"Druid, Circle of Land",3,3,"Spellcasting, druid",Si può prendere più volte,
+"Circle Spells, Land",Magic,"Druid, Circle of Land",3,3,,Si pu&ograve; prendere pi&ugrave; volte,
 "Land's Stride, Druid",Magic,"Druid, Circle of Land",1,6,,"Starting at 6th level, moving through nonmagical difficult terrain costs you no extra movement. You can also pass through nonmagical plants without being slowed by them and without taking damage from them if they have thorns, spines, or a similar hazard.
 
 In addition, you have advantage on saving throws against plants that are magically created or manipulated to impede movement, such as those created by the Entangle spell.",
@@ -756,11 +926,11 @@ Starting at 6th level, you can transform into a beast with a challenge rating as
 Primal Strike,Magic,"Druid, Circle of Moon",1,6,Wild Shape,"Starting at 6th level, your attacks in beast form count as magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage.",
 Elemental Wild Shape,Magic,"Druid, Circle of Moon",2,10,Circle Forms,"At 10th level, you can expend two uses of Wild Shape at the same time to transform into an air elemental, an earth elemental, a fire elemental, or a water elemental.",
 Thousands Form,Magic,"Druid, Circle of Moon",2,14,,"By 14th level, you have learned to use magic to alter your physical form in more subtle ways. You can cast the Alter Self spell at will.",
-"Circle Spells, Spores",Magic,"Druid, Circle of Spores",2,2,"Spellcasting, druid","|3| blindness/deafness, gentle repose 
+Halo of Spores,Magic,"Druid, Circle of Spores",2,2,,"Starting at 2nd level, you are surrounded by invisible, necrotic spores that are harmless until you unleash them on a creature nearby. When a creature you can see moves into a space within 10 feet of you or starts its turn there, you can use your reaction to deal 1d4 necrotic damage to that creature unless it succeeds on a Constitution saving throw against your spell save DC. The necrotic damage increases to 1d6 at 6th level, 1d8 at 10th level, and 1d10 at 14th level.",Reaction
+"Circle Spells, Spores",Magic,"Druid, Circle of Spores",2,2,,"|3| blindness/deafness, gentle repose 
 |5| animate dead, gaseous form 
 |7| blight, confusion 
-|9| cloudkill, contagion",
-Halo of Spores,Magic,"Druid, Circle of Spores",2,2,,"Starting at 2nd level, you are surrounded by invisible, necrotic spores that are harmless until you unleash them on a creature nearby. When a creature you can see moves into a space within 10 feet of you or starts its turn there, you can use your reaction to deal 1d4 necrotic damage to that creature unless it succeeds on a Constitution saving throw against your spell save DC. The necrotic damage increases to 1d6 at 6th level, 1d8 at 10th level, and 1d10 at 14th level.",Reaction
+|9°| cloudkill, contagion",
 Symbiotic Entity,Magic,"Druid, Circle of Spores",3,2,Halo of spores,"Also at 2nd level, you gain the ability to channel magic into your spores. using 2 AP, you can expend a use of your Wild Shape feature to awaken those spores, rather than transforming into a beast form, and you gain 4 temporary hit points for each level you have in this class. While this feature is active, you gain the following benefits:
 
 • When you deal your Halo of Spores damage, roll the damage die a second time and add it to the total.
@@ -784,11 +954,11 @@ While in your starry form, you retain your game statistics, but your body become
 
 Whenever you assume your starry form, choose which of the following constellations glimmers on your body; your choice gives you certain benefits while in the form:
 
-Archer. A constellation of an archer appears on you. When you activate this form, and using 1 AP on your subsequent turns while it lasts, you can make a ranged spell attack, hurling a luminous arrow that targets one creature within 60 feet of you. On a hit, the attack deals radiant damage equal to 1d8 + your Wisdom modifier.
+***Archer***. A constellation of an archer appears on you. When you activate this form, and using 1 AP on your subsequent turns while it lasts, you can make a ranged spell attack, hurling a luminous arrow that targets one creature within 60 feet of you. On a hit, the attack deals radiant damage equal to 1d8 + your Wisdom modifier.
 
-Chalice. A constellation of a life-giving goblet appears on you. Whenever you cast a spell using a spell slot that restores hit points to a creature, you or another creature within 30 feet of you can regain hit points equal to 1d8 + your Wisdom modifier.
+***Chalice***. A constellation of a life-giving goblet appears on you. Whenever you cast a spell using a spell slot that restores hit points to a creature, you or another creature within 30 feet of you can regain hit points equal to 1d8 + your Wisdom modifier.
 
-Dragon. A constellation of a wise dragon appears on you. When you make an Intelligence or a Wisdom check or a Constitution saving throw to maintain concentration on a spell, you can treat a roll of 9 or lower on the d20 as a 10.",1 AP
+***Dragon***. A constellation of a wise dragon appears on you. When you make an Intelligence or a Wisdom check or a Constitution saving throw to maintain concentration on a spell, you can treat a roll of 9 or lower on the d20 as a 10.",1 AP
 Cosmic omen,Magic,"Druid, Circle of Star",4,6,,"When you reach 6th level, you learn to use your star map to divine the will of the cosmos. Whenever you finish a long rest, you can consult your Star Map for omens. When you do so, roll a die. Until you finish your next long rest, you gain access to a special reaction based on whether you rolled an even or an odd number on the die:
 
 Weal (even). Whenever a creature you can see within 30 feet of you is about to make an attack roll, a saving throw, or an ability check, you can use your reaction to roll a d6 and add the number rolled to the total.
@@ -811,11 +981,11 @@ The spirit persists for 1 minute. Once you use this feature, you can’t use it 
 
 The effect of the spirit’s aura depends on the type of spirit you summon from the options below.
 
-• Bear Spirit. The bear spirit grants you and your allies its might and endurance. Each creature of your choice in the aura when the spirit appears gains temporary hit points equal to 5 + your druid level. In addition, you and your allies gain advantage on Strength checks and Strength saving throws while in the aura.
+• ***Bear Spirit***. The bear spirit grants you and your allies its might and endurance. Each creature of your choice in the aura when the spirit appears gains temporary hit points equal to 5 + your druid level. In addition, you and your allies gain advantage on Strength checks and Strength saving throws while in the aura.
 
-• Hawk Spirit. The hawk spirit is a consummate hunter, aiding you and your allies with its keen sight. When a creature makes an attack roll against a target in the spirit’s aura, you can use your reaction to grant advantage to that attack roll. In addition, you and your allies have advantage on Wisdom (Perception) checks while in the aura.
+• ***Hawk Spirit***. The hawk spirit is a consummate hunter, aiding you and your allies with its keen sight. When a creature makes an attack roll against a target in the spirit’s aura, you can use your reaction to grant advantage to that attack roll. In addition, you and your allies have advantage on Wisdom (Perception) checks while in the aura.
 
-• Unicorn Spirit. The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit’s aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level.","1 AP, Reaction"
+• ***Unicorn Spirit***. The unicorn spirit lends its protection to those nearby. You and your allies gain advantage on all ability checks made to detect creatures in the spirit’s aura. In addition, if you cast a spell using a spell slot that restores hit points to any creature inside or outside the aura, each creature of your choice in the aura also regains hit points equal to your druid level.","1 AP, Reaction"
 Mighty Summoner,Magic,"Druid, Circle of the Shepherd",3,6,,"At 6th level, beasts and fey that you conjure are more resilient than normal. Any beast or fey summoned or created by a spell that you cast gains two benefits:
 
 • The creature appears with more hit points than normal: 2 extra hit points per Hit Die it has.
@@ -824,11 +994,11 @@ Guardian Spirit,Magic,"Druid, Circle of the Shepherd",2,10,Spirit Totem,"Beginni
 Faithful Summons,Magic,"Druid, Circle of the Shepherd",2,14,,"Starting at 14th level, the nature spirits you commune with protect you when you are the most defenseless. If you are reduced to 0 hit points or are incapacitated against your will, you can immediately gain the benefits of Conjure Animals as if it were cast with a 9th-level spell slot. It summons four beasts of your choice that are challenge rating 2 or lower. The conjured beasts appear within 20 feet of you. If they receive no commands from you, they protect you from harm and attack your foes. The spell lasts for 1 hour, requiring no concentration, or until you dismiss it (no action required).
 
 Once you use this feature, you can’t use it again until you finish a long rest.",
-"Circle Spells, Wildfire",Magic,"Druid, Circle of Wildfire",2,2,"Spellcasting, druid","|2| burning hands, cure wounds 
+"Circle Spells, Wildfire",Magic,"Druid, Circle of Wildfire",2,2,,"|2| burning hands, cure wounds 
 |3| flaming sphere, scorching ray 
 |5| plant growth, revivify 
 |7| aura of life, fire shield 
-|9| flame strike, mass cure wounds",
+|9°| flame strike, mass cure wounds",
 Summon Wild Spirit,Magic,"Druid, Circle of Wildfire",4,2,,"At 2nd level, You can summon the primal spirit bound to your soul. using 2 AP, you can expend one use of your Wild Shape feature to summon your wildfire spirit, rather than assuming a beast form.
 
 The spirit appears in an unoccupied space of your choice that you can see within 30 feet of you. Each creature within 10 feet of the spirit (other than you) when it appears must succeed on a Dexterity saving throw against your spell save DC or take 2d6 fire damage.
@@ -853,39 +1023,45 @@ Once you use this feature, you must finish a short or long rest before you can u
 Action Surge,Combat,Fighter,8,2,,"Starting at 2nd level, you can push yourself beyond your normal limits for a moment. On your turn, you can take one additional action.
 
 Once you use this feature, you must finish a short or long rest before you can use it again. Starting at 17th level, you can use it twice before a rest, but only once on the same turn.",
+Extra Attack,Combat,Fighter,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Indomitable,Defense,Fighter,3,9,,"Beginning at 9th level, you can reroll a saving throw that you fail. If you do so, you must use the new roll, and you can't use this feature again until you finish a long rest.
 
 You can use this feature twice between long rests starting at 13th level and three times between long rests starting at 17th level.",
-Arcane Archer Lore,General,"Fighter, Arcane Archer",2,3,,"At 3rd level, you learn magical theory or some of the secrets of nature – typical for practitioners of of this elven martial tradition. You choose to gain proficiency in either the Arcana or the Nature skill, and you choose to learn either the Prestidigitation or Druidcraft cantrip.",
-Arcane Shot,Magic,"Fighter, Arcane Archer",4,3,,"At 3rd level, you learn to unleash special magical effects with some of your shots. When you gain this feature, you learn two Arcane Shot options of your choice.
-Once per turn when you fire an arrow from a shortbow or longbow as part of the Attack action, you can apply one of your Arcane Shot options to that arrow. You decide to use the option when the arrow hits, unless the option doesn’t involve an attack roll. You have two uses of this ability, and you regain all expended uses of it when you finish a short or long rest.
+Extra Attack,Combat,Fighter,5,11,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
+Extra Attack,Combat,Fighter,5,20,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
+Arcane Archer Lore,General,"Fighter, Arcane Archer",2,3,,"You learn magical theory and secrets of nature, granting you the following benefits.
 
-You gain an additional Arcane Shot option of your choice when you reach certain levels in this class: 7th, 10th, 15th, and 18th level. Each option also improves when you become an 18th-level fighter.
+• **Cantrip.** You know either the Druidcraft or the Prestidigitation cantrip. Intelligence is your spellcasting ability for it.
+
+• **Skills.** You gain proficiency in the Arcana and Nature skills. If you already have one of these proficiencies, you instead gain proficiency in a different skill of your choice from the skills available to Fighters at level 1 (or in two skills available to Fighters at level 1 if you have both).",
+Arcane Shot,Magic,"Fighter, Arcane Archer",4,3,,"You learn to unleash special magical effects with your shots.
+
+You learn two Arcane Shot options of your choice. You learn an additional Arcane Shot option of your choice when you reach Fighter levels 7, 10, 15, and 18. Each time you learn a new Arcane Shot option, you can also replace one option you know with a different one.
+
+Using Arcane Shot. Once per turn when you make a ranged attack using a weapon with the Ammunition property, you can apply one of your Arcane Shot options to that attack. You decide to use the option when you hit a creature and deal damage to it unless the option doesn't involve an attack roll.
+
+You can use this feature a number of times equal to your Intelligence modifier (minimum of once). You regain all expended uses when you finish a Short or Long Rest.
+
+Arcane Shot Die. Arcane Shot options refer to your Arcane Shot Die. Your Arcane Shot Die is a d6.
+
+Saving Throws. If an Arcane Shot option requires a saving throw, the DC equals 8 plus your Intelligence modifier and Proficiency Bonus.
+
+At Higher Levels. Your Arcane Shot Die changes when you reach certain Fighter levels. The die becomes a d8 at level 10, a d10 at level 15, and a d12 at level 18.
 
 ",
-Magic Arrow,Magic,"Fighter, Arcane Archer",1,7,,"At 7th level, you gain the ability to infuse arrows with magic. Whenever you fire a nonmagical arrow from a shortbow or longbow, you can make it magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage. The magic fades from the arrow immediately after it hits or misses its target.",
-Curving Shot,Magic,"Fighter, Arcane Archer",3,7,,"At 7th level, you learn how to direct an errant arrow toward a new target. When you make an attack roll with a magic arrow and miss, you can use 1 AP to reroll the attack roll against a different target within 60 feet of the original target.",1 AP
-Even-ready Shot,Combat,"Fighter, Arcane Archer",5,15,,"Starting at 15th level, your magical archery is available whenever battle starts. If you roll initiative and have no uses of Arcane Shot remaining, you regain one use of it.",
-Combat Superiority,Combat,"Fighter, Battle Master",5,3,,"When you choose this archetype at 3rd level, you learn maneuvers that are fueled by special dice called superiority dice.
-- Maneuvers. You learn 3
-- Superiority Dice. You have 4 superiority dice, which are d8s. A superiority die is expended when you use it. You regain all of your expended superiority dice when you finish a short or long rest.
-- Maneuver save DC = 17
-Scegli 3 battle Maneuvers: 
-• Pushing Attack - When you hit a creature with a weapon attack, you can expend one superiority die to attempt to drive the target back. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you push the target up to 15 feet away from you.
-• Precision Attack - When you make a weapon attack roll against a creature, you can expend one superiority die to add it to the roll. You can use this maneuver before or after making the attack roll, but before any effects of the attack are applied.
-• Trip Attack - When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you knock the target prone.
-• Disarming Attack - When you hit a creature with a weapon attack, you can expend one superiority die to attempt to disarm the target, forcing it to drop one item of your choice that it's holding. You add the superiority die to the attack's damage roll, and the target must make a Strength saving throw. On a failed save, it drops the object you choose. The object lands at its feet.",Reaction
-Student of war,General,"Fighter, Battle Master",1,3,,"At 3rd level, you gain proficiency with one type of artisan's tools of your choice.",
-Know your Enemy,General,"Fighter, Battle Master",1,7,,"Starting at 7th level, if you spend at least 1 minute observing or interacting with another creature outside combat, you can learn certain information about its capabilities compared to your own. The DM tells you if the creature is your equal, superior, or inferior in regard to two of the following characteristics of your choice:
-• Strength score
-• Dexterity score
-• Constitution score
-• Armor Class
-• Current hit points
-• Total class levels, if any
-• Fighter class levels, if any",
-Improved Combat Superiority,Combat,"Fighter, Battle Master",3,10,Combat Superiority,"At 10th level, your superiority dice turn into d10s. At 18th level, they turn into d12s.",
-Relentless,Combat,"Fighter, Battle Master",3,15,,"Starting at 15th level, when you roll initiative and have no superiority dice remaining, you regain 1 superiority die.",
+Magic Arrow,Magic,"Fighter, Arcane Archer",2,7,,"You learn to imbue your ammunition with magical properties. As a Magic action, you can imbue a piece of nonmagical ammunition with one of the following magical properties and fire it at a solid surface you can see within the weapon's range. When the ammunition hits the surface, the ammunition's effect activates, and the ammunition attaches to the surface it hit for the duration of the effect; you can remove an attached piece of ammunition as a Magic action, ending the effect early. When the effect ends, the ammunition is destroyed.
+
+Once you use this feature, you can't do so again until you finish a Short or Long Rest. You can also restore your use of this feature by expending a use of your Second Wind (no action required).
+
+• **Darkening Ammunition.** Magical shadows fill a 15-foot Emanation originating from the ammunition for 1 minute. Nonmagical flames in the Emanation are extinguished, and creatures in the Emanation have a −5 penalty to Wisdom (Perception) checks and Passive Perception.
+
+• **Unlocking Ammunition.** A burst of magic fills a 15-foot Emanation originating from the ammunition. The ammunition also emits a loud knocking sound, audible up to 300 feet away. Any object in the Emanation that is held shut by a nonmagical lock or that is stuck or barred becomes unlocked, unstuck, or unbarred. If such an object has multiple locks, only one of them is unlocked.
+
+• **Vine Ammunition.** A 120-foot-long vine grows from the ammunition. You and other creatures can then climb it. The vine withers away after 10 minutes.",
+Curving Shot,Magic,"Fighter, Arcane Archer",3,7,,"You learn how to direct an errant shot toward a new target. If you make a ranged attack roll with a weapon with the Ammunition property and miss, you can cause the shot to ricochet toward a new target as a 1 Action Point immediately after the attack misses. The new target must be a creature you can see within the weapon's range and within 60 feet of the attack's original target. Make an attack roll against the new target.",1 AP
+Ever-Ready Shot,Combat,"Fighter, Arcane Archer",2,10,Arcane Shot,"When you roll Initiative, you can regain one expended use of Arcane Shot.",
+Indomitable Teleport,Combat,"Fighter, Arcane Archer",3,15,Indomitable,"Your magical mastery lets you escape dire situations. When you use your Indomitable feature and succeed on the saving throw, you can teleport up to 60 feet to an unoccupied space you can see.",
+Masterful Shots,Combat,"Fighter, Arcane Archer",6,18,,"You employ agility in your sharpshooting. When a creature you can see misses you with an attack roll, you can take a Reaction to move up to half your Speed away from the attacker without provoking Opportunity Attacks. You can then make a ranged attack roll against the attacker as part of this Reaction if the attacker is within the weapon's range.",Reaction
 Rallying Cry,Combat,"Fighter, Banneret",2,3,Second Wind,"When you choose this archetype at 3rd level, you learn how to inspire your allies to fight on past their injuries.
 
 When you use your Second Wind feature, you can choose up to three creatures within 60 feet of you that are allied with you. Each one regains hit points equal to your fighter level, provided that the creature can see or hear you.",
@@ -898,6 +1074,28 @@ Inspiring Surge,Combat,"Fighter, Banneret",4,10,Action Surge,"Starting at 10th l
 
 Starting at 18th level, you can choose two allies within 60 feet of you, rather than one.",
 Bulwark,Combat,"Fighter, Banneret",3,15,Indomitable,"Beginning at 15th level, you can extend the benefit of your Indomitable feature to an ally. When you decide to use Indomitable to reroll an Intelligence, a Wisdom, or a Charisma saving throw and you aren't incapacitated, you can choose one ally within 60 feet of you that also failed its saving throw against the same effect. If that creature can see or hear you, it can reroll its saving throw and must use the new roll.",
+Student of war,General,"Fighter, Battle Master",1,3,,"At 3rd level, you gain proficiency with one type of artisan's tools of your choice.",
+Combat Superiority,Combat,"Fighter, Battle Master",5,3,,"Your experience on the battlefield has refined your fighting techniques. You learn maneuvers that are fueled by special dice called Superiority Dice.
+
+***Maneuvers***. You learn three maneuvers of your choice from the ""Maneuvers Options"" section later in this subclass's description. Many maneuvers enhance an attack in some way. You can use only one maneuver per attack.
+
+You learn two additional maneuvers of your choice when you reach Fighter levels 7, 10, and 15. Each time you learn new maneuvers, you can also replace one maneuver you know with a different one.
+
+***Superiority Dice***. You have four Superiority Dice, which are d8s. A Superiority Die is expended when you use it. You regain all expended Superiority Dice when you finish a Short or Long Rest.
+
+You gain an additional Superiority Die when you reach Fighter levels 7 (five dice total) and 15 (six dice total).
+
+***Saving Throws***. If a maneuver requires a saving throw, the DC equals 8 plus your Strength or Dexterity modifier (your choice) and Proficiency Bonus.",Reaction
+Know your Enemy,General,"Fighter, Battle Master",1,7,,"Starting at 7th level, if you spend at least 1 minute observing or interacting with another creature outside combat, you can learn certain information about its capabilities compared to your own. The DM tells you if the creature is your equal, superior, or inferior in regard to two of the following characteristics of your choice:
+• Strength score
+• Dexterity score
+• Constitution score
+• Armor Class
+• Current hit points
+• Total class levels, if any
+• Fighter class levels, if any",
+Improved Combat Superiority,Combat,"Fighter, Battle Master",3,10,Combat Superiority,"At 10th level, your superiority dice turn into d10s. At 18th level, they turn into d12s.",
+Relentless,Combat,"Fighter, Battle Master",3,15,,"Starting at 15th level, when you roll initiative and have no superiority dice remaining, you regain 1 superiority die.",
 Improved Critical,Combat,"Fighter, Champion",5,3,,"Beginning when you choose this archetype at 3rd level, your weapon attacks score a critical hit on a roll of 19 or 20.",
 Remarkable Athlete,Combat,"Fighter, Champion",3,7,,"Starting at 7th level, you can add half your proficiency bonus (rounded up) to any Strength, Dexterity, or Constitution check you make that doesn't already use your proficiency bonus.
 
@@ -931,11 +1129,7 @@ War Magic,Magic,"Fighter, Eldritch knight",3,7,,"Beginning at 7th level, when yo
 Eldritch Strike,Magic,"Fighter, Eldritch knight",5,10,,"At 10th level, you learn how to make your weapon strikes undercut a creature's resistance to your spells. When you hit a creature with a weapon attack, that creature has disadvantage on the next saving throw it makes against a spell you cast before the end of your next turn.",
 Arcane Charge,Magic,"Fighter, Eldritch knight",2,15,Action Surge,"At 15th level, you gain the ability to teleport up to 30 feet to an unoccupied space you can see when you use your Action Surge. You can teleport before or after the additional action.",
 Improved War magic,Magic,"Fighter, Eldritch knight",2,18,War Magic,"Starting at 18th level, when you use your action to cast a spell, you can make one weapon attack using 1 AP.",1 AP
-"Rune Knight, Bonus Proficiency",General,"Fighter, Rune Knight",1,1,,"When you choose this archetype at 3rd level, you gain proficiency with smith’s tools, and you learn to speak, read, and write Giant.",
-Rune Carver,Magic,"Fighter, Rune Knight",6,3,,"Starting at 3rd level, you can use magic runes to enhance your gear.
-Scegli 2 rune.
-CD=16
-","1 AP, Reaction"
+"Rune Knight, Bonus Proficiency",General,"Fighter, Rune Knight",1,3,,"When you choose this archetype at 3rd level, you gain proficiency with smith’s tools, and you learn to speak, read, and write Giant.",
 Giant Might,Magic,"Fighter, Rune Knight",3,3,,"At 3rd level, you have learned how to imbue yourself with the might of giants. using 1 AP, you magically gain the following benefits, which last for 1 minute:
 
 • If you are smaller than Large, you become Large, along with anything you are wearing. If you lack the room to become Large, your size doesn't change.
@@ -943,6 +1137,41 @@ Giant Might,Magic,"Fighter, Rune Knight",3,3,,"At 3rd level, you have learned ho
 • Once on each of your turns, one of your attacks with a weapon or an unarmed strike can deal an extra 1d6 damage to a target on a hit.
 
 You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses of it when you finish a long rest.",1 AP
+Rune Carver,Magic,"Fighter, Rune Knight",6,3,,"You can use magic runes to enhance your gear. You learn two runes of your choice, from among the runes described below, and each time you gain a level in this class, you can replace one rune you know with a different one from this feature. When you reach certain levels in this class, you learn additional runes, as shown in the Runes Known table.
+
+Whenever you finish a long rest, you can touch a number of objects equal to the number of runes you know, and you inscribe a different rune onto each of the objects. To be eligible, an object must be a weapon, a suit of armor, a shield, a piece of jewelry, or something else you can wear or hold in a hand. Your rune remains on an object until you finish a long rest, and an object can bear only one of your runes at a time.
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Runes Known</h4>
+<div class=""table-container"" style=""overflow-x: auto; margin-bottom: 16px; max-width: 360px;"">
+  <table class=""dnd-table"" style=""width: 100%;"">
+    <thead>
+      <tr>
+        <th style=""text-align: center;"">Fighter Level</th>
+        <th style=""text-align: center;"">Number of Runes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style=""text-align: center;"">3rd</td><td style=""text-align: center;"">2</td></tr>
+      <tr><td style=""text-align: center;"">7th</td><td style=""text-align: center;"">3</td></tr>
+      <tr><td style=""text-align: center;"">10th</td><td style=""text-align: center;"">4</td></tr>
+      <tr><td style=""text-align: center;"">15th</td><td style=""text-align: center;"">5</td></tr>
+    </tbody>
+  </table>
+</div>
+
+The following runes are available to you when you learn a rune. If a rune has a level requirement, you must be at least that level in this class to learn the rune. If a rune requires a saving throw, your Rune Magic save DC equals 8 + your proficiency bonus + your Constitution modifier.
+
+<p><strong>Cloud Rune.</strong> This rune emulates the deceptive magic used by some cloud giants. While wearing or carrying an object inscribed with this rune, you have advantage on Dexterity (Sleight of Hand) checks and Charisma (Deception) checks.<br>In addition, when you or a creature you can see within 30 feet of you is hit by an attack roll, you can use your Reaction to invoke the rune and choose a different creature within 30 feet of you, other than the attacker. The chosen creature becomes the target of the attack, using the same roll. This magic can transfer the attack's effects regardless of the attack's range. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>
+
+<p><strong>Fire Rune.</strong> This rune's magic channels the masterful craftsmanship of great smiths. While wearing or carrying an object inscribed with this rune, your proficiency bonus is doubled for any ability check you make that uses your proficiency with a tool.<br>In addition, when you hit a creature with an attack using a weapon, you can invoke the rune to summon fiery shackles: the target takes an extra 2d6 fire damage, and it must succeed on a Strength saving throw or be restrained for 1 minute. While restrained by the shackles, the target takes 2d6 fire damage at the start of each of its turns. The target can repeat the saving throw at the end of each of its turns, banishing the shackles on a success. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>
+
+<p><strong>Frost Rune.</strong> This rune's magic evokes the might of those who survive in the wintry wilderness, such as frost giants. While wearing or carrying an object inscribed with this rune, you have advantage on Wisdom (Animal Handling) checks and Charisma (Intimidation) checks.<br>In addition, you can invoke the rune as 1 AP to increase your sturdiness. For 10 minutes, you gain a +2 bonus to all ability checks and saving throws that use Strength or Constitution. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>
+
+<p><strong>Hill Rune (7th Level or Higher).</strong> This rune's magic bestows a resilience reminiscent of a hill giant. While wearing or carrying an object that bears this rune, you have advantage on saving throws against being poisoned, and you have resistance against poison damage.<br>In addition, you can invoke the rune as 1 AP, gaining resistance to bludgeoning, piercing, and slashing damage for 1 minute. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>
+
+<p><strong>Stone Rune.</strong> This rune's magic channels the judiciousness associated with stone giants. While wearing or carrying an object inscribed with this rune, you have advantage on Wisdom (Insight) checks, and you have darkvision out to a range of 120 feet.<br>In addition, when a creature you can see ends its turn within 30 feet of you, you can use your Reaction to invoke the rune and force the creature to make a Wisdom saving throw. Unless the save succeeds, the creature is charmed by you for 1 minute. While charmed in this way, the creature has a speed of 0 and is incapacitated, descending into a dreamy stupor. The creature repeats the saving throw at the end of each of its turns, ending the effect on a success. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>
+
+<p><strong>Storm Rune (7th Level or Higher).</strong> Using this rune, you can glimpse the future like a storm giant seer. While wearing or carrying an object inscribed with this rune, you have advantage on Intelligence (Arcana) checks, and you can't be surprised as long as you aren't incapacitated.<br>In addition, you can invoke the rune as 1 AP to enter a prophetic state for 1 minute or until you're incapacitated. Until the state ends, when you or another creature you can see within 60 feet of you makes an attack roll, a saving throw, or an ability check, you can use your Reaction to cause the roll to have advantage or disadvantage. Once you invoke this rune, you can't do so again until you finish a short or long rest.</p>","1 AP, Reaction"
 Runic Shield,Magic,"Fighter, Rune Knight",3,7,,"At 7th level, you learn to invoke your rune magic to protect your allies. When another creature you can see within 60 feet of you is hit by an attack roll, you can use your reaction to force the attacker to reroll the d20 and use the new roll.
 
 You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",Reaction
@@ -963,7 +1192,33 @@ Rapid Strike,Combat,"Fighter, Samurai",3,15,,"Starting at 15th level, you learn 
 Strenght Before Death,Combat,"Fighter, Samurai",7,18,,"Starting at 18th level, your fighting spirit can delay the grasp of death. If you take damage that reduces you to 0 hit points, you can use your reaction to delay falling unconscious, and you can immediately take an extra turn. While you have 0 hit points during that extra turn, taking damage causes death saving throw failures as normal, and three death saving throw failures can still kill you. When the extra turn ends, you fall unconscious if you still have 0 hit points.
 
 Once you use this feature, you can’t use it again until you finish a long rest.",Reaction
-Unarmored Defense: Monk,Combat,Monk,6,1,,"Beginning at 1st level, while you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.",
+Psionic Power,Magic,"Fighter, Psi Warrior",1,3,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
+
+Some of your powers expend the Psionic Energy die they use, as specified in a power's description, and you can't use a power if it requires you to use a die when your dice are all expended. You regain all your expended Psionic Energy dice when you finish a long rest. In addition, using 1 AP, you can regain one expended Psionic Energy die, but you can't do so again until you finish a short or long rest.
+
+When you reach certain levels in this class, the size of your Psionic Energy dice increases: at 5th level (d8), 11th level (d10), and 17th level (d12).
+
+You regain one of your expended Psionic Energy Dice when you finish a Short Rest, and you regain all of them when you finish a Long Rest.
+
+",1 AP
+Kandra Heritage,Magic,"Homebrew, Kandra",10,19,,"Un Kandra antico, che si avvicina al retaggio della Prima Generazione, ha avuto la possibilit&agrave; di conoscere e intraprendere numerose esistenze mortali. Questo patrimonio che lo ha accompagnato in tutta la sua vita gli ha permesso di evolversi come custode stesso del sapere e come erede stesso dei poteri assorbiti durante le sue trasformazioni.
+Grazie all'utilizzo di un Ruin, un kandra &egrave; in grado di richiamare un potere rimasto assopito nel suo DNA. &egrave; in grado di replicare qualsiasi potere di qualsiasi classe di pari livello, purch&egrave; questo potere non richieda un uso continuo di una determinata risorsa. La risorsa della classe che un kandra pu&ograve; apprendere deve essere di una durata diversa da permanente: un kandra non pu&ograve; replicare per esempio la capacit&agrave; del monaco Diamond Soul. Se l'abilit&agrave; replicata richiede una risorsa (punti ki, mana, channel diviinity…), questa risorsa viene considerata soddisfatta quando si consuma il Ruin.
+Il kandra pu&ograve; replicare un'abilit&agrave; che ha un utilizzo giornaliero, purch&egrave; rispetti il numero di utilizzi giornaliero. Se il Kandra possiede gi&agrave; un potere di classe, non pu&ograve; eccedere il numero giornaliero di utilizzo utilizzando un Ruin. Esempio: se Koddak (Kandra di 19o livello) ha gi&agrave; Action Surge come guerriero di 8o livello, ha un uso giornaliero di classe come guerriero, ma potrebbe utilizzare un Ruin per usare un'altra volta Action Surge come se fosse un guerriero di 18o livello. Non pu&ograve; tuttavia utilizzare un altro Ruin perch&egrave; l'utilizzo giornaliero massimo &egrave; stato raggiunto.
+Nessun Kandra pu&ograve; replicare i poteri del vampiro.
+",
+Magic Essence,Magic,"Homebrew, Kandra",4,1,Token of the Departed,"Il Kandra &egrave; in grado di incanalare il potere ancestrale della magia presente nei ninnoli all’interno del suo corpo e di manifestarlo come residuo del potere di Preservazione e di Rovina.
+Prerequisito: Token of the Departed, Ghost walk
+Il Kandra &egrave; in grado di consumare il potere dei ninnolo ottenuti. Gli spell devono rispettare le seguenti caratteristiche.
+Livello di incantesimo: possono essere lanciati incantesimi di qualsiasi livello.
+Livello di incantatore: lo stesso livello del Kandra.
+CD dello spell: 8+proficiency+una caratteristica a scelta tra INT/WIS/CHA.
+Spell attack: il tiro per colpire e il danno sono calcolati sulla caratteristica scelta dal Kandra per lanciare incantesimi.
+Spell slot: l’incantesimo pu&ograve; essere lanciato da qualsiasi lista e di qualsiasi livello, compatibilmente con il livello di spellcaster del Kandra. Ad esempio un kandra di livello 13 pu&ograve; lanciare incantesimi di livello 7 massimo.
+Metamagia: non &egrave; possibile applicare talenti di metamagia agli incantesimi lanciati in questo modo.
+Numeri di utilizzi: possono essere lanciati un numero massimo di incantesimi pari al bonus di proficienza. Ulteriori utilizzi successivi comportano un livello di esaurimento aggiuntivo per ogni utilizzo. Dopo un riposo breve, un kandra recupera un numero di utilizzi aggiuntivo pari alla met&agrave; del bonus di proficienza. Dopo un riposo lungo un kandra recupera tutti gli utilizzi.
+Costo C.P. 4",1 AP or 2 AP
+Martellone,Combat,"Homebrew, Martello Zormannu",2,10,,"You gain a +2 bonus to attack and damage rolls made with this magic weapon. On a hit, the weapon deals an extra 1d6 bludgeoning damage, for a total of 3d6 bludgeoning damage.",2 AP
+Slam the Maul (recharge 5-6),Combat,"Homebrew, Martello Zormannu",5,12,Martellone,"Zormannu can slam the maul to the ground 1 AP. One charge, and recharge once per round launching a d6 and getting a 5 or 6. As an action, you can slam the maul into the ground and shatter the ground in a 25-foot square in front of you. Each grounded creature in that area must make a DC (8+prof+STR mod) Dexterity saving throw, taking 3d6 thunder damage and 3d6 bludgeoning damage and being knocked prone on a failed save, or half as much damage and remain standing on a successful one. Small or smaller creatures automatically fail this save. All land affected by this action becomes difficult terrain. Once this action is used, it can't be used again until the short rest.",1 AP
 Martial Arts,Combat,Monk,3,1,,"At 1st level, your practice of martial arts gives you mastery of combat styles that use unarmed strikes and monk weapons, which are shortswords and scimitars and any simple melee weapons that don't have the two-handed or heavy property.
 
 You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or wielding a shield:
@@ -974,6 +1229,9 @@ You gain the following benefits while you are unarmed or wielding only monk weap
 • You can use the skil Dexterity (Acrobatics) in place of Strenght (Athletics).
 
 Certain monasteries use specialized forms of the monk weapons. For example, you might use a club that is two lengths of wood connected by a short chain (called a nunchaku) or a sickle with a shorter, straighter blade (called a kama). Whatever name you use for a monk weapon, you can use the game statistics provided for the weapon on the Weapons page.",1 AP
+Unarmored Defense: Monk,Combat,Monk,6,1,,"Beginning at 1st level, while you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Wisdom modifier.",
+Unarmored movement,Combat,Monk,4,2,,"Your speed increases by 10 feet while you aren't wearing armor or wielding a Shield. This bonus increases when you reach certain Monk levels, as shown on the Monk Features table.
+At 9th level, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the move.",
 Ki,Combat,Monk,4,2,,"Starting at 2nd level, your training allows you to harness the mystic energy of ki. Your access to this energy is represented by a number of ki points. Your monk level determines the number of points you have, as shown in the Ki Points column of the Monk table.
 
 You can spend these points to fuel various ki features. You start knowing three such features: Flurry of Blows, Patient Defense, and Step of the Wind. You learn more ki features as you gain levels in this class.
@@ -984,39 +1242,61 @@ Some of your ki features require your target to make a saving throw to resist th
 
 Ki save DC = 8 + your proficiency bonus + your Wisdom modifier
 
-•  Flurry of Blows. Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes using 1 AP.
-•  Patient Defense. You can take the Disengage action using 1 AP. Alternatively, you can spend 1 Discipline Point to take both the Disengage and the Dodge actions using 1 AP.
-• Step of the Wind. You can take the Dash action using 1 AP. Alternatively, you can spend 1 Discipline Point to take both the Disengage and Dash actions using 1 AP, and your jump distance is doubled for the turn.",1 AP
-Unarmored movement,Combat,Monk,4,2,,"Starting at 2nd level, your speed increases by 10 feet while you are not wearing armor or wielding a shield. This bonus increases when you reach certain monk levels, as shown in the Monk table.
-Bonus of speed +
-At 9th level, you gain the ability to move along vertical surfaces and across liquids on your turn without falling during the move.",
+•  ***Flurry of Blows***. Immediately after you take the Attack action on your turn, you can spend 1 ki point to make two unarmed strikes using 1 AP.
+•  ***Patient Defense***. You can take the Disengage action using 1 AP. Alternatively, you can spend 1 Discipline Point to take both the Disengage and the Dodge actions using 1 AP.
+• ***Step of the Wind***. You can take the Dash action using 1 AP. Alternatively, you can spend 1 Discipline Point to take both the Disengage and Dash actions using 1 AP, and your jump distance is doubled for the turn.",1 AP
 Uncanny Metabolism,Combat,Monk,4,2,,"When you roll Initiative, you can regain all expended Discipline Points. When you do so, roll your Martial Arts die, and regain a number of Hit Points equal to your Monk level plus the number rolled.
 Once you use this feature, you can’t use it again until you finish a Long Rest.",
 Deflect Attack,Combat,Monk,2,3,Ki,"You can use your Reaction to deflect melee and ranged attacks against you that deal Bludgeoning, Piercing, or Slashing damage.
 When you do so, the total damage you take from the attack is reduced by 1d10 + your Dexterity modifier + your Monk level.
 If you reduce the damage to 0, you can spend 1 Discipline Point to redirect some of the attack’s force. If you do so, choose a creature within 5 feet of you if the attack was a melee attack or 60 feet of yourself that isn’t behind Total Cover if the attack was a ranged attack. That creature must succeed on a Dexterity saving throw or take damage equal to two rolls of your Martial Arts die plus your Dexterity modifier. The damage is the same type dealt by the attack.",Reaction
 Ki-Fueled Attack,Combat,Monk,3,3,Ki,"Also at 3rd level, if you spend 1 ki point or more as part of your action on your turn, you can make one attack with an unarmed strike or a monk weapon using 1 AP before the end of the turn.",1 AP
-Slow Fall,Combat,Monk,1,4,,"Beginning at 4th level, you can use your reaction when you fall to reduce any falling damage you take by an amount equal to five times your monk level.",Reaction
 Quickened Healing,Combat,Monk,1,4,,"Also at 4th level, using 2 AP, you can spend 2 ki points and roll a Martial Arts die. You regain a number of hit points equal to the number rolled plus your proficiency bonus.",2 AP
-Stunning Strike,Combat,Monk,5,5,Ki,"Once per round, when you hit a creature with a Monk Weapon or an Unarmed Strike, you can spend 1 Ki Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target is Dazed.",
+Slow Fall,Combat,Monk,1,4,,"Beginning at 4th level, you can use your reaction when you fall to reduce any falling damage you take by an amount equal to five times your monk level.",Reaction
 Focused Aim,Combat,Monk,3,5,Ki,"Also at 5th level, when you miss with an attack roll, you can spend 1 to 3 ki points to increase your attack roll by 2 for each of these ki points you spend, potentially turning the miss into a hit.",
+Extra Attack,Combat,Monk,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
+Stunning Strike,Combat,Monk,5,5,Ki,"Once per round, when you hit a creature with a Monk Weapon or an Unarmed Strike, you can spend 1 Ki Point to attempt a stunning strike. The target must make a Constitution saving throw. On a failed save, the target has the Stunned condition until the start of your next turn. On a successful save, the target is Dazed.",
 Ki-Empowered Strikes,Combat,Monk,3,6,Ki,"Whenever you deal damage with your Unarmed Strike, it can deal your choice of Force damage or its normal damage type.",
 Stillness of Mind,Combat,Monk,2,7,Ki,"Starting at 7th level, you can use 2 AP to end one effect on yourself that is causing you to be charmed or frightened.",2 AP
-Heigthned Discipline,Combat,Monk,3,10,Martial Arts,"Your training has pushed your body and mind to new levels. Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits:
-• Flurry of Blows. You can spend 1 Discipline Point to use Flurry of Blows and make three Unarmed Strikes with it instead of two.
-• Patient Defense. When you spend a Discipline Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die.
-• Step of the Wind. When you spend a Discipline Point to use Step of the Wind, you can choose a willing creature within 5 feet of you that is Large or smaller. You move the creature with you until the end of your turn. The creature’s movement doesn’t provoke Opportunity Attacks.",
 Purity of Budy,Combat,Monk,2,10,Ki,"At 10th level, your mastery of the ki flowing through you makes you immune to disease and poison.",
+Heigthned Discipline,Combat,Monk,3,10,Martial Arts,"Your training has pushed your body and mind to new levels. Your Flurry of Blows, Patient Defense, and Step of the Wind gain the following benefits:
+• ***Flurry of Blows***. You can spend 1 Discipline Point to use Flurry of Blows and make three Unarmed Strikes with it instead of two.
+• ***Patient Defense***. When you spend a Discipline Point to use Patient Defense, you gain a number of Temporary Hit Points equal to two rolls of your Martial Arts die.
+• ***Step of the Wind***. When you spend a Discipline Point to use Step of the Wind, you can choose a willing creature within 5 feet of you that is Large or smaller. You move the creature with you until the end of your turn. The creature’s movement doesn’t provoke Opportunity Attacks.",
 Self-Restoration,Combat,Monk,3,10,Ki,"Through sheer force of will, you can remove one of the following conditions from yourself at the end of each of your turns: Charmed, Frightened, or Poisoned.
 In addition, forgoing food and drink doesn’t give you levels of Exhaustion.",
 Tongue of the Sun and Moon,General,Monk,1,13,Ki,"Starting at 13th level, you learn to touch the ki of other minds so that you understand all spoken languages. Moreover, any creature that can understand a language can understand what you say.",
 Deflect Energy,Combat,Monk,2,13,Deflect Attack,"You can now use your Deflect Attacks feature against attacks that deal any damage type, not just Bludgeoning, Piercing, or Slashing.",
 Diamond Soul,Combat,Monk,10,14,Ki,"Beginning at 14th level, your mastery of ki grants you proficiency in all saving throws.
 Additionally, whenever you make a saving throw and fail, you can spend 1 ki point to reroll it and take the second result.",
-Perfect Self,General,Monk,4,15,Ki,"When you roll Initiative and have 3 Discipline Points or fewer, you regain expended Discipline Points until you have 4.",
 "Timeless Body, Monk",General,Monk,1,15,Ki,"At 15th level, your ki sustains you so that you suffer none of the frailty of old age, and you can't be aged magically. You can still die of old age, however. In addition, you no longer need food or water.",
+Perfect Self,General,Monk,4,15,Ki,"When you roll Initiative and have 3 Discipline Points or fewer, you regain expended Discipline Points until you have 4.",
 Superior Defense,Combat,Monk,7,18,Ki,"At the start of your turn, you can spend 3 Discipline Points to perfectly bolster yourself against harm for 1 minute or until you have the Incapacitated condition. During that time, you have resistance to all damage except Force damage.",
 Body and Mind,General,Monk,8,20,Ki,You have honed your body and mind to new heights. Your Dexterity and Wisdom scores increase by 4. Your maximum for your primary score is now 30 and for your secondary score is 24,
+Path of the Kensai,Combat,"Monk, Kensai",4,3,,"When you choose this tradition at 3rd level, your special martial arts training leads you to master the use of certain weapons. This path also includes instruction in the deft strokes of calligraphy or painting. You gain the following benefits:
+
+•***Kensei Weapons***. Choose two types of weapons to be your kensei weapons: one melee weapon and one ranged weapon. Each of these weapons can be any simple or martial weapon that lacks the heavy and special properties. The longbow is also a valid choice. You gain proficiency with these weapons if you don't already have it. Weapons of the chosen types are monk weapons for you. Many of this tradition's features work only with your kensei weapons. When you reach 6th, 11th, and 17th level in this class, you can choose another type of weapon – either melee or ranged – to be a kensei weapon for you, following the criteria above.
+•***Agile Parry***. If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren’t incapacitated.
+•Kensei's Shot. You can use 1 AP on your turn to make your ranged attacks with a kensei weapon more deadly. When you do so, any target you hit with a ranged attack using a kensei weapon takes an extra 1d4 damage of the weapon’s type. You retain this benefit until the end of the current turn.
+•***Way of the Brush***. You gain proficiency with your choice of calligrapher's supplies or painter's supplies.",1 AP
+One With the Blade,Combat,"Monk, Kensai",3,6,Ki,"At 6th level, you extend your ki into your kensei weapons, granting you the following benefits.
+
+***Magic Kensei Weapons***. Your attacks with your kensei weapons can deal Force damage or its normal damage type.
+***Deft Strike***. When you hit a target with a kensei weapon, you can spend 1 ki point to cause the weapon to deal extra damage to the target equal to your Martial Arts die. You can use this feature only once on each of your turns.",
+Sharpen the Blade,Combat,"Monk, Kensai",5,11,Ki,"At 11th level, you gain the ability to augment your weapons further with your ki. using 1 AP, you can expend up to 3 ki points to grant one kensei weapon you touch a bonus to attack and damage rolls when you attack with it. The bonus equals the number of ki points you spent. This bonus lasts for 1 minute or until you use this feature again. This feature has no effect on a magic weapon that already has a bonus to attack and damage rolls.",1 AP
+Unerring Accuracy,Combat,"Monk, Kensai",3,17,,"At 17th level, your mastery of weapons grants you extraordinary accuracy. If you miss with an attack roll using a monk weapon on your turn, you can reroll it. You can use this feature only once on each of your turns.",
+"Warrior of Mercy, Implements of Mercy","General, Skill","Monk, Way of Mercy",1,3,,You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit.,
+"Warrior of Mercy, Hand of Healing",Magic,"Monk, Way of Mercy",2,3,,"As a Magic action, you can expend 1 Focus Point to touch a creature and restore a number of Hit Points equal to a roll of your Martial Arts die plus your Wisdom modifier. When you use your Flurry of Blows, you can replace one of the Unarmed Strikes with a use of this feature without expending a Focus Point for the healing.",2 AP
+"Warrior of Mercy, Hand of Harm",Combat,"Monk, Way of Mercy",2,3,,"Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier.",No AP
+"Physician's Touch, Hand of Healing",Magic,"Monk, Way of Mercy",2,6,"Warrior of Mercy, Hand of Healing","When you use Hand of Healing, you can also end one of the following conditions on the creature you heal: Blinded, Deafened, Paralyzed, Poisoned, Staggered, or Stunned.",No AP
+"Physician's Touch, Hand of Harm",Combat,"Monk, Way of Mercy",3,6,"Warrior of Mercy, Hand of Harm","When you use Hand of Harm on a creature, you can also give that creature the Poisoned condition until the end of your next turn.",No AP
+Flurry of Healing and Harm,Magic,"Monk, Way of Mercy",3,11,"Warrior of Mercy, Hand of Harm;  Warrior of Mercy, Hand of Healing","When you use Flurry of Blows, you can replace each of the Unarmed Strikes with a use of Hand of Healing without expending Focus Points for the healing.
+
+In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.
+
+You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest.",No AP
+Hand of Ultimate Mercy,Magic,"Monk, Way of Mercy",3,17,"Warrior of Mercy, Hand of Healing","Your mastery of life energy opens the door to the ultimate mercy. As a Magic action, you can touch the corpse of a creature that died within the past 24 hours and expend 5 Focus Points. The creature then returns to life with a number of Hit Points equal to 4d10 plus your Wisdom modifier. If the creature died with any of the following conditions, the creature revives with the conditions removed: Blinded, Deafened, Paralyzed, Poisoned, Staggered and Stunned.
+Once you use this feature, you can't use it again until you finish a Long Rest.",2 AP
 Arms of the Astral Self,Magic,"Monk, Way of the Astral Self",8,3,Ki,"Your mastery of your ki allows you to summon a portion of your astral self. As 1 AP, you can spend 1 ki point to summon the arms of your astral self. When you do so, each creature of your choice that you can see within 10 feet of you must succeed on a Dexterity saving throw or take force damage equal to two rolls of your Martial Arts die.
 
 For 10 minutes, these spectral arms hover near your shoulders or surround your arms (your choice). You determine the arms' appearance, and they vanish early if you are incapacitated or die.
@@ -1032,21 +1312,21 @@ Body of the Astral Self,Magic,"Monk, Way of the Astral Self",2,11,,"When you hav
 
 While the spectral body is present, you gain the following benefits.
 
-• Deflect Energy. When you take acid, cold, fire, force, lightning, or thunder damage, you can use your reaction to deflect it. When you do so, the damage you take is reduced by 1d10 + your Wisdom modifier (minimum reduction of 1).
+• ***Deflect Energy***. When you take acid, cold, fire, force, lightning, or thunder damage, you can use your reaction to deflect it. When you do so, the damage you take is reduced by 1d10 + your Wisdom modifier (minimum reduction of 1).
 
-• Empowered Arms. Once on each of your turns when you hit a target with the Arms of the Astral Self, you can deal extra damage to the target equal to your Martial Arts die.",Reaction
+• ***Empowered Arms***. Once on each of your turns when you hit a target with the Arms of the Astral Self, you can deal extra damage to the target equal to your Martial Arts die.",Reaction
 Awakened Astral Self,Magic,"Monk, Way of the Astral Self",6,17,,"Your connection to your astral self is complete, allowing you to unleash its full potential. As 1 AP, you can spend 5 ki points to summon the arms, visage, and body of your astral self and awaken it for 10 minutes. This awakening ends early if you are incapacitated or die.
 
 While your astral self is awakened, you gain the following benefits.
 
-• Armor of the Spirit. You gain a +2 bonus to Armor Class.
+• ***Armor of the Spirit***. You gain a +2 bonus to Armor Class.
 
-• Astral Barrage. You can make an Extra Attack if your attacks are made with your astral arms.",1 AP
+• ***Astral Barrage***. You can make an Extra Attack if your attacks are made with your astral arms.",1 AP
 Elemental Attunement,Magic,"Monk, Way of the Elements",4,3,Ki,"At the start of your turn, you can expend 1 Focus Point to imbue yourself with elemental energy. The energy lasts for 10 minutes or until you have the Incapacitated condition. You gain the following benefits while this feature is active.
 
-• Reach. When you make an Unarmed Strike, your reach is 10 feet greater than normal, as elemental energy extends from you.
+• ***Reach***. When you make an Unarmed Strike, your reach is 10 feet greater than normal, as elemental energy extends from you.
 
-• Elemental Strikes. Whenever you hit with your Unarmed Strike, you can cause it to deal your choice of Acid, Cold, Fire, Lightning, or Thunder damage rather than its normal damage type. When you deal one of these types with it, you can also force the target to make a Strength saving throw. On a failed save, you can move the target up to 10 feet toward or away from you, as elemental energy swirls around it.
+• ***Elemental Strikes***. Whenever you hit with your Unarmed Strike, you can cause it to deal your choice of Acid, Cold, Fire, Lightning, or Thunder damage rather than its normal damage type. When you deal one of these types with it, you can also force the target to make a Strength saving throw. On a failed save, you can move the target up to 10 feet toward or away from you, as elemental energy swirls around it.
 
 • You know the Elementalism spell. Wisdom is your spellcasting ability for it.",No AP
 Elemental Burst,Magic,"Monk, Way of the Elements",1,6,Elemental Attunement,"As a Magic action, you can expend 2 Focus Points to cause elemental energy to burst in a 20-foot-radius Sphere centered on a point within 120 feet of yourself. Choose a damage type: Acid, Cold, Fire, Lightning, or Thunder.
@@ -1055,51 +1335,54 @@ Each creature in the Sphere must make a Dexterity saving throw. On a failed save
 Stride of the Elements,Magic,"Monk, Way of the Elements",4,11,Elemental Attunement,"While your Elemental Attunement is active, you also have a Fly Speed and a Swim Speed equal to your Speed.",
 Elemental Epitome,Magic,"Monk, Way of the Elements",4,17,Elemental Attunement,"While your Elemental Attunement is active, you also gain the following benefits.
 
-• Damage Resistance. You gain Resistance to one of the following damage types of your choice: Acid, Cold, Fire, Lightning, or Thunder. At the start of each of your turns, you can change this choice.
+• ***Damage Resistance***. You gain Resistance to one of the following damage types of your choice: Acid, Cold, Fire, Lightning, or Thunder. At the start of each of your turns, you can change this choice.
 
-• Destructive Stride. When you use your Step of the Wind, your Speed increases by 20 feet until the end of the turn. For that duration, any creature of your choice takes damage equal to one roll of your Martial Arts die when you enter a space within 5 feet of it. The damage type is your choice of Acid, Cold, Fire, Lightning, or Thunder. A creature can take this damage only once per turn.
+• ***Destructive Stride***. When you use your Step of the Wind, your Speed increases by 20 feet until the end of the turn. For that duration, any creature of your choice takes damage equal to one roll of your Martial Arts die when you enter a space within 5 feet of it. The damage type is your choice of Acid, Cold, Fire, Lightning, or Thunder. A creature can take this damage only once per turn.
 
-• Empowered Strikes. Once on each of your turns, you can deal extra damage to a target equal to one roll of your Martial Arts die when you hit it with an Unarmed Strike. The extra damage is the same type dealt by that strike.",
-"Warrior of Mercy, Hand of Harm",Combat,"Monk, Way of Mercy",2,3,,"Once per turn when you hit a creature with an Unarmed Strike and deal damage, you can expend 1 Focus Point to deal extra Necrotic damage equal to one roll of your Martial Arts die plus your Wisdom modifier.",No AP
-"Warrior of Mercy, Hand of Healing",Magic,"Monk, Way of Mercy",2,3,,"As a Magic action, you can expend 1 Focus Point to touch a creature and restore a number of Hit Points equal to a roll of your Martial Arts die plus your Wisdom modifier. When you use your Flurry of Blows, you can replace one of the Unarmed Strikes with a use of this feature without expending a Focus Point for the healing.",2 AP
-"Warrior of Mercy, Implements of Mercy","General, Skill","Monk, Way of Mercy",1,3,,You gain proficiency in the Insight and Medicine skills and proficiency with the Herbalism Kit.,
-"Physician's Touch, Hand of Harm",Combat,"Monk, Way of Mercy",3,6,"Warrior of Mercy, Hand of Harm","When you use Hand of Harm on a creature, you can also give that creature the Poisoned condition until the end of your next turn.",No AP
-"Physician's Touch, Hand of Healing",Magic,"Monk, Way of Mercy",2,6,"Warrior of Mercy, Hand of Healing","When you use Hand of Healing, you can also end one of the following conditions on the creature you heal: Blinded, Deafened, Paralyzed, Poisoned, Staggered, or Stunned.",No AP
-Flurry of Healing and Harm,Magic,"Monk, Way of Mercy",3,11,"Warrior of Mercy, Hand of Harm;  Warrior of Mercy, Hand of Healing","When you use Flurry of Blows, you can replace each of the Unarmed Strikes with a use of Hand of Healing without expending Focus Points for the healing.
-
-In addition, when you make an Unarmed Strike with Flurry of Blows and deal damage, you can use Hand of Harm with that strike without expending a Focus Point for Hand of Harm. You can still use Hand of Harm only once per turn.
-
-You can use these benefits a total number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses when you finish a Long Rest.",No AP
-Hand of Ultimate Mercy,Magic,"Monk, Way of Mercy",3,17,"Warrior of Mercy, Hand of Healing","Your mastery of life energy opens the door to the ultimate mercy. As a Magic action, you can touch the corpse of a creature that died within the past 24 hours and expend 5 Focus Points. The creature then returns to life with a number of Hit Points equal to 4d10 plus your Wisdom modifier. If the creature died with any of the following conditions, the creature revives with the conditions removed: Blinded, Deafened, Paralyzed, Poisoned, Staggered and Stunned.
-Once you use this feature, you can't use it again until you finish a Long Rest.",2 AP
-Path of the Kensai,Combat,"Monk, Kensai",4,3,,"When you choose this tradition at 3rd level, your special martial arts training leads you to master the use of certain weapons. This path also includes instruction in the deft strokes of calligraphy or painting. You gain the following benefits:
-
-•Kensei Weapons. Choose two types of weapons to be your kensei weapons: one melee weapon and one ranged weapon. Each of these weapons can be any simple or martial weapon that lacks the heavy and special properties. The longbow is also a valid choice. You gain proficiency with these weapons if you don't already have it. Weapons of the chosen types are monk weapons for you. Many of this tradition's features work only with your kensei weapons. When you reach 6th, 11th, and 17th level in this class, you can choose another type of weapon – either melee or ranged – to be a kensei weapon for you, following the criteria above.
-•Agile Parry. If you make an unarmed strike as part of the Attack action on your turn and are holding a kensei weapon, you can use it to defend yourself if it is a melee weapon. You gain a +2 bonus to AC until the start of your next turn, while the weapon is in your hand and you aren’t incapacitated.
-•Kensei's Shot. You can use 1 AP on your turn to make your ranged attacks with a kensei weapon more deadly. When you do so, any target you hit with a ranged attack using a kensei weapon takes an extra 1d4 damage of the weapon’s type. You retain this benefit until the end of the current turn.
-•Way of the Brush. You gain proficiency with your choice of calligrapher's supplies or painter's supplies.",1 AP
-One With the Blade,Combat,"Monk, Kensai",3,6,Ki,"At 6th level, you extend your ki into your kensei weapons, granting you the following benefits.
-
-Magic Kensei Weapons. Your attacks with your kensei weapons can deal Force damage or its normal damage type.
-Deft Strike. When you hit a target with a kensei weapon, you can spend 1 ki point to cause the weapon to deal extra damage to the target equal to your Martial Arts die. You can use this feature only once on each of your turns.",
-Sharpen the Blade,Combat,"Monk, Kensai",5,11,Ki,"At 11th level, you gain the ability to augment your weapons further with your ki. using 1 AP, you can expend up to 3 ki points to grant one kensei weapon you touch a bonus to attack and damage rolls when you attack with it. The bonus equals the number of ki points you spent. This bonus lasts for 1 minute or until you use this feature again. This feature has no effect on a magic weapon that already has a bonus to attack and damage rolls.",1 AP
-Unerring Accuracy,Combat,"Monk, Kensai",3,17,,"At 17th level, your mastery of weapons grants you extraordinary accuracy. If you miss with an attack roll using a monk weapon on your turn, you can reroll it. You can use this feature only once on each of your turns.",
-Shadow Arts,Magic,"Monk, Way of the Shadow",3,3,,"Starting when you choose this tradition at 3rd level, you can use your ki to duplicate the effects of certain spells. using 2 AP, you can spend 2 ki points to cast darkness, darkvision, pass without trace, or silence, without providing material components. Additionally, you gain the minor illusion cantrip if you don't already know it.",2 AP
-Shadow Step,Magic,"Monk, Way of the Shadow",3,6,,"At 6th level, you gain the ability to step from one shadow into another. When you are in dim light or darkness, using 1 AP you can teleport up to 60 feet to an unoccupied space you can see that is also in dim light or darkness. You then have advantage on the first melee attack you make before the end of the turn.",1 AP
-Improved Shadow Step,Magic,"Monk, Way of the Shadow",2,11,Shadow Step,"You can draw on your Shadowfell connection to empower your teleportation. When you use your Shadow Step, you can expend 1 Focus Point to remove the requirement that you must start and end in Dim Light or Darkness for that use of the feature. As part of this 1 Action Point, you can make an Unarmed Strike immediately after you teleport.",1 AP
-Cloak of Shadow,Magic,"Monk, Way of the Shadow",4,17,,"As a Magic action while entirely within Dim Light or Darkness, you can expend 3 Focus Points to shroud yourself with shadows for 1 minute, until you have the Incapacitated condition, or until you end your turn in Bright Light. While shrouded by these shadows, you gain the following benefits.
-
-• Invisibility. You have the Invisible condition.
-
-• Partially Incorporeal. You can move through occupied spaces as if they were Difficult Terrain. If you end your turn in such a space, you are shunted to the last unoccupied space you were in.
-
-• Shadow Flurry. You can use your Flurry of Blows without expending any Focus Points.",2 AP
+• ***Empowered Strikes***. Once on each of your turns, you can deal extra damage to a target equal to one roll of your Martial Arts die when you hit it with an Unarmed Strike. The extra damage is the same type dealt by that strike.",
 Touch of Death,Combat,"Monk, Way of the Long Death",2,3,,"Starting when you choose this tradition at 3rd level, your study of death allows you to extract vitality from another creature as it nears its demise. When you reduce a creature within 5 feet of you to 0 hit points, you gain temporary hit points equal to your Wisdom modifier + your monk level (minimum of 1 temporary hit point).",
 Hour of Reaping,Combat,"Monk, Way of the Long Death",2,6,,"At 6th level, you gain the ability to unsettle or terrify those around you using 2 AP, for your soul has been touched by the shadow of death. When you take this action, each creature within 30 feet of you that can see you must succeed on a Wisdom saving throw or be frightened of you until the end of your next turn.",2 AP
 Mastery of Death,Combat,"Monk, Way of the Long Death",5,11,Ki,"You use your familiarity with death to escape its grasp.
 When you are reduced to 0 hit points, you can expend a number of ki points up to your Wisdom modifier (minimum of 1, no action required). You regain 20 hit points for each ki point spent.
 You cannot use this feature if you are incapacitated.",No AP
 Touch of the Long Death,Combat,"Monk, Way of the Long Death",2,17,Ki,"Starting at 17th level, your touch can channel the energy of death into a creature. using 2 AP, you touch one creature within 5 feet of you, and you expend 1 to 10 ki points. The target must make a Constitution saving throw, and it takes 2d10 necrotic damage per ki point spent on a failed save, or half as much damage on a successful one.",
+Shadow Arts,Magic,"Monk, Way of the Shadow",3,3,,"Starting when you choose this tradition at 3rd level, you can use your ki to duplicate the effects of certain spells. using 2 AP, you can spend 2 ki points to cast darkness, darkvision, pass without trace, or silence, without providing material components. Additionally, you gain the minor illusion cantrip if you don't already know it.",2 AP
+Shadow Step,Magic,"Monk, Way of the Shadow",3,6,,"At 6th level, you gain the ability to step from one shadow into another. When you are in dim light or darkness, using 1 AP you can teleport up to 60 feet to an unoccupied space you can see that is also in dim light or darkness. You then have advantage on the first melee attack you make before the end of the turn.",1 AP
+Improved Shadow Step,Magic,"Monk, Way of the Shadow",2,11,Shadow Step,"You can draw on your Shadowfell connection to empower your teleportation. When you use your Shadow Step, you can expend 1 Focus Point to remove the requirement that you must start and end in Dim Light or Darkness for that use of the feature. As part of this 1 Action Point, you can make an Unarmed Strike immediately after you teleport.",1 AP
+Cloak of Shadow,Magic,"Monk, Way of the Shadow",4,17,,"As a Magic action while entirely within Dim Light or Darkness, you can expend 3 Focus Points to shroud yourself with shadows for 1 minute, until you have the Incapacitated condition, or until you end your turn in Bright Light. While shrouded by these shadows, you gain the following benefits.
+
+• ***Invisibility***. You have the Invisible condition.
+
+• ***Partially Incorporeal***. You can move through occupied spaces as if they were Difficult Terrain. If you end your turn in such a space, you are shunted to the last unoccupied space you were in.
+
+• ***Shadow Flurry***. You can use your Flurry of Blows without expending any Focus Points.",2 AP
+Mystic Fighting Style,Magic,"Monk, Warrior of the Mystic Arts",2,6,Spellcasting,"When you take the Attack action on your turn, you can replace one Unarmed Strike with a casting of one of your Sorcerer cantrips that has a casting time of an action.",
+Mystic Focus,Magic,"Monk, Warrior of the Mystic Arts",7,6,"Spellcasting, Ki","You keep your magical power and martial focus in perfect balance, allowing you to convert spell slots into Focus Points, or convert Focus Points into spell slots.
+
+***Converting Spell Slots to Focus Points***. You can expend a spell slot to regain a number of expended Focus Points equal to the slot's level (no action required).
+
+***Recovering Spell Slots***. When you finish a Short Rest or use Uncanny Metabolism, you can transform unexpended Focus Points to recover one expended spell slot. The Recovering Spell Slots table shows the cost of recovering a spell slot of a given level, and it lists the minimum Monk level you must be to recover a slot. You can recover a spell slot no higher than level 4.
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Recovering Spell Slots</h4>
+<div class=""table-container"" style=""overflow-x: auto; margin-bottom: 16px; max-width: 420px;"">
+  <table class=""dnd-table"" style=""width: 100%;"">
+    <thead>
+      <tr>
+        <th style=""text-align: center;"">Spell Slot Level</th>
+        <th style=""text-align: center;"">Focus Point Cost</th>
+        <th style=""text-align: center;"">Min. Monk Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td style=""text-align: center;"">1</td><td style=""text-align: center;"">2</td><td style=""text-align: center;"">6</td></tr>
+      <tr><td style=""text-align: center;"">2</td><td style=""text-align: center;"">3</td><td style=""text-align: center;"">7</td></tr>
+      <tr><td style=""text-align: center;"">3</td><td style=""text-align: center;"">5</td><td style=""text-align: center;"">13</td></tr>
+      <tr><td style=""text-align: center;"">4</td><td style=""text-align: center;"">6</td><td style=""text-align: center;"">19</td></tr>
+    </tbody>
+  </table>
+</div>",
+Focused Strike,Magic,"Monk, Warrior of the Mystic Arts",4,11,Stunning Strike,"When you use your Stunning Strike, whether the target succeeds or fails on the saving throw, the target has Disadvantage on saving throws against your spells until the start of your next turn.",
+Improved Mystic Fighting Style,Magic,"Monk, Warrior of the Mystic Arts",2,17,Mystic Fighting Style,"When you use Flurry of Blows, you can replace two of the Unarmed Strikes with a casting of one of your level 1 or 2 Sorcerer spells that has a casting time of an action, and you cast it as part of the same 1 Action Point (1 AP) you use to activate Flurry of Blows.",
 Evasion,Combat,Monk; Rogue,3,7,,"When you're subjected to an effect that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on the saving throw and only half damage if you fail.
 You don't benefit from this feature if you have the Incapacitated condition.",
 Divine Sense,Magic,Paladin,2,1,,"The presence of strong evil registers on your senses like a noxious odor, and powerful good rings like heavenly music in your ears. using 2 AP, you can open your awareness to detect such forces. Until the end of your next turn, you know the location of any celestial, fiend, or undead within 60 feet of you that is not behind total cover. You know the type (celestial, fiend, or undead) of any being whose presence you sense, but not its identity (the vampire Count Strahd von Zarovich, for instance). Within the same radius, you also detect the presence of any place or object that has been consecrated or desecrated, as with the Hallow spell.
@@ -1110,17 +1393,18 @@ As 1 AP, you can touch a creature (which could be yourself) and draw power from 
 
 You can also expend 5 Hit Points from the pool of healing power to remove the Poisoned condition from the creature; those points don't also restore Hit Points to the creature.",1 AP
 Divine Smite,Magic,Paladin,5,2,,"Starting at 2nd level, when you hit a creature with a melee weapon attack, you can expend one spell slot to deal radiant damage to the target, in addition to the weapon's damage. The extra damage is 2d8 for a 1st-level spell slot, plus 1d8 for each spell level higher than 1st, to a maximum of 5d8. The damage increases by 1d8 if the target is an undead or a fiend, to a maximum of 6d8.",
+Divine Health,Combat,Paladin,1,3,,"By 3rd level, the divine magic flowing through you makes you immune to disease.",
 "Channel Divinity, Paladin",Magic,Paladin,2,3,,"You can channel divine energy directly from the Outer Planes, using it to fuel magical effects. You start with one such effect: Divine Sense, which is described below. Other Paladin features give additional Channel Divinity effect options. Each time you use this class's Channel Divinity, you choose which effect from this class to create.
 
 You can use this class's Channel Divinity twice. You regain one of its expended uses when you finish a Short Rest, and you regain all expended uses when you finish a Long Rest. You gain an additional use when you reach Paladin level 11.
 
 If a Channel Divinity effect requires a saving throw, the DC equals the spell save DC from this class's Spellcasting feature.
 
-• Divine Sense. As 1 Action Point, you can open your awareness to detect Celestials, Fiends, and Undead. For the next 10 minutes or until you have the Incapacitated condition, you know the location of any creature of those types within 60 feet of yourself, and you know its creature type. Within the same radius, you also detect the presence of any place or object that has been consecrated or desecrated, as with the Hallow spell.",1 AP
+• ***Divine Sense***. As 1 Action Point, you can open your awareness to detect Celestials, Fiends, and Undead. For the next 10 minutes or until you have the Incapacitated condition, you know the location of any creature of those types within 60 feet of yourself, and you know its creature type. Within the same radius, you also detect the presence of any place or object that has been consecrated or desecrated, as with the Hallow spell.",1 AP
 Faithful Steed,Magic,Paladin,2,5,Channel Divinity,"You can call on the aid of an otherworldly steed. You always have the Find Steed spell prepared.
 
 You can also cast the spell once without expending a spell slot, and you regain the ability to do so when you finish a Long Rest.",1 AP
-Divine Health,Combat,Paladin,1,3,,"By 3rd level, the divine magic flowing through you makes you immune to disease.",
+Extra Attack,Combat,Paladin,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Aura of Protection,Magic,Paladin,6,6,,"You radiate a protective, invisible aura that extends 10 feet from you in every direction, but it doesn’t extend through Total Cover. The aura is inactive while you have the Incapacitated condition.
 
 You and your allies in the aura gain a bonus to saving throws equal to your Charisma modifier (minimum bonus of +1).
@@ -1131,17 +1415,17 @@ Aura of Courage,Magic,Paladin,2,10,Aura of Protection,"You and your allies are i
 Radiant Strikes,Magic,Paladin,3,11,,"Your strikes now carry supernatural power. When you hit a target with an attack roll using a Melee weapon or an Unarmed Strike, the target takes an extra 1d8 Radiant damage.",
 Restoring Touch,Magic,Paladin,4,14,Lay on Hands,"When you use Lay On Hands on a creature, you can also remove one or more of the following conditions from the creature: Blinded, Charmed, Deafened, Frightened, Paralyzed, or Stunned. You must expend 5 Hit Points from the healing pool of Lay On Hands for each of these conditions you remove; those points don't also restore Hit Points to the creature.",
 "Aura of Protection, Extended",Magic,Paladin,4,18,Aura of Protection,Your Aura of Protection is now a 30-foot Emanation.,
-"Oath Spell, Ancients",Magic,Paladin Ancients,3,3,"Spellcasting, paladin","|3| Ensnaring Strike, Speak with Animals 
+"Channel Divinity , Ancients",Magic,"Paladin, Ancients",3,3,,"As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on itself on a success.",2 AP
+"Oath Spell, Ancients",Magic,"Paladin, Ancients",3,3,,"|3| Ensnaring Strike, Speak with Animals 
 |5| Misty Step, Moonbeam 
-|9| Plant Growth, Protection from Energy 
+|9°| Plant Growth, Protection from Energy 
 |13| Ice Storm, Stoneskin 
 |17| Commune with Nature, Tree Stride",
-"Channel Divinity , Ancients",Magic,Paladin Ancients,3,3,,"As a Magic action, you can expend one use of your Channel Divinity to conjure spectral vines around nearby creatures. Each creature of your choice that you can see within 15 feet of yourself must succeed on a Strength saving throw or have the Restrained condition for 1 minute. A Restrained creature repeats the save at the end of each of its turns, ending the effect on itself on a success.",2 AP
-Aura of warding,Magic,Paladin Ancients,4,7,Aura of Protection,"Ancient magic lies so heavily upon you that it forms an eldritch ward, blunting energy from beyond the Material Plane; you and your allies have resistance to Necrotic, Psychic, and Radiant damage while in your Aura of Protection.",
-Undying sentinel,Combat,Paladin Ancients,5,15,,"When you are reduced to 0 Hit Points and not killed outright, you can choose to drop to 1 Hit Point instead, and you regain a number of Hit Points equal to three times your Paladin level. Once you use this feature, you can’t do so again until you finish a Long Rest.
+Aura of warding,Magic,"Paladin, Ancients",4,7,Aura of Protection,"Ancient magic lies so heavily upon you that it forms an eldritch ward, blunting energy from beyond the Material Plane; you and your allies have resistance to Necrotic, Psychic, and Radiant damage while in your Aura of Protection.",
+Undying sentinel,Combat,"Paladin, Ancients",5,15,,"When you are reduced to 0 Hit Points and not killed outright, you can choose to drop to 1 Hit Point instead, and you regain a number of Hit Points equal to three times your Paladin level. Once you use this feature, you can’t do so again until you finish a Long Rest.
 
 Additionally, you suffer none of the drawbacks of old age, and you can’t be aged magically.",
-Elder Champion,Magic,Paladin Ancients,8,20,Aura of Protection,"At 20th level, you can assume the form of an ancient force of nature, taking on an appearance you choose. For example, your skin might turn green or take on a bark-like texture, your hair might become leafy or moss-like, or you might sprout antlers or a lion-like mane.
+Elder Champion,Magic,"Paladin, Ancients",8,20,Aura of Protection,"At 20th level, you can assume the form of an ancient force of nature, taking on an appearance you choose. For example, your skin might turn green or take on a bark-like texture, your hair might become leafy or moss-like, or you might sprout antlers or a lion-like mane.
 
 Using 1 AP, you undergo a transformation. For 1 minute, you gain the following benefits:
 
@@ -1150,91 +1434,91 @@ Using 1 AP, you undergo a transformation. For 1 minute, you gain the following b
 • Enemy creatures within 10 feet of you have disadvantage on saving throws against your paladin spells and Channel Divinity options.
 
 Once you use this feature, you can’t use it again until you finish a Long Rest. You can also restore your use of it by expending a 5th-level spell slot (no action required).",1 AP
-"Oath Spell, Conquest",Magic,Paladin Conquest,3,3,"Spellcasting, paladin","|3| armor of Agathys, command 
+"Oath Spell, Conquest",Magic,"Paladin, Conquest",3,3,,"|3| armor of Agathys, command 
 |5| hold person, spiritual weapon 
-|9| bestow curse, fear 
+|9°| bestow curse, fear 
 |13| dominate beast, stoneskin 
 |17| cloudkill, dominate person",
-"Channel Divinity, Conquest",Magic,Paladin Conquest,4,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
+"Channel Divinity, Conquest",Magic,"Paladin, Conquest",4,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
 
-Conquering Presence. You can use your Channel Divinity to exude a terrifying presence. using 2 AP, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success.
-Guided Strike. You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses.",
-Aura of Conquest,Magic,Paladin Conquest,3,7,Aura of Protection,"Starting at 7th level, you constantly emanate a menacing aura while you're not incapacitated.
+***Conquering Presence***. You can use your Channel Divinity to exude a terrifying presence. using 2 AP, you force each creature of your choice that you can see within 30 feet of you to make a Wisdom saving throw. On a failed save, a creature becomes frightened of you for 1 minute. The frightened creature can repeat this saving throw at the end of each of its turns, ending the effect on itself on a success.
+***Guided Strike***. You can use your Channel Divinity to strike with supernatural accuracy. When you make an attack roll, you can use your Channel Divinity to gain a +10 bonus to the roll. You make this choice after you see the roll, but before the DM says whether the attack hits or misses.",
+Aura of Conquest,Magic,"Paladin, Conquest",3,7,Aura of Protection,"Starting at 7th level, you constantly emanate a menacing aura while you're not incapacitated.
 
 While a creature is inside you Aura of Protection, if the creature is frightened of you, its speed is reduced to 0 while in the aura, and that creature takes psychic damage equal to half your paladin level if it starts its turn there.",
-Scornful Rebuke,Magic,Paladin Conquest,4,15,,"Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1) if you’re not incapacitated.",
-Invincible Conqueror,Magic,Paladin Conquest,8,20,Aura of Protection,"At 20th level, you gain the ability to harness extraordinary martial prowess. using 1 AP, you can magically become an avatar of conquest, gaining the following benefits for 1 minute:
+Scornful Rebuke,Magic,"Paladin, Conquest",4,15,,"Starting at 15th level, those who dare to strike you are psychically punished for their audacity. Whenever a creature hits you with an attack, that creature takes psychic damage equal to your Charisma modifier (minimum of 1) if you’re not incapacitated.",
+Invincible Conqueror,Magic,"Paladin, Conquest",8,20,Aura of Protection,"At 20th level, you gain the ability to harness extraordinary martial prowess. using 1 AP, you can magically become an avatar of conquest, gaining the following benefits for 1 minute:
 
 • You have resistance to all damage.
 • When you take the Attack action on your turn, you can make one additional attack as part of that action.
 • Your melee weapon attacks score a critical hit on a roll of 19 or 20 on the d20.
 
 Once you use this feature, you can’t use it again until you finish a Long Rest. You can also restore your use of it by expending a 5th-level spell slot (no action required).",1 AP
-"Oath Spell, Crown",Magic,Paladin Crown,4,3,"Spellcasting, paladin","|3| command, compelled duel 
-|5| warding bond, zone of truth 
-|9| aura of vitality, spirit guardians 
-|13| banishment, guardian of faith 
-|17| circle of power, geas",
-Channel Divinity,Magic,Paladin Crown,3,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
+Channel Divinity,Magic,"Paladin, Crown",3,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
 
 • Champion Challenge. using 1 AP, you issue a challenge that compels other creatures to do battle with you. Each creature of your choice that you can see within 30 feet of you must make a Wisdom saving throw. On a failed save, a creature can't willingly move more than 30 feet away from you. This effect ends on the creature if you are incapacitated or die or if the creature is more than 30 feet away from you.
 • Turn the Tide. using 1 AP, you can bolster injured creatures with your Channel Divinity. Each creature of your choice that can hear you within 30 feet of you regains hit points equal to 1d6 + your Charisma modifier (minimum of 1) if it has no more than half of its hit points.",1 AP
-Divine Allegiance,Magic,Paladin Crown,2,7,Aura of Protection,"Starting at 7th level, when a creature within 5 feet of you takes damage, you can use your reaction to magically substitute your own health for that of the target creature, causing that creature not to take the damage. Instead, you take the damage. This damage to you can't be reduced or prevented in any way.",Reaction
-Unyielding Saint,Magic,Paladin Crown,3,15,,"Starting at 15th level, you have advantage on saving throws to avoid becoming paralyzed or stunned.",
-Exalted Champion,Magic,Paladin Crown,4,20,Aura of Protection,"At 20th level, your presence on the field of battle is an inspiration to those dedicated to your cause. You can use 1 AP to gain the following benefits for 1 hour:
+"Oath Spell, Crown",Magic,"Paladin, Crown",4,3,,"|3| command, compelled duel 
+|5| warding bond, zone of truth 
+|9°| aura of vitality, spirit guardians 
+|13| banishment, guardian of faith 
+|17| circle of power, geas",
+Divine Allegiance,Magic,"Paladin, Crown",2,7,Aura of Protection,"Starting at 7th level, when a creature within 5 feet of you takes damage, you can use your reaction to magically substitute your own health for that of the target creature, causing that creature not to take the damage. Instead, you take the damage. This damage to you can't be reduced or prevented in any way.",Reaction
+Unyielding Saint,Magic,"Paladin, Crown",3,15,,"Starting at 15th level, you have advantage on saving throws to avoid becoming paralyzed or stunned.",
+Exalted Champion,Magic,"Paladin, Crown",4,20,Aura of Protection,"At 20th level, your presence on the field of battle is an inspiration to those dedicated to your cause. You can use 1 AP to gain the following benefits for 1 hour:
 
 • You have resistance to bludgeoning, piercing, and slashing damage.
 • Your allies have advantage on death saving throws within inside your Aura of Protection.
 • You have advantage on Wisdom saving throws, as do your allies within inside your Aura of Protection.
 This effect ends early if you are incapacitated or die.
 Once you use this feature, you can’t use it again until you finish a Long Rest. You can also restore your use of it by expending a 5th-level spell slot (no action required).",1 AP
-"Oath Spells, Devotion",Magic,Paladin Devotion,4,3,"Spellcasting, paladin","|3| Protection from Evil And Good, Shield of Faith 
+"Oath Spells, Devotion",Magic,"Paladin, Devotion",4,3,,"|3| Protection from Evil And Good, Shield of Faith 
 |5| Aid, Zone of Truth 
-|9| Beacon of Hope, Dispel Magic 
+|9°| Beacon of Hope, Dispel Magic 
 |13| Freedom of Movement, Guardian of Faith 
 |17| Commune, Flame Strike",
-Channel Divinity,Magic,Paladin Devotion,6,3,,"When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.
+Channel Divinity,Magic,"Paladin, Devotion",6,3,,"When you take the Attack action, you can expend one use of your Channel Divinity to imbue one Melee weapon that you are holding with positive energy. For 10 minutes or until you use this feature again, you add your Charisma modifier to attack rolls you make with that weapon (minimum bonus of +1), and each time you hit with it, you cause it to deal its normal damage type or Radiant damage.
 
 The weapon also emits Bright Light in a 20-foot radius and Dim Light 20 feet beyond that.
 
 You can end this effect early (no action required). This effect also ends if you aren't carrying the weapon.",2 AP
-Aura of Devotion,Magic,Paladin Devotion,4,7,Aura of Protection,"Starting at 7th level, you and friendly creatures is inside your Aura of Protection you can't be charmed while you are conscious.
+Aura of Devotion,Magic,"Paladin, Devotion",4,7,Aura of Protection,"Starting at 7th level, you and friendly creatures is inside your Aura of Protection you can't be charmed while you are conscious.
 If a Charmed ally enters the aura, that condition has no effect on that ally while there.",
-Purity of Spirit,Magic,Paladin Devotion,3,15,,"Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn.",
-Holy Nimbus,Magic,Paladin Devotion,6,20,Aura of Protection,"As 1 AP, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+Purity of Spirit,Magic,"Paladin, Devotion",3,15,,"Your magical smite now radiates protective energy. Whenever you cast Divine Smite, you and your allies have Half Cover while in your Aura of Protection. The aura has this benefit until the start of your next turn.",
+Holy Nimbus,Magic,"Paladin, Devotion",6,20,Aura of Protection,"As 1 AP, you can imbue your Aura of Protection with holy power, granting the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
 
-• Holy Ward. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.
+• ***Holy Ward***. You have Advantage on any saving throw you are forced to make by a Fiend or an Undead.
 
-• Radiant Damage. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.
+• ***Radiant Damage***. Whenever an enemy starts its turn in the aura, that creature takes Radiant damage equal to your Charisma modifier plus your Proficiency Bonus.
 
-• Sunlight. The aura is filled with Bright Light that is sunlight.",1 AP
-"Oath Spells, Glory",Magic,Paladin Glory,4,3,"Spellcasting, paladin","|3| Guiding Bolt, Heroism 
+• ***Sunlight***. The aura is filled with Bright Light that is sunlight.",1 AP
+Channel Divinity,Magic,"Paladin, Glory",4,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options. See the Sacred Oath class feature for how Channel Divinity works.
+• Peerless Athlete. using 1 AP, you can use your Channel Divinity to augment your athleticism. For the next 10 minutes, you have advantage on Strength (Athletics) and Dexterity (Acrobatics) checks; you can carry, push, drag, and lift twice as much weight as normal; and the distance of your long and high jumps increases by 10 feet (this extra distance costs movement as normal).
+• ***Inspiring Smite***. Immediately after you deal damage to a creature with your Divine Smite feature, you can use your Channel Divinity using 1 AP and distribute temporary hit points to creatures of your choice within 30 feet of you, which can include you. The total number of temporary hit points equals 2d8 + your level in this class, divided among the chosen creatures however you like.",1 AP
+"Oath Spells, Glory",Magic,"Paladin, Glory",4,3,,"|3| Guiding Bolt, Heroism 
 |5| Enhance Ability, Magic Weapon 
-|9| Haste, Protection from Energy 
+|9°| Haste, Protection from Energy 
 |13| Compulsion, Freedom of Movement 
 |17| Legend Lore, Yolande's Regal Presence",
-Channel Divinity,Magic,Paladin Glory,4,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options. See the Sacred Oath class feature for how Channel Divinity works.
-• Peerless Athlete. using 1 AP, you can use your Channel Divinity to augment your athleticism. For the next 10 minutes, you have advantage on Strength (Athletics) and Dexterity (Acrobatics) checks; you can carry, push, drag, and lift twice as much weight as normal; and the distance of your long and high jumps increases by 10 feet (this extra distance costs movement as normal).
-• Inspiring Smite. Immediately after you deal damage to a creature with your Divine Smite feature, you can use your Channel Divinity using 1 AP and distribute temporary hit points to creatures of your choice within 30 feet of you, which can include you. The total number of temporary hit points equals 2d8 + your level in this class, divided among the chosen creatures however you like.",1 AP
-Aura of Alacrity,Magic,Paladin Glory,5,7,Aura of Protection,"Your Speed increases by 10 feet.
+Aura of Alacrity,Magic,"Paladin, Glory",5,7,Aura of Protection,"Your Speed increases by 10 feet.
 
 In addition, whenever an ally enters your Aura of Protection for the first time on a turn or starts their turn there, the ally's Speed increases by 10 feet until the end of their next turn.",
-Glorious Defense,Magic,Paladin Glory,4,15,,"When you reach 15th level, you can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can use your reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one weapon attack against the attacker as part of this reaction, provided the attacker is within your weapon's range.
+Glorious Defense,Magic,"Paladin, Glory",4,15,,"When you reach 15th level, you can turn defense into a sudden strike. When you or another creature you can see within 10 feet of you is hit by an attack roll, you can use your reaction to grant a bonus to the target's AC against that attack, potentially causing it to miss. The bonus equals your Charisma modifier (minimum of +1). If the attack misses, you can make one weapon attack against the attacker as part of this reaction, provided the attacker is within your weapon's range.
 
 You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a long rest.",Reaction
-Living Legend,Magic,Paladin Glory,7,20,Aura of Protection,"You can empower yourself with the legends—whether true or exaggerated—of your great deeds. As 1 AP, you gain the benefits below for 10 minutes. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+Living Legend,Magic,"Paladin, Glory",7,20,Aura of Protection,"You can empower yourself with the legends—whether true or exaggerated—of your great deeds. As 1 AP, you gain the benefits below for 10 minutes. Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
 
-• Charismatic. You are blessed with an otherworldly presence and have Advantage on all Charisma checks.
+• ***Charismatic***. You are blessed with an otherworldly presence and have Advantage on all Charisma checks.
 
-• Saving Throw Reroll. If you fail a saving throw, you can take a Reaction to reroll it. You must use this new roll.
+• ***Saving Throw Reroll***. If you fail a saving throw, you can take a Reaction to reroll it. You must use this new roll.
 
-• Unerring Strike. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead.","1 AP, Reaction"
-"Oath Spell, Noble Genies",,"Paladine, Oath of the Noble Genies",3,3,,"|3| Chromatic Orb, Elementalism, Thunderous Smite 
+• ***Unerring Strike***. Once on each of your turns when you make an attack roll with a weapon and miss, you can cause that attack to hit instead.","1 AP, Reaction"
+"Oath Spell, Noble Genies",,"Paladin, Oath of the Noble Genies",3,3,,"|3| Chromatic Orb, Elementalism, Thunderous Smite 
 |5| Mirror Image, Phantasmal Force 
-|9| Fly, Gaseous Form 
+|9°| Fly, Gaseous Form 
 |13| Conjure Minor Elementals, Summon Elemental 
 |17| Banishing Smite, Contact Other Plane",
-Elemental Smite,Magic,"Paladine, Oath of the Noble Genies",5,3,Channel Divinity,"Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and invoke one of the following effects.
+Elemental Smite,Magic,"Paladin, Oath of the Noble Genies",5,3,Channel Divinity,"Immediately after you cast Divine Smite, you can expend one use of your Channel Divinity and invoke one of the following effects.
 
 • Dao's Crush. Earth rises up around the target of your Divine Smite. The target has the Grappled condition (escape DC equal to your spell save DC). While Grappled, the target has the Restrained condition.
 
@@ -1243,60 +1527,45 @@ Elemental Smite,Magic,"Paladine, Oath of the Noble Genies",5,3,Channel Divinity,
 • Efreeti's Fury. The target of your Divine Smite takes an extra 2d4 Fire damage, and fire jumps from the target to another creature you can see within 30 feet of yourself. The second creature also takes 2d4 Fire damage.
 
 • Marid's Surge. The target of your Divine Smite and each creature of your choice in a 10-foot Emanation originating from you make a Strength saving throw against your spell save DC. On a failed save, a creature is pushed 15 feet straight away from you and has the Prone condition.",
-Genie's Splendor,Combat,"Paladine, Oath of the Noble Genies",8,3,,"When you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers. You can use a Shield and still gain this benefit.
+Genie's Splendor,Combat,"Paladin, Oath of the Noble Genies",8,3,,"When you aren't wearing any armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers. You can use a Shield and still gain this benefit.
 
 You also gain proficiency in one of the following skills of your choice: Acrobatics, Intimidation, Performance, or Persuasion.",
-Aura of Elemental Shielding,Magic,"Paladine, Oath of the Noble Genies",4,7,Aura of Protection,"Choose one of the following damage types: Acid, Cold, Fire, Lightning, or Thunder. You and your allies have Resistance to that damage type while in your Aura of Protection.
+Aura of Elemental Shielding,Magic,"Paladin, Oath of the Noble Genies",4,7,Aura of Protection,"Choose one of the following damage types: Acid, Cold, Fire, Lightning, or Thunder. You and your allies have Resistance to that damage type while in your Aura of Protection.
 
 At the start of each of your turns, you can change the damage type affected by this feature to one of the other listed options (no action required).",
-Elemental Rebuke,Magic,"Paladine, Oath of the Noble Genies",2,15,,"When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.
+Elemental Rebuke,Magic,"Paladin, Oath of the Noble Genies",2,15,,"When you are hit by an attack roll, you can take a Reaction to halve the attack's damage against yourself (round down) and force the attacker to make a Dexterity saving throw against your spell save DC. On a failed save, the attacker takes damage equal to 2d10 plus your Charisma modifier of one of the following types (your choice): Acid, Cold, Fire, Lightning, or Thunder. On a successful save, the attacker takes half as much damage.
 
 You can use this feature a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",Reaction
-Noble Scion,Magic,"Paladine, Oath of the Noble Genies",8,20,,"As 1 AP, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+Noble Scion,Magic,"Paladin, Oath of the Noble Genies",8,20,,"As 1 AP, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
 
-• Flight. You have a Fly Speed of 60 feet and can hover.
+• ***Flight***. You have a Fly Speed of 60 feet and can hover.
 
-• Minor Wish. When you or an ally in your Aura of Protection fails a D20 Test, you can take a Reaction to make the D20 Test succeed instead.",1 AP
-"Oath Spell, Oathbreaker",Magic,Paladin Oathbreaker,3,3,"Spellcasting, paladin","|3| hellish rebuke, inflict wounds 
-|5| crown of madness, darkness 
-|9| animate dead, bestow curse 
-|13| blight, confusion 
-|17| contagion, dominate person",
-"Channel Divinity, Oathbreaker",Magic,Paladin Oathbreaker,3,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
+• ***Minor Wish***. When you or an ally in your Aura of Protection fails a D20 Test, you can take a Reaction to make the D20 Test succeed instead.",1 AP
+"Channel Divinity, Oathbreaker",Magic,"Paladin, Oathbreaker",3,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
 
 • Control Undead. using 2 AP, you target one undead creature you can see within 30 feet of you. The target must make a Wisdom saving throw. On a failed save, the target must obey your commands for the next 24 hours, or until you use this Channel Divinity option again. An undead whose challenge rating is equal to or greater than your paladin level is immune to this effect.
 • Dreadful Aspect. using 2 AP, you channel the darkest emotions and focus them into a burst of magical menace. Each creature of your choice within 30 feet of you must make a Wisdom saving throw if it can see you. On a failed save, the target is frightened of you for 1 minute. If a creature frightened by this effect ends its turn more than 30 feet away from you, it can attempt another Wisdom saving throw to end the effect on it",
-Aura of Hate,Magic,Paladin Oathbreaker,7,7,Aura of Protection,"Starting at 7th level you, as well any fiends and undead inside your Aura of Protection, gain a bonus to melee weapon damage rolls equal to your Charisma modifier (minimum of +1). A creature can benefit from this feature from only one paladin at a time.",
-Supernatural Resistance,Magic,Paladin Oathbreaker,4,15,,"At 15th level, you gain resistance to bludgeoning, piercing, and slashing damage from weapons.",
-Dread Lord,Combat,Paladin Oathbreaker,4,20,Aura of Protection,"At 20th level, you can, using 1 AP, surround yourself with an aura of gloom that lasts for 1 minute. The aura reduces any bright light in a 30-foot radius around you to dim light. Whenever an enemy that is frightened by you starts its turn in the aura, it takes 4d10 psychic damage. Additionally, you and any creatures of your choosing in the aura are draped in deeper shadow. Creatures that rely on sight have disadvantage on attack rolls against creatures draped in this shadow.
+"Oath Spell, Oathbreaker",Magic,"Paladin, Oathbreaker",3,3,,"|3| hellish rebuke, inflict wounds 
+|5| crown of madness, darkness 
+|9°| animate dead, bestow curse 
+|13| blight, confusion 
+|17| contagion, dominate person",
+Aura of Hate,Magic,"Paladin, Oathbreaker",7,7,Aura of Protection,"Starting at 7th level you, as well any fiends and undead inside your Aura of Protection, gain a bonus to melee weapon damage rolls equal to your Charisma modifier (minimum of +1). A creature can benefit from this feature from only one paladin at a time.",
+Supernatural Resistance,Magic,"Paladin, Oathbreaker",4,15,,"At 15th level, you gain resistance to bludgeoning, piercing, and slashing damage from weapons.",
+Dread Lord,Combat,"Paladin, Oathbreaker",4,20,Aura of Protection,"At 20th level, you can, using 1 AP, surround yourself with an aura of gloom that lasts for 1 minute. The aura reduces any bright light in a 30-foot radius around you to dim light. Whenever an enemy that is frightened by you starts its turn in the aura, it takes 4d10 psychic damage. Additionally, you and any creatures of your choosing in the aura are draped in deeper shadow. Creatures that rely on sight have disadvantage on attack rolls against creatures draped in this shadow.
 
 While the aura lasts, you can use 1 AP on your turn to cause the shadows in the aura to attack one creature. Make a melee spell attack against the target. If the attack hits, the target takes necrotic damage equal to 3d10 + your Charisma modifier.
 
 Once you use this feature, you can’t use it again until you finish a long rest, unless you expend a 5th-level spell slot to use it again.",1 AP
-"Oath Spells, Vengeance",Magic,Paladin Vengeance,4,3,"Spellcasting, paladin","|3| Bane, Hunter's Mark 
-|5| Hold Person, Misty Step 
-|9| Haste, Protection from Energy 
-|13| Banishment, Dimension Door 
-|17| Hold Monster, Scrying",
-"Channel Divinity, Vengeance",Magic,Paladin Vengeance,7,3,,"When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You have Advantage on attack rolls against the creature for 1 minute or until you use this feature again.
-
-If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).",
-Relentless Avenger,Magic,Paladin Vengeance,4,7,Aura of Protection,"Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks.",Reaction
-Soul of Vengeance,Magic,Paladin Vengeance,5,15,"Channel Divinity, Vengeance","Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it's within range.",Reaction
-Avenging Angel,Magic,Paladin Vengeance,7,20,Aura of Protection,"As 1 AP, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
-
-• Flight. You sprout spectral wings on your back, have a Fly Speed of 60 feet, and can hover.
-
-• Frightful Aura. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage.",1 AP
-"Oath Spell, Redemption",Magic,"Paladin, Redemption",3,3,"Spellcasting, paladin","|3| sanctuary, sleep 
-|5| calm emotions, hold person 
-|9| counterspell, hypnotic pattern 
-|13| Otiluke's resilient sphere, stoneskin 
-|17| hold monster, wall of force",
 "Channel Divinity, Redemption",Magic,"Paladin, Redemption",3,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options.
 
-• Emissary of Peace. You can use your Channel Divinity to augment your presence with divine power. using 1 AP, you grant yourself a +5 bonus to Charisma (Persuasion) checks for the next 10 minutes.
-• Rebuke the Violent. You can use your Channel Divinity to rebuke those who use violence. Immediately after an attacker within 30 feet of you deals damage with an attack against a creature other than you, you can use your reaction to force the attacker to make a Wisdom saving throw. On a failed save, the attacker takes radiant damage equal to the damage it just dealt. On a successful save, it takes half as much damage.","1 AP, Reaction"
+• ***Emissary of Peace***. You can use your Channel Divinity to augment your presence with divine power. using 1 AP, you grant yourself a +5 bonus to Charisma (Persuasion) checks for the next 10 minutes.
+• ***Rebuke the Violent***. You can use your Channel Divinity to rebuke those who use violence. Immediately after an attacker within 30 feet of you deals damage with an attack against a creature other than you, you can use your reaction to force the attacker to make a Wisdom saving throw. On a failed save, the attacker takes radiant damage equal to the damage it just dealt. On a successful save, it takes half as much damage.","1 AP, Reaction"
+"Oath Spell, Redemption",Magic,"Paladin, Redemption",3,3,,"|3| sanctuary, sleep 
+|5| calm emotions, hold person 
+|9°| counterspell, hypnotic pattern 
+|13| Otiluke's resilient sphere, stoneskin 
+|17| hold monster, wall of force",
 Aura of the Guardian,Magic,"Paladin, Redemption",3,7,Aura of Protection,"Starting at 7th level, you can shield your allies from harm at the cost of your own health. When a creature within your Aura of Protection of you takes damage, you can use your reaction to magically take that damage, instead of that creature taking it. This feature doesn't transfer any other effects that might accompany the damage, and this damage can't be reduced in any way.",Reaction
 Protectiove Spirit,Magic,"Paladin, Redemption",5,15,,"Starting at 15th level, a holy presence mends your wounds in combat. You regain hit points equal to 1d6 + half your paladin level if you end your turn in combat with fewer than half of your hit points remaining and you aren’t incapacitated.",
 Emissary of Redemption,Magic,"Paladin, Redemption",5,20,Aura of Protection,"At 20th level,  you become an avatar of peace, which gives you the following benefits.
@@ -1304,14 +1573,29 @@ Emissary of Redemption,Magic,"Paladin, Redemption",5,20,Aura of Protection,"At 2
 • You have resistance to all damage dealt by other creatures (their attacks, spells, and other effects).
 • Whenever a creature damages you, it takes radiant damage equal to half the amount it dealt to you.
 If you attack a creature, cast a spell on it, or deal damage to it by any means but this feature, neither benefit works against that creature until you finish a long rest,  unless you expend a 5th-level spell slot to use it again.",
-"Oath Spell, Watchers",Magic,"Paladin, Watchers",3,3,"Spellcasting, paladin","|3| alarm, detect magic 
+"Oath Spells, Vengeance",Magic,"Paladin, Vengeance",4,3,,"|3| Bane, Hunter's Mark 
+|5| Hold Person, Misty Step 
+|9°| Haste, Protection from Energy 
+|13| Banishment, Dimension Door 
+|17| Hold Monster, Scrying",
+"Channel Divinity, Vengeance",Magic,"Paladin, Vengeance",7,3,,"When you take the Attack action, you can expend one use of your Channel Divinity to utter a vow of enmity against a creature you can see within 30 feet of yourself. You have Advantage on attack rolls against the creature for 1 minute or until you use this feature again.
+
+If the creature drops to 0 Hit Points before the vow ends, you can transfer the vow to a different creature within 30 feet of yourself (no action required).",
+Relentless Avenger,Magic,"Paladin, Vengeance",4,7,Aura of Protection,"Your supernatural focus helps you close off a foe's retreat. When you hit a creature with an Opportunity Attack, you can reduce the creature's Speed to 0 until the end of the current turn. You can then move up to half your Speed as part of the same Reaction. This movement doesn't provoke Opportunity Attacks.",Reaction
+Soul of Vengeance,Magic,"Paladin, Vengeance",5,15,"Channel Divinity, Vengeance","Immediately after a creature under the effect of your Vow of Enmity hits or misses with an attack roll, you can take a Reaction to make a melee attack against that creature if it's within range.",Reaction
+Avenging Angel,Magic,"Paladin, Vengeance",7,20,Aura of Protection,"As 1 AP, you gain the benefits below for 10 minutes or until you end them (no action required). Once you use this feature, you can't use it again until you finish a Long Rest. You can also restore your use of it by expending a level 5 spell slot (no action required).
+
+• ***Flight***. You sprout spectral wings on your back, have a Fly Speed of 60 feet, and can hover.
+
+• ***Frightful Aura***. Whenever an enemy starts its turn in your Aura of Protection, that creature must succeed on a Wisdom saving throw or have the Frightened condition for 1 minute or until it takes any damage. Attack rolls against the Frightened creature have Advantage.",1 AP
+"Oath Spell, Watchers",Magic,"Paladin, Watchers",3,3,,"|3| alarm, detect magic 
 |5| moonbeam, see invisibility 
-|9| counterspell, nondetection 
+|9°| counterspell, nondetection 
 |13| aura of purity, banishment 
 |17| hold monster, scrying",
 "Channel Divinity, Watchers",Magic,"Paladin, Watchers",4,3,,"When you take this oath at 3rd level, you gain the following two Channel Divinity options. See the Sacred Oath class feature for how Channel Divinity works.
 • Watcher's Will. You can use your Channel Divinity to invest your presence with the warding power of your faith. using 2 AP, you can choose a number of creatures you can see within 30 feet of you, up to a number equal to your Charisma modifier (minimum of one creature). For 1 minute, you and the chosen creatures have advantage on Intelligence, Wisdom, and Charisma saving throws.
-• Abjure the Extraplanar. You can use your Channel Divinity to castigate unworldly beings. using 2 AP, you present your holy symbol and each aberration, celestial, elemental, fey, or fiend within 30 feet of you that can hear you must make a Wisdom saving throw. On a failed save, the creature is turned for 1 minute or until it takes damage.
+• ***Abjure the Extraplanar***. You can use your Channel Divinity to castigate unworldly beings. using 2 AP, you present your holy symbol and each aberration, celestial, elemental, fey, or fiend within 30 feet of you that can hear you must make a Wisdom saving throw. On a failed save, the creature is turned for 1 minute or until it takes damage.
 A turned creature must spend its turns trying to move as far away from you as it can, and it can't willingly end its move in a space within 30 feet of you. For its action, it can use only the Dash action or try to escape from an effect that prevents it from moving. If there's nowhere to move, the creature can take the Dodge action.",2 AP
 Aura of the Sentinel,Magic,"Paladin, Watchers",5,7,Aura of Protection,"At 7th level, you emit an aura of alertness while you aren't incapacitated. When you and any creatures of your choice inside your Aura of Protection roll initiative, you all gain a bonus to initiative equal to your proficiency bonus.",
 Vigilant Rebuke,Magic,"Paladin, Watchers",2,15,,"At 15th level, you've learned how to chastise anyone who dares wield beguilements against you and your wards. Whenever you or a creature you can see within 30 feet of you succeeds on an Intelligence, a Wisdom, or a Charisma saving throw, you can use your reaction to deal 2d8 + your Charisma modifier force damage to the creature that forced the saving throw.",Reaction
@@ -1321,21 +1605,116 @@ Mortal Bulwark,Magic,"Paladin, Watchers",8,20,Aura of Protection,"At 20th level,
 • You have advantage on attack rolls against aberrations, celestials, elementals, fey, and fiends.
 • When you hit a creature with an attack roll and deal damage to it, you can also force it to make a Charisma saving throw against your spell save DC. On a failed save, the creature is magically banished to its native plane of existence if it's currently not there. On a successful save, the creature can't be banished by this feature for 24 hours.
 Once you use this action, you can't use it again until you finish a long rest, unless you expend a 5th-level spell slot to use it again.",1 AP
+Subtle Telekinesis,Magic,Psion,1,1,,"You know the Mage Hand cantrip. You can cast it without Somatic components, and you can make the spectral hand Invisible when you cast it. ",
+Psionic Power,Magic,Psion,1,1,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
+
+Some of your powers expend the Psionic Energy die they use, as specified in a power's description, and you can't use a power if it requires you to use a die when your dice are all expended. You regain all your expended Psionic Energy dice when you finish a long rest. In addition, using 1 AP, you can regain one expended Psionic Energy die, but you can't do so again until you finish a short or long rest.
+
+When you reach certain levels in this class, the size of your Psionic Energy dice increases: at 5th level (d8), 11th level (d10), and 17th level (d12).
+
+You regain one of your expended Psionic Energy Dice when you finish a Short Rest, and you regain all of them when you finish a Long Rest.
+
+",1 AP
+Psionic Discipline,Magic,Psion,1,3,Psionic Power,"Prerequisiti: Psionic Power
+You learn further psionic techniques that are fueled by your Psionic Energy Dice. You can use only one Discipline each turn and only once per turn unless otherwise noted.
+Ciascun potere richiede un investimento di 2 PC e va selezionato dall'apposito elenco presente nella sezione dei Feat dedicata alle Psionic Disciplines.
+",
+Psionic Restoration,Magic,Psion,3,5,Psionic Power,"You can perform a meditation that focuses the mind for 1 minute. At the end of it, you regain expended Psionic Energy Dice. Once you use this feature, you can't do so again until you finish a Long Rest. ",
+Extra Attack,Combat,Psion,5,6,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
+Psionic Surge,Magic,Psion,3,7,Psionic Power,"You can push your psionic powers using your life force. After you roll one or more Psionic Energy Dice, you can expend one of your Hit Point Dice and treat any roll of 1, 2, or 3 on those Psionic Energy Dice as a 4.",
+Psionic Reserves,Magic,Psion,4,18,Psionic Power,"When you roll Initiative, you regain expended uses of Psionic Energy Dice until you have four if you have fewer than that.",
+Enkindled Life,Magic,Psion,6,20,Psionic Power,"Once per turn, when you roll one or more Psionic Energy Dice for a Psion feature or Psionic Discipline, you can expend one or two of your Hit Point Dice. For each Hit Point Die expended, roll an additional Psionic Energy Die and add the numbers rolled to the total. This roll does not expend the Psionic Energy Die",
+"Discipline Power, Egoist",Magic,"Psion, Egoist",3,3,,"|3| Alter Self, Cure Wounds, Inflict Wounds, Lesser Restoration
+|5| Aura of Vitality, Haste
+|7| Polymorph, Stoneskin
+|9°| Contagion, Mass Cure Wounds",
+Mutable Form,Magic,"Psion, Egoist",4,3,Psionic Power,"As 1 Action Point, you can expend one Psionic Energy Die to psionically stretch your limbs for 1 minute. Roll the expended Psionic Energy Die and gain a number of Temporary Hit Points equal to the number rolled plus your Intelligence modifier (minimum of 1 Temporary Hit Point). In addition, you gain the following benefits while this feature is active: Reach (+5 feet), Speed (+5 feet), Touch (Touch spells become range 10 feet)",1 AP
+Organic Weapon,Magic,"Psion, Egoist",5,3,,"As a Magic action, you can reform your free hand into one of the following organic weapons: Bone Blade, Flesh Maul, or Viscera Launcher. Whenever you attack with the weapon, you can use your Intelligence modifier for the attack and damage rolls instead of using Strength or Dexterity.",2 AP
+Thicken Skin,Magic,"Psion, Egoist",6,3,,"Al 3° livello il manifester &egrave; in grado di alterare lo spessore della propria pelle rendendola pi&ugrave; robusta agli attacchi. While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Intelligence modifiers.",
+Die Hard,Magic,"Psion, Egoist",3,6,,"A partire dal 6° livello quando vieni ridotto a 0 punti ferita o meno, puoi rigenerare all’istante le ferite mortali e andare a 1 punto ferita. Nessuna azione &egrave; richiesta.
+Non puoi usare nuovamente questa abilit&agrave; prima di effettuare un riposo lungo.",
+Flesh Weaver,Magic,"Psion, Egoist",4,6,Mutable Form,"When you use Mutable Form, you can expend an additional Psionic Energy Die to gain the following benefits: 
+• Organic Defense (+2 bonus to AC) 
+• Empowered Healing (When you cast a spell that restores Hit Points, expend one Psionic Energy Die and add the number rolled to the HP regained). ",
+Improved Mutable Form,Magic,"Psion, Egoist",4,10,Mutable Form,"When you use Mutable Form, the duration increases to 10 minutes and you gain one of the following benefits:
+• Stony Epidermis (Advantage on Con saves for Concentration, Resistance to one damage type)
+• Superior Stride (Dash as 1 Action Point (1 AP), Climb/Swim Speed)
+• Unnatural Flexibility (+1 AC, move through 1 inch spaces, escape restraints and end Grappled condition).",
+Life-Bending Weapons,Magic,"Psion, Egoist",5,14,Organic Weapon,"When you hit a target with an attack roll using your Organic Weapon, roll one Psionic Energy Die. The target takes extra Necrotic damage equal to the number rolled. This roll doesn't expend the die. Alternatively, you can expend one Psionic Energy Die to deal extra Necrotic damage equal to the roll and heal creatures in a 30-foot Emanation. ",
+Metamorphosis,Magic,"Psion, Egoist",6,14,Thicken Skin,"Dal 14° il tuo corpo viene pervaso dall’energia psichica. Any critical hit against you becomes a normal hit. In addition, when you are subjected to a magical effect that allows you to make a Strength or Constitution saving throw to take only half damage, you instead take no damage if you succeed on the saving throw.",
+Warp Propel,Magic,"Psion, Nomad",2,3,Psionic Power,"When a target fails its saving throw against your Telekinetic Propel, instead of pushing it, you can teleport the target to an unoccupied space you can see within 30 feet of you that is horizontal to you.",
+Bend space fabric,Magic,"Psion, Nomad",3,3,Psionic Power,Spendendo un Dado di Energia rendi difficile il movimento in un'area di 20 piedi attorno a te. Le creature selezionate all'interno di quest'area devono spendere il doppio del normale costo di movimento fino all'inizio del tuo prossimo turno.,1 AP
+"Discipline Power, Nomad",Magic,"Psion, Nomad",3,3,,"|3| Long Strider, Misty Step, Vortex Varp, Kinetic Jaunt
+|5| Blink, Thunder Step
+|7| Dimensional Door, Dimensional Anchor*
+|9°| Far Step, Steel Wind Strike",
+Teleportation Master,Magic,"Psion, Nomad",4,3,Psionic Power,"Su tutti i poteri di teletrasporto a bersaglio o bersaglio multiplo, puoi usare un Energy Dice per applicare una delle seguenti opzioni (ove applicabile)
+&egrave; possibile influenzare un numero di creature addizionali pari al valore dell’Energy Dice. Tutte le condizioni di eleggibilit&agrave; restano valide.
+Puoi modificare il raggio da personale a Touch (nessun tiro per colpire richiesto)
+Puoi modificare la destinazione di un numero di bersagli pari al valore dell’Energy Dice rispetto agli altri.
+Puoi applicare l’effetto a creature non consenzienti anche se non previsto. Tiro salvezza Saggezza contro la tua spell DC nega.",
+Fast Traveler,Magic,"Psion, Nomad",2,6,Psionic Power,"Starting at 6th level, usando un Energy Dice pu&ograve; lanciare un potere della lista del Nomade con 1 Action Point.",1 AP
+Nomad's Step,Magic,"Psion, Nomad",3,6,,"Quando sei bersaglio di un attacco, puoi usare un Energy Dice come Reaction per evitare l’attacco e teletrasportarti in una zona che puoi vedere a 30 piedi da te.",Reaction
+Teleporter Combat,Magic,"Psion, Nomad",4,6,,"Immediately after you cast Misty Step, you can cast one of your Psion cantrips that has a casting time of an action as part of the 1 Action Point (1 AP).",1 AP
+Duplicity Target,Magic,"Psion, Nomad",3,10,Psionic Power,"When a creature you can see makes an attack roll against you, you can take a Reaction to expend one Psionic Energy Die and choose a willing creature you can see within 30 feet of yourself that doesn’t have the Incapacitated condition. You and the willing creature teleport, swapping places with each other.
+The creature then becomes the target of the attack roll.",Reaction
+Mass Teleportation,Magic,"Psion, Nomad",3,14,Psionic Power,"As a Magic action, you expend four Psionic Energy Dice and choose Huge or smaller creatures within 30 feet of yourself, up to a number of creatures equal to your Intelligence modifier (minimum of one creature). Each of the chosen creatures is teleported to an unoccupied space you can see within 150 feet of you. An unwilling creature that succeeds on a Wisdom saving throw against your spell save DC is unaffected.",2 AP
+Incantesimi Transdimensionali,Magic,"Psion, Nomad",5,14,Psionic Power,"Puoi spendere un Energy Dice per lanciare incantesimi che influenzano bersagli nascosti in piani coesistenti e spazi extradimensionali gli ingressi dei quali rientrano all'interno dell'area dell'incantesimo.
+
+Beneficio: Un incantesimo transdimensionale ha il suo effetto normale completo sulle creature incorporee, sulle creature sul Piano Etereo o sul Piano delle Ombre, e sulle creature dentro uno spazio extradimensionale nell'area dell'incantesimo. Tali creature comprendono le creature eteree, le creature che sono soggette a intermittenza o camminare nelle ombre, i fantasmi manifestati e le creature all'interno dello spazio extradimensionale di un trucco della corda, buco portatile o tasca per famiglio.
+Il personaggio deve essere in grado di percepire una creatura per mirarla con un incantesimo transdimensionale, ma non ha bisogno di percepire una creatura per catturarla nell'area di un'esplosione, un cono, una emanazione o una propagazione.
+Nel momento in cui viene usato un incantesimo transdimensional il caster si affaccia nel piano di destinazione ed &egrave; soggetto agli effetti di entrambi i piani.",
+Telepathy,Magic,"Psion, Telepathy",2,3,,"• You can speak telepathically to any creature you can see within 120 feet of you. Your telepathic utterances are in a language you know, and the creature understands you only if it knows that language. Your communication doesn't give the creature the ability to respond to you telepathically.
+• You can cast the Detect Thoughts spell, requiring no spell slot or components, and you must finish a long rest before you can cast it this way again. Your spellcasting ability for the spell is the ability increased by this feat. If you have spell slots of 2nd level or higher, you can cast this spell with them.",
+Mind Infiltrator,Magic,"Psion, Telepathy",2,3,Psionic Power,"When you cast Detect Thoughts, you can expend one Psionic Energy Die to modify the spell so that the spell doesn't require spell components or Concentration. In addition, when you use the Read Thoughts effect of the spell, the target doesn't know you're probing its mind if it fails the Wisdom saving throw. ",
+"Discipline Power, Telepathy",Magic,"Psion, Telepathy",3,3,,"|3| Bane, Command, Detect Thoughts, Mind Spike
+|5| Counterspell, Schism
+|7| Compulsion, Confusion
+|9°| Modify Memory, Yolande’s Regal Presence",
+Telepathic Distraction,Magic,"Psion, Telepathy",3,3,"Psionic Power, Telepathy","When a creature you can see within range of your telepathy hits with an attack roll, you can take a Reaction to roll one Psionic Energy Die and subtract the number rolled from attack roll, potentially causing the attack to miss. The die is expended only if the target misses the attack. ",Reaction
+Mind Affecting Master,Magic,"Psion, Telepathy",6,3,Psionic Power,"Su tutti i poteri di telepatia a bersaglio o bersaglio multiplo, puoi sempre selezionare le seguenti opzioni di aumento (ove applicabile)
+• Spendendo 2 Energy Dice puoi avere effetto anche su bestie, folletti e giganti
+• Spendendo 3 Energy Dice puoi avere effetto su qualsiasi tipo di creatura
+• Spendendo 1 o pi&ugrave; Energy Dice la durata aumenta di 1 ora per ogni PP di aumento
+• Spendendo 1 o pi&ugrave; Energy Dice &egrave; possibile influenzare un numero di creature addizionali pari al numero di Energy Dice usato",
+Potent Thoughts,Magic,"Psion, Telepathy",1,6,Psionic Power,"You have telepathy with a range of 180 feet. In addition, you add your Intelligence modifier to the damage you deal with any Psion cantrip.",
+Mind Link,Magic,"Psion, Telepathy",2,6,,Puoi lanciare Telepathic Bond una volta per riposo breve senza spendere uno slot. Puoi sempre inoltre lanciarlo come rituale.,
+Bulwark Mind,Magic,"Psion, Telepathy",4,6,Psionic Power,"At the start of your turn, you can expend one Psionic Energy Die to strengthen your mind and enter a fortified state. For the next 10 minutes, you have Resistance to Psychic damage; and whenever you make an Intelligence, Wisdom, or Charisma saving throw, you add a roll of your Psionic Energy Die to the save. Rolling the Psionic Energy Die doesn't expend it. You can’t use this benefit if you have the Incapacitated condition.",
+Telepathic Bolstering,Magic,"Psion, Telepathy",2,10,"Psionic Power, Telepathy","When you or a creature you can see within range of your telepathy fails an ability check or misses with an attack roll, you can take a Reaction to expend one Psionic Energy Die. Roll the die and add the number rolled to the d20. The Psionic Energy Die is expended only if the check succeeds or the attack hits.",Reaction
+Scarmble Minds,Magic,"Psion, Telepathy",4,10,Psionic Power,"You can cast Confusion without expending a spell slot by instead expending four Psionic Energy Dice. Radius becomes 30 feet, you can choose one creature to automatically succeed. You choose their behavior from the table for the turn instead of the creature rolling.",
+Mind Piercing Power,Magic,"Psion, Telepathy",5,10,,Quando lanci uno spell di Enchantment puoi spendere 3 Dadi di Energia per superare l’immunit&agrave; di un target alla condizione Charmed o Frightned. In generale qualsiasi protezione o immunit&agrave; che protegga specificatamente dagli effetti di influenza mentale viene ignorata.,
+Psychic Transfer,Magic,"Psion, Telepathy",6,14,,"Guadagni la capacit&agrave; di accedere alle capacit&agrave; mentali delle creature sotto l’effetto di dominate, mind seed o mind switch. Fintanto che il legame con la mente della creatura perdura puoi lanciare qualsiasi potere dal soggetto come se fossi tu a manifestarlo. I parametri sono calcolati in base a quelli che hai (proficiency bonus, CD tiri salvezza, tiri per colpire). Se il potere manifestato richiede concentrazione, la creatura dominata pu&ograve; tenere la concentrazione attiva al posto del manifester.",
+Alter time flow,Magic,"Psion, Time Bender",2,3,Psionic Power,Il manifester &egrave; in grado di alterare marginalmente lo scorrere del tempo per brevi istanti. Puoi usare un Action Point e un Energy Dice per ottenere la condizione Quickened fino all’inizio del prossimo round.,1 AP
+"Discipline Power, Time Bender",Magic,"Psion, Time Bender",3,3,,"|3| Gift of Alacrity, Time Freeze, Expeditious Retreat, Elminster’s Elusion
+|5| Temporal Rewind, Slow
+|7| Time Warden, Banishment
+|9°| Time Hop, Temporal Shunt
+",
+Omniscence,Skill,"Psion, Time Bender",4,3,,"Choose 3 skills you are trained in between Arcana, Society, Insight, Investigation, Medicine, Nature or Religion. You can add double the proficiency bonus to any check.",
+Alter Probability,Magic,"Psion, Time Bender",3,6,Psionic Power,Una volta per riposo breve puoi decidere di usare 1 Energy Dice ed aggiungere il suo valore ad un D20 Test (dopo aver tirato ma prima di sapere il risultato).,
+Improved Alter Time Flow,Magic,"Psion, Time Bender",3,6,Alter time flow,"Quando usi Alter Time Flow, puoi rimanere nella condizione Quickened per un numero di round pari al valore ottenuto dall’Energy Dice.",
+Timer screenshot,Magic,"Psion, Time Bender",2,10,,"As a Magic Action you can impress a picture of a creature or an object in a stone or a crystal.
+You can store only one picture at a time. At any time later, you can restore the photo (Will deny). If you do not restore the picture within a week, it will fade away with no effect.
+The target will be restored in the exact same condition as it was. It also loses any memory collected after the shot, but will not be moved in space, nor will it lose any object.
+Experience points and levels will also be lost, but the original value will be tracked and called ghost XP Value.
+Whenever the creature earns XP, the amount will be added to the ghost value and double of the amount will be added to the actual value. When actual value reaches or surpasses the ghost value the creature will gain XP as normal again.",2 AP
+Time Master,Magic,"Psion, Time Bender",6,14,Psionic Power,Al 14° livello spendendo un Energy Dice con un Action Point il manifester pu&ograve; rendere quickened un numero di creature pari al modificatore di Intelligenza. L’effetto dura fino all’inizio del round successivo del manifester. Non &egrave; un effetto a concentrazione,1 AP
 Favored Enemy,General,Ranger,2,1,,"You always have the Hunter's Mark spell prepared. You can cast it twice without expending a spell slot, and you regain all expended uses of this ability when you finish a Long Rest.
 
 The number of times you can cast the spell without a spell slot increases when you reach certain Ranger levels, as shown in the Favored Enemy column of the Ranger Features table.",1 AP
-Deft Explorer,"General, Skill",Ranger,2,2,,"• Expertise. Chose one of your skill proficiencies with which you lack Expertise. You gain Expertise in that skill
-• Languages. You know two languages of your choise.",
 Roving,"General, Skill",Ranger,4,1,,Your walking speed increases by 10 while you aren't wearing Heavy armor. You gain a climbing speed and a swimming speed equal to your walking speed.,2 AP
+Deft Explorer,"General, Skill",Ranger,2,2,,"• Expertise. Chose one of your skill proficiencies with which you lack Expertise. You gain Expertise in that skill
+• ***Languages***. You know two languages of your choise.",
 Primeval Awareness,General,Ranger,2,3,,"Beginning at 3rd level, you can use 2 AP and expend one ranger spell slot to focus your awareness on the region around you. For 1 minute per level of the spell slot you expend, you can sense whether the following types of creatures are present within 1 mile of you (or within up to 6 miles if you are in your favored terrain): aberrations, celestials, dragons, elementals, fey, fiends, and undead. This feature doesn’t reveal the creatures’ location or number.",2 AP
+Extra Attack,Combat,Ranger,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 "Land's Stride, Ranger",General,Ranger,1,8,,"Starting at 8th level, moving through nonmagical difficult terrain costs you no extra movement. You can also pass through nonmagical plants without being slowed by them and without taking damage from them if they have thorns, spines, or a similar hazard.
 
 In addition, you have advantage on saving throws against plants that are magically created or manipulated to impede movement, such as those created by the Entangle spell.",
 "Expertise, Ranger","General, Skill",Ranger,3,9,,Chose two of your skill proficiencies with which you lack Expertise. You gain Expertise in those skills.,
 Tireless,Magic,Ranger,3,10,,"Primal forces now help fuel you on your journeys, granting you the following benefits:
 
-• Temporary Hit Points. As a magic action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1). You can use this action a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.  
-• Decrease Exhaustion. Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1.",2 AP
+• ***Temporary Hit Points***. As a magic action, you can give yourself a number of Temporary Hit Points equal to 1d8 plus your Wisdom modifier (minimum of 1). You can use this action a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.  
+• ***Decrease Exhaustion***. Whenever you finish a Short Rest, your Exhaustion level, if any, decreases by 1.",2 AP
 Relentless Hunter,Magic,Ranger,1,13,Favored Enemy,Taking damage can't break your Concentration on Hunter's Mark.,
 Nature's Veil,General,Ranger,4,14,,"You invocke spirits of nature to magically hide your self. As 1 AP you can give yourself the Invisible condition untile the end of your next turn.
 You can use this feature a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",1 AP
@@ -1346,15 +1725,15 @@ Draconic Gift,Magic,"Ranger, Drakewarden",1,3,,"At 3rd level, the bond you share
 
 You gain the following benefits:
 
-• Thaumaturgy. You learn the Thaumaturgy cantrip, which is a ranger spell for you.
-• Tongue of Dragons. You learn to speak, read, and write Draconic or one other language of your choice.",
+• ***Thaumaturgy***. You learn the Thaumaturgy cantrip, which is a ranger spell for you.
+• ***Tongue of Dragons***. You learn to speak, read, and write Draconic or one other language of your choice.",
 Drake Companion,General,"Ranger, Drakewarden",4,3,,,
 Bond of Fang and Scale,Combat,"Ranger, Drakewarden",2,7,Drake Companion,"At 7th level the bond you share with your drake intensifies, protecting you and stoking the drake’s fury. When you summon your drake, it grows wings on its back and gains a flying speed equal to its walking speed.
 In addition, while your drake is summoned, you and the drake gain the following benefits:
 
-• Drake Mount. The drake grows to Medium size. Reflecting your special bond, you can use the drake as a mount if your size is Medium or smaller. While you are riding your drake, it can’t use the flying speed of this feature.
-• Magic Fang. The drake’s Bite attack deals an extra 1d6 damage of the type chosen for the drake’s Draconic Essence.
-• Resistance. You gain resistance to the damage type chosen for the drake’s Draconic Essence.",
+• ***Drake Mount***. The drake grows to Medium size. Reflecting your special bond, you can use the drake as a mount if your size is Medium or smaller. While you are riding your drake, it can’t use the flying speed of this feature.
+• ***Magic Fang***. The drake’s Bite attack deals an extra 1d6 damage of the type chosen for the drake’s Draconic Essence.
+• ***Resistance***. You gain resistance to the damage type chosen for the drake’s Draconic Essence.",
 Drake’s Breath,Combat,"Ranger, Drakewarden",2,11,Drake Companion,"At 11th level, using 2 AP, you can exhale a 30-foot cone of damaging breath or cause your drake to exhale it. Choose acid, cold, fire, lightning, or poison damage (your choice doesn’t have to match your drake’s Draconic Essence). Each creature in the cone must make a Dexterity saving throw against your spell save DC, taking 8d6 damage on a failed save, or half as much damage on a successful one.
 
 This damage increases to 10d6 when you reach 15th level in this class.
@@ -1362,18 +1741,18 @@ This damage increases to 10d6 when you reach 15th level in this class.
 Once you use this feature, you can’t do so again until you finish a long rest, unless you expend a spell slot of 3rd level or higher to use it again.",
 Perfected Bond,Combat,"Ranger, Drakewarden",2,15,Bond of Fang and Scale,"At 15th level, your bond to your drake reaches the pinnacle of its power. While your drake is summoned, you and the drake gain the following benefits:
 
-• Empowered Bite. The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage).
-• Large Drake. The drake grows to Large size. When you ride your drake, it is no longer prohibited from using the flying speed of Bond of Fang and Scale.
-• Reflexive Resistance. When either you or the drake takes damage while you’re within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",Reaction
+• ***Empowered Bite***. The drake’s Bite attack deals an extra 1d6 damage of the type chosen for its Draconic Essence (for a total of 2d6 extra damage).
+• ***Large Drake***. The drake grows to Large size. When you ride your drake, it is no longer prohibited from using the flying speed of Bond of Fang and Scale.
+• ***Reflexive Resistance***. When either you or the drake takes damage while you’re within 30 feet of each other, you can use your reaction to give yourself or the drake resistance to that instance of damage. You can use this reaction a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",Reaction
 Dreadful Strike,Magic,"Ranger, Fey Wander",3,3,,"You can augment your weapon strikes with mind-scarring magic drawn from the murky hollows of the Feywild. When you hit a creature with a weapon, you can deal an extra 1d4 Psychic damage to the target, which can take this extra damage only once per turn. The extra damage increases to 1d6 when you reach Ranger level 11.",
-Fey Wanderer Spells,Magic,"Ranger, Fey Wander",3,3,"Spellcasting, Ranger","|3| Charm Person 
-|5| Misty Step
-|9| Summon Fey 
-|13| Dimension Door 
-|17| Mislead",
 Otherworldly Glamour,"General, Skill","Ranger, Fey Wander",3,3,,"Whenever you make a Charisma check, you gain a bonus to the check equal to your Wisdom modifier (minimum of +1).
 
 You also gain proficiency in one of these skills of your choice: Deception, Performance, or Persuasion.",
+Fey Wanderer Spells,Magic,"Ranger, Fey Wander",3,3,,"|3| Charm Person 
+|5| Misty Step
+|9°| Summon Fey 
+|13| Dimension Door 
+|17| Mislead",
 Beguiling Twist,Magic,"Ranger, Fey Wander",3,7,,"The magic of the Feywild guards your mind. You have Advantage on saving throws to avoid or end the Charmed or Frightened condition.
 
 In addition, whenever you or a creature you can see within 120 feet of you succeeds on a saving throw to avoid or end the Charmed or Frightened condition, you can take a Reaction to force a different creature you can see within 120 feet of yourself to make a Wisdom save against your spell save DC. On a failed save, the target is Charmed or Frightened (your choice) for 1 minute. The target repeats the save at the end of each of its",Reaction
@@ -1385,15 +1764,15 @@ Misty Wanderer,Magic,"Ranger, Fey Wander",3,15,,"You can cast Misty Step without
 In addition, whenever you cast Misty Step, you can bring along one willing creature you can see within 5 feet of yourself. That creature teleports to an unoccupied space of your choice within 5 feet of your destination space.",1 AP
 Gloom Stalker Magic,Magic,"Ranger, Gloom Stalker",2,3,,"|3| Disguise Self 
 |5| Rope Trick 
-|9| Fear 
+|9°| Fear 
 |13| Greater Invisibility 
 |17| Seeming",
-Dread Ambusher,Combat,"Ranger, Gloom Stalker",6,3,,"• Ambusher's Leap. At the start of your first turn of each combat, your speed increase by 10 feet untile the end of that turn.
-• Dreadful Strike. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
-• Initiative Bonus. When you roll Initiative, you can add your Wisdom modifier to the roll.",
 Umbral Sight,General,"Ranger, Gloom Stalker",3,3,,"At 3rd level, you gain darkvision out to a range of 60 feet. If you already have darkvision from your race, its range increases by 60 feet.
 
 You are also adept at evading creatures that rely on darkvision. While in darkness, you are invisible to any creature that relies on darkvision to see you in that darkness.",
+Dread Ambusher,Combat,"Ranger, Gloom Stalker",6,3,,"• Ambusher's Leap. At the start of your first turn of each combat, your speed increase by 10 feet untile the end of that turn.
+• ***Dreadful Strike***. When you attack a creature and hit it with a weapon, you can deal an extra 2d6 Psychic damage. You can use this benefit only once per turn, you can use it a number of times equal to your Wisdom modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
+• ***Initiative Bonus***. When you roll Initiative, you can add your Wisdom modifier to the roll.",
 Iron mind,Combat,"Ranger, Gloom Stalker",3,7,,"By 7th level, you have honed your ability to resist the mind-altering powers of your prey. You gain proficiency in Wisdom saving throws. If you already have this proficiency, you instead gain proficiency in Intelligence or Charisma saving throws (your choice).",
 Stalker's Flurry,Combat,"Ranger, Gloom Stalker",4,11,Dread Ambusher,"The Psychic damage of your Dreadful Strike becomes 2d8. In addition, when you use the Dreadful Strike effect of your Dread Ambusher feature, you can cause one of the following additional effects:
 
@@ -1401,16 +1780,16 @@ Stalker's Flurry,Combat,"Ranger, Gloom Stalker",4,11,Dread Ambusher,"The Psychic
 
 • Mass Fear: The target and each creature within 10 feet of it must make a Wisdom saving throw against your spell save DC. On a failed save, a creature has the Frightened condition until the start of your next turn.",
 Shadowy Dodge,Combat,"Ranger, Gloom Stalker",2,15,,"When a creature makes an attack roll against you, you can take a Reaction to impose Disadvantage on that roll. Whether the attack hits or misses, you can then teleport up to 30 feet to an unoccupied space you can see.",Reaction
-Horizon Walker Magic,Magic,"Ranger, Horizon Walker",3,3,,"|3| protection from evil and good 
-|5| misty step 
-|9| haste 
-|13| banishment 
-|17| teleportation circle",
 Detecte Portal,Magic,"Ranger, Horizon Walker",1,3,,"At 3rd level, you gain the ability to magically sense the presence of a planar portal. using 2 AP, you detect the distance and direction to the closest planar portal within 1 mile of you.
 
 Once you use this feature, you can't use it again until you finish a short or long rest.
 
 See the ""Planar Travel"" section in chapter 2 of the Dungeon Master's Guide for examples of planar portals.",
+Horizon Walker Magic,Magic,"Ranger, Horizon Walker",3,3,,"|3| protection from evil and good 
+|5| misty step 
+|9°| haste 
+|13| banishment 
+|17| teleportation circle",
 Planar Warrior,Magic,"Ranger, Horizon Walker",4,3,,"At 3rd level, you learn to draw on the energy of the multiverse to augment your attacks.
 
 using 1 AP, choose one creature you can see within 30 feet of you. The next time you hit that creature on this turn with a weapon attack, all damage dealt by the attack becomes force damage, and the creature takes an extra 1d8 force damage from the attack. When you reach 11th level in this class, the extra damage increases to 2d8.",1 AP
@@ -1421,52 +1800,52 @@ Distant Strike,Magic,"Ranger, Horizon Walker",4,11,,"At 11th level, you gain the
 
 If you attack at least two different creatures with the action, you can make one additional attack with it against a third creature.",
 Spectral Defense,Magic,"Ranger, Horizon Walker",4,15,,"At 15th level, your ability to move between planes enables you to slip through the planar boundaries to lessen the harm done to you during battle. When you take damage from an attack, you can use your reaction to give yourself resistance to all of that attack's damage on this turn.",Reaction
-Hunter's Prey,Combat,"Ranger, Hunter",3,3,,"Si può prendere anche 3 volte e selezionare tutte e 3 le opzioni.
+Hunter's Prey,Combat,"Ranger, Hunter",3,3,,"Si pu&ograve; prendere anche 3 volte e selezionare tutte e 3 le opzioni.
 At 3rd level, you gain one of the following features of your choice.
 
-• Colossus Slayer. Your tenacity can wear down the most potent foes. When you hit a creature with a weapon attack, the creature takes an extra 1d8 damage if it’s below its hit point maximum. You can deal this extra damage only once per turn.
-• Giant Killer. When a Large or larger creature within 5 feet of you hits or misses you with an attack, you can use your reaction to attack that creature immediately after its attack, provided that you can see the creature.
-• Horde Breaker. Once on each of your turns when you make a weapon attack, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target and within range of your weapon.",Reaction
+• ***Colossus Slayer***. Your tenacity can wear down the most potent foes. When you hit a creature with a weapon attack, the creature takes an extra 1d8 damage if it’s below its hit point maximum. You can deal this extra damage only once per turn.
+• ***Giant Killer***. When a Large or larger creature within 5 feet of you hits or misses you with an attack, you can use your reaction to attack that creature immediately after its attack, provided that you can see the creature.
+• ***Horde Breaker***. Once on each of your turns when you make a weapon attack, you can make another attack with the same weapon against a different creature that is within 5 feet of the original target and within range of your weapon.",Reaction
 Defensive Tactics,Combat,"Ranger, Hunter",5,7,,"At 7th level, you gain one of the following features of your choice.
 
-• Escape the Horde. Opportunity attacks against you are made with disadvantage.
-• Multiattack Defense. When a creature hits you with an attack,that creature has Disadvantage on all other attack rolls agains you this turn.
-• Steel Will. You have advantage on saving throws against being frightened.",
+• ***Escape the Horde***. Opportunity attacks against you are made with disadvantage.
+• ***Multiattack Defense***. When a creature hits you with an attack,that creature has Disadvantage on all other attack rolls agains you this turn.
+• ***Steel Will***. You have advantage on saving throws against being frightened.",
 Multiattack,Combat,"Ranger, Hunter",3,11,,"At 11th level, you gain one of the following features of your choice.
 
-• Volley. You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon’s range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target
-• Whirlwind Attack. You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target.",
+• ***Volley***. You can use your action to make a ranged attack against any number of creatures within 10 feet of a point you can see within your weapon’s range. You must have ammunition for each target, as normal, and you make a separate attack roll for each target
+• ***Whirlwind Attack***. You can use your action to make melee attacks against any number of creatures within 5 feet of you, with a separate attack roll for each target.",
 Superior hunter's defense,Combat,"Ranger, Hunter",3,15,,"At 15th level, you gain one of the following features of your choice.
 
-• Evasion. When you are subjected to an effect, such as a red dragon’s fiery breath or a lightning bolt spell, that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on a saving throw, and only half damage if you fail
-• Stand Against the Tide. When a hostile creature misses you with a melee attack, you can use your reaction to force that creature to repeat the same attack against another creature (other than itself) of your choice.
-• Uncanny Dodge. When an attacker that you can see hits you with an attack, you can use your reaction to halve the attack’s damage against you.",Reaction
-Monster Slayer Magic,Magic,"Ranger, Monster Slayer",3,3,,"|3| protection from evil and good 
-|5| zone of truth 
-|9| magic circle 
-|13| banishment 
-|17| hold monster",
+• ***Evasion***. When you are subjected to an effect, such as a red dragon’s fiery breath or a lightning bolt spell, that allows you to make a Dexterity saving throw to take only half damage, you instead take no damage if you succeed on a saving throw, and only half damage if you fail
+• ***Stand Against the Tide***. When a hostile creature misses you with a melee attack, you can use your reaction to force that creature to repeat the same attack against another creature (other than itself) of your choice.
+• ***Uncanny Dodge***. When an attacker that you can see hits you with an attack, you can use your reaction to halve the attack’s damage against you.",Reaction
 Hunter's Sense,Magic,"Ranger, Monster Slayer",1,3,,"At 3rd level, you gain the ability to peer at a creature and magically discern how best to hurt it. using 2 AP, choose one creature you can see within 60 feet of you. You immediately learn whether the creature has any damage immunities, resistances, or vulnerabilities and what they are. If the creature is hidden from divination magic, you sense that it has no damage immunities, resistances, or vulnerabilities.
 
 You can use this feature a number of times equal to your Wisdom modifier (minimum of once). You regain all expended uses of it when you finish a long rest.",2 AP
 Slayer's Prey,Combat,"Ranger, Monster Slayer",2,3,,"Starting at 3rd level, you can focus your ire on one foe, increasing the harm you inflict on it. using 1 AP, you designate one creature you can see within 60 feet of you as the target of this feature. The first time each turn that you hit that target with a weapon attack, it takes an extra 1d6 damage from the weapon.
 
 This benefit lasts until you finish a short or long rest. It ends early if you designate a different creature.",1 AP
+Monster Slayer Magic,Magic,"Ranger, Monster Slayer",3,3,,"|3| protection from evil and good 
+|5| zone of truth 
+|9°| magic circle 
+|13| banishment 
+|17| hold monster",
 "Supernatural Defense, Monster Slayer",Combat,"Ranger, Monster Slayer",4,7,,"At 7th level, you gain extra resilience against your prey's assaults on your mind and body. Whenever the target of your Slayer's Prey forces you to make a saving throw and whenever you make an ability check to escape that target's grapple, add 1d6 to your roll.",
 Magic-User's Nemesis,Magic,"Ranger, Monster Slayer",3,11,,"At 11th level, you gain the ability to thwart someone else's magic. When you see a creature casting a spell or teleporting within 60 feet of you, you can use your reaction to try to magically foil it. The creature must succeed on a Wisdom saving throw against your spell save DC, or its spell or teleport fails and is wasted.
 
 Once you use this feature, you can't use it again until you finish a short or long rest.",Reaction
 Slayer's Counter,Combat,"Ranger, Monster Slayer",5,15,,"At 15th level, you gain the ability to counterattack when your prey tries to sabotage you. If the target of your Slayer’s Prey forces you to make a saving throw, you can use your reaction to make one weapon attack against the quarry. You make this attack immediately before making the saving throw. If the attack hits, your save automatically succeeds, in addition to the attack’s normal effects.",Reaction
+Swarmkeeper Magic,Magic,"Ranger, Swarmkeeper",2,3,,"|3| faerie fire 
+|5| web 
+|9°| gaseous form 
+|13| arcane eye 
+|17| insect plague",
 Gathered Swarm,Combat,"Ranger, Swarmkeeper",4,3,,"Once on each of your turns, you can cause the swarm to assist you in one of the following ways, immediately after you hit a creature with an attack:
 
 • The attack's target takes 1d6 piercing damage from the swarm.
 • The attack's target must succeed on a Strength saving throw against your spell save DC or be moved by the swarm up to 15 feet horizontally in a direction of your choice.
 • You are moved by the swarm 5 feet horizontally in a direction of your choice.",
-Swarmkeeper Magic,Magic,"Ranger, Swarmkeeper",2,3,,"|3| faerie fire 
-|5| web 
-|9| gaseous form 
-|13| arcane eye 
-|17| insect plague",
 Writhing Tide,Magic,"Ranger, Swarmkeeper",3,7,Gathered Swarm,"Beginning at 7th level, you can condense part of your swarm into a focused mass that lifts you up. using 1 AP, you gain a flying speed of 10 feet and can hover. This effect lasts for 1 minute or until you are incapacitated.
 
 You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",1 AP
@@ -1478,9 +1857,6 @@ Mighty Swarm,Magic,"Ranger, Swarmkeeper",3,11,Gathered Swarm,"At 11th level, you
 Swarming Dispersal,Magic,"Ranger, Swarmkeeper",3,15,Gathered Swarm,"When you reach 15th level, you can discorporate into your swarm, avoiding danger. When you take damage, you can use your reaction to give yourself resistance to that damage. You vanish into your swarm and then teleport to an unoccupied space that you can see within 30 feet of you, where you reappear with the swarm.
 
 You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",Reaction
-"Expertise, Rogue","General, Skill",Rogue,3,1,,"At 1st level, choose two of your skill proficiencies, or one of your skill proficiencies and your proficiency with thieves' tools. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.
-
-At 6th level, you can choose two more of your proficiencies (in skills or with thieves' tools) to gain this benefit.",
 Sneak Attack,Combat,Rogue,5,,,"Progressione come tabella Rogue. Beginning at 1st level, you know how to strike subtly and exploit a foe's distraction. Once per turn, you can deal an extra 0d6 damage to one creature you hit with an attack if you have advantage on the attack roll. The attack must use a finesse or a ranged weapon.
 
 You don't need advantage on the attack roll if another enemy of the target is within 5 feet of it, that enemy isn't incapacitated, and you don't have disadvantage on the attack roll.
@@ -1488,6 +1864,9 @@ You don't need advantage on the attack roll if another enemy of the target is wi
 Thieves' Cant,Combat,Rogue,0,1,,"During your rogue training you learned thieves' cant, a secret mix of dialect, jargon, and code that allows you to hide messages in seemingly normal conversation. Only another creature that knows thieves' cant understands such messages. It takes four times longer to convey such a message than it does to speak the same idea plainly.
 
 In addition, you understand a set of secret signs and symbols used to convey short, simple messages, such as whether an area is dangerous or the territory of a thieves' guild, whether loot is nearby, or whether the people in an area are easy marks or will provide a safe house for thieves on the run.",
+"Expertise, Rogue","General, Skill",Rogue,3,1,,"At 1st level, choose two of your skill proficiencies, or one of your skill proficiencies and your proficiency with thieves' tools. Your proficiency bonus is doubled for any ability check you make that uses either of the chosen proficiencies.
+
+At 6th level, you can choose two more of your proficiencies (in skills or with thieves' tools) to gain this benefit.",
 Cunning Action,Combat,Rogue,5,2,,"Starting at 2nd level, your quick thinking and agility allow you to move and act quickly. You can take this action using 1 AP on each of your turns in combat. This action can be used only to take the Dash, Disengage or Hide action.",1 AP
 Steady Aim,Combat,Rogue,3,3,,"With 1 AP, you give yourself Advantage on your next attack roll on the current turn. You can use this feature only if you haven't moved during this turn, and after you use it, your Speed is 0 until the end of the current turn.",1 AP
 Uncanny Dodge,Combat,Rogue,3,5,,"Starting at 5th level, when an attacker that you can see hits you with an attack, you can use your reaction to halve the attack's damage against you.",Reaction
@@ -1504,20 +1883,20 @@ Spell Thief,Magic,"Rogue, Arcane Trickster",2,17,,"You gain the ability to magic
 Immediately after a creature casts a spell that targets you or includes you in its area of effect, you can take a Reaction to force the creature to make an Intelligence saving throw. The DC equals your spell save DC. On a failed save, you negate the spell's effect against you, and you steal the knowledge of the spell if it is at least level 1 and of a level you can cast (it doesn't need to be a Wizard spell). For the next 8 hours, you have the spell prepared. The creature can't cast it until the 8 hours have passed.
 
 Once you steal a spell with this feature, you can't use this feature again until you finish a Long Rest.",Reaction
-Assassinate,Combat,"Rogue, Assassin",5,3,,"Starting at 3rd level, you are at your deadliest when you get the drop on your enemies. You have advantage on attack rolls against any creature that hasn't taken a turn in the combat yet. In addition, any hit you score against a creature that is surprised is a critical hit.",
 "Bonus Proficiency, Assassin",General,"Rogue, Assassin",1,3,,"You gain a Disguise Kit and a Poisoner's Kit, and you have proficiency with them.",
+Assassinate,Combat,"Rogue, Assassin",5,3,,"Starting at 3rd level, you are at your deadliest when you get the drop on your enemies. You have advantage on attack rolls against any creature that hasn't taken a turn in the combat yet. In addition, any hit you score against a creature that is surprised is a critical hit.",
 Infiltration Expertise,General,"Rogue, Assassin",2,9,,"You are expert at the following techniques that aid your infiltrations.
 
-• Masterful Mimicry. You can unerringly mimic another person's speech, handwriting, or both if you have spent at least 1 hour studying them.
+• ***Masterful Mimicry***. You can unerringly mimic another person's speech, handwriting, or both if you have spent at least 1 hour studying them.
 
-• Roving Aim. Your Speed isn't reduced to 0 by using Steady Aim.",
+• ***Roving Aim***. Your Speed isn't reduced to 0 by using Steady Aim.",
 Envenom Weapons,General,"Rogue, Assassin",3,13,,"When you use the Poison option of your Cunning Strike, the target also takes 2d6 Poison damage whenever it fails the saving throw. This damage ignores Resistance to Poison damage.",
 Death Strike,General,"Rogue, Assassin",4,17,,"When you hit with your Sneak Attack on the first round of a combat, the target must succeed on a Constitution saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus), or the attack's damage is doubled against the target.",
-Ear of Deceit,General,"Rogue, Inquisitive",2,3,,"When you choose this archetype at 3rd level, you develop a keen ear for picking out lies. Whenever you make a Wisdom (Insight) check to determine whether a creature is lying, treat a roll of 7 or lower on the d20 as an 8.",
-Eye of Detail,General,"Rogue, Inquisitive",2,3,,"Starting at 3rd level, you can use the Search Action using only 1 AP.",1 AP
 Insightful Fighting,Combat,"Rogue, Inquisitive",1,3,Sneak Attack,"At 3rd level, you gain the ability to decipher an opponent's tactics and develop a counter to them. using 1 AP, you make a Wisdom (Insight) check against a creature you can see that isn't incapacitated, contested by the target's Charisma (Deception) check. If you succeed, you can use your Sneak Attack against that target even if you don't have advantage on the attack roll, but not if you have disadvantage on it.
 
 This benefit lasts for 1 minute or until you successfully use this feature against a different target.",1 AP
+Ear of Deceit,General,"Rogue, Inquisitive",2,3,,"When you choose this archetype at 3rd level, you develop a keen ear for picking out lies. Whenever you make a Wisdom (Insight) check to determine whether a creature is lying, treat a roll of 7 or lower on the d20 as an 8.",
+Eye of Detail,General,"Rogue, Inquisitive",2,3,,"Starting at 3rd level, you can use the Search Action using only 1 AP.",1 AP
 Steady Eye,General,"Rogue, Inquisitive",2,9,,you gain advantage on any Wisdom (Perception) or Intelligence (Investigation) check if you move no more than half your speed on the same turn.,
 Unerring Eye,General,"Rogue, Inquisitive",2,13,,"At 13th level, your senses are almost impossible to foil. using 2 AP, you sense the presence of illusions, shapechangers not in their original form, and other magic designed to deceive the senses within 30 feet of you, provided you aren't blinded or deafened. You sense that an effect is attempting to trick you, but you gain no insight into what is hidden or into its true nature.
 
@@ -1542,7 +1921,7 @@ Whispers of the Dead,"General, Skill","Rogue, Phantom",1,3,,"When you choose thi
 Wails from the Grave,Combat,"Rogue, Phantom",3,3,,"Immediately after you deal your Sneak Attack damage to a creature on your turn, you can target a second creature that you can see within 30 feet of the first creature. Roll half the number of Sneak Attack dice for your level (round up), and the second creature takes necrotic damage equal to the roll's total, as wails of the dead sound around them for a moment.
 
 You can use this feature a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.",
-Tokens of the Departed,Magic,"Rogue, Phantom",4,7,,"when a life ends in your presence, you're able to snatch a token from the departing soul, a sliver of its life essence that takes physical form: as a reaction when a creature you can see dies within 30 feet of you, you can open your free hand and cause a Tiny trinket to appear there, a soul trinket. The DM determines the trinket's form or has you roll on the Trinkets table in the Player's Handbook to generate it.
+Token of the Departed,Magic,"Rogue, Phantom",4,7,,"when a life ends in your presence, you're able to snatch a token from the departing soul, a sliver of its life essence that takes physical form: as a reaction when a creature you can see dies within 30 feet of you, you can open your free hand and cause a Tiny trinket to appear there, a soul trinket. The DM determines the trinket's form or has you roll on the Trinkets table in the Player's Handbook to generate it.
 You can have a maximum number of soul trinkets equal to your proficiency bonus, and you can't create one while at your maximum.
 You can use soul trinkets in the following ways:
 • While a soul trinket is on your person, you have advantage on death saving throws and Constitution saving throws, for your vitality is enhanced by the life essence within the object.
@@ -1555,14 +1934,14 @@ Death's Friend,Magic,"Rogue, Phantom",2,17,Wails from the Grave,"At 17th level, 
 
 • When you use your Wails from the Grave, you can now deal the necrotic damage to both the first and the second creature.
 • At the end of a long rest, a soul trinket appears in your hand if you don't have any soul trinkets, as the spirits of the dead are drawn to you.",
-Skirmisher,General,"Rogue, Scout",4,3,,"Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn’t provoke opportunity attacks.",Reaction
 Survivalist,"General, Skill","Rogue, Scout",3,3,,"When you choose this archetype at 3rd level, you gain proficiency in the Nature and Survival skills if you don't already have it. Your proficiency bonus is doubled for any ability check you make that uses either of those proficiencies.",
+Skirmisher,General,"Rogue, Scout",4,3,,"Starting at 3rd level, you are difficult to pin down during a fight. You can move up to half your speed as a reaction when an enemy ends its turn within 5 feet of you. This movement doesn’t provoke opportunity attacks.",Reaction
 Superior Mobility,General,"Rogue, Scout",3,9,,"At 9th level, your walking speed increases by 10 feet. If you have a climbing or swimming speed, this increase applies to that speed as well.",
 Ambush Master,Combat,"Rogue, Scout",6,13,,"Starting at 13th level, you excel at leading ambushes and acting first in a fight.
 
 You have advantage on initiative rolls. In addition, the first creature you hit during the first round of a combat becomes easier for you and others to strike; attack rolls against that target have advantage until the start of your next turn.",
 Sudden Strike,Combat,"Rogue, Scout",6,17,Sneak Attack,"Starting at 17th level, you can strike with deadly speed. If you take the Attack action on your turn, you can make one additional attack using 1 AP. This attack can benefit from your Sneak Attack even if you have already used it this turn, but you can't use your Sneak Attack against the same target more than once in a turn.",1 AP
-Psionic Power,Magic,Psion; Rogue; Fighter,3,1,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
+Psionic Power,Magic,"Rogue, Soulknife",1,3,,"You harbor a wellspring of psionic energy within yourself. This energy is represented by your Psionic Energy dice, which are each a d6. You have a number of these dice equal to twice your proficiency bonus, and they fuel various psionic powers you have, which are detailed below.
 
 Some of your powers expend the Psionic Energy die they use, as specified in a power's description, and you can't use a power if it requires you to use a die when your dice are all expended. You regain all your expended Psionic Energy dice when you finish a long rest. In addition, using 1 AP, you can regain one expended Psionic Energy die, but you can't do so again until you finish a short or long rest.
 
@@ -1574,10 +1953,10 @@ You regain one of your expended Psionic Energy Dice when you finish a Short Rest
 Psychic Blades,Magic,"Rogue, Soulknife",2,3,Psionic Power,"You can manifest shimmering blades of psychic energy. Whenever you take the Attack action or make an Opportunity Attack, you can manifest a Psychic Blade in your free hand and make the attack with that blade.
 
 The blade vanishes immediately after it hits or misses its target, and it leaves no mark if it deals damage.
-After you attack with the blade on your turn, you can make a melee or ranged attack with a second psychic blade as a Bonus Action on the same turn if your other hand is free to create it. The damage die of this bonus attack is 1d4 instead of 1d6.",1 AP
+After you attack with the blade on your turn, you can make a melee or ranged attack with a second psychic blade as 1 Action Point (1 AP) on the same turn if your other hand is free to create it. The damage die of this bonus attack is 1d4 instead of 1d6.",1 AP
 Soul Blades,Magic,"Rogue, Soulknife",4,9,Psychic Blades,"Your Psychic Blades are now an expression of your psi-suffused soul, giving you these powers that use your Psionic Energy dice:
 
-• Homing Strikes. If you make an attack roll with your Psychic Blades and miss the target, you can roll one Psionic Energy die and add the number rolled to the attack roll. If this causes the attack to hit, you expend the Psionic Energy die.
+• ***Homing Strikes***. If you make an attack roll with your Psychic Blades and miss the target, you can roll one Psionic Energy die and add the number rolled to the attack roll. If this causes the attack to hit, you expend the Psionic Energy die.
 
 • Psychic Teleportation. using 1 AP, you manifest one of your Psychic Blades, expend one Psionic Energy die and roll it, and throw the blade at an unoccupied space you can see, up to a number of feet away equal to 10 times the number rolled. You then teleport to that space, and the blade vanishes.",1 AP
 Psychic Veil,Magic,"Rogue, Soulknife",4,13,,"You can weave a veil of psychic static to mask yourself. As a Magic action, you gain the Invisible condition for 1 hour or until you dismiss this effect (no action required). This invisibility ends early immediately after you deal damage to a creature or you force a creature to make a saving throw.
@@ -1586,29 +1965,10 @@ Once you use this feature, you can't do so again until you finish a Long Rest un
 Rend Mind,Magic,"Rogue, Soulknife",4,17,Sneak Attack; Psychic Blades,"You can sweep your Psychic Blades through a creature's mind. When you use your Psychic Blades to deal Sneak Attack damage to a creature, you can force that target to make a Wisdom saving throw (DC 8 plus your Dexterity modifier and Proficiency Bonus). If the save fails, the target has the Stunned condition for 1 minute. The Stunned target repeats the save at the end of each of its turns, ending the effect on itself on a success.
 
 Once you use this feature, you can't do so again until you finish a Long Rest unless you expend three Psionic Energy Dice (no action required) to restore your use of it.",
-Fast Hands,General,"Rogue, Thief",3,3,Cunning Action,"As 1 AP, you can do one of the following.
-
-• Sleight of Hand. Make a Dexterity (Sleight of Hand) check to pick a lock or disarm a trap with Thieves' Tools or to pick a pocket.
-
-• Use an Object. Take the Utilize action, or take the Magic action to use a magic item that requires that action.",1 AP
-Second-Story Work,General,"Rogue, Thief",3,3,,"You've trained to get into especially hard-to-reach places, granting you these benefits.
-
-• Climber. You gain a Climb Speed equal to your Speed.
-
-• Jumper. You can determine your jump distance using your Dexterity rather than your Strength.",
-Supreme Sneak,General,"Rogue, Thief",3,9,,"Starting at 9th level, you have advantage on a Dexterity (Stealth) check if you move no more than half your speed on the same turn.",
-Use Magic Device,General,"Rogue, Thief",5,13,,"You've learned how to maximize use of magic items, granting you the following benefits.
-
-• Attunement. You can attune to up to four magic items at once.
-
-• Charges. Whenever you use a magic item property that expends charges, roll 1d6. On a roll of 6, you use the property without expending the charges.
-
-• Scrolls. You can use any Spell Scroll, using Intelligence as your spellcasting ability for the spell. If the spell is a cantrip or a level 1 spell, you can cast it reliably. If the scroll contains a higher-level spell, you must first succeed on an Intelligence (Arcana) check (DC 10 plus the spell's level). On a successful check, you cast the spell from the scroll. On a failed check, the scroll disintegrates.",
-Thief's Reflexes,General,"Rogue, Thief",9,17,,"When you reach 17th level, you have become adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal initiative and your second turn at your initiative minus 10. You can't use this feature when you are surprised.",
+Fancy Footwork,Combat,"Rogue, Swashbuckler",2,3,,"When you choose this archetype at 3rd level, you learn how to land a strike and then slip away without reprisal. During your turn, if you make a melee attack against a creature, that creature can't make opportunity attacks against you for the rest of your turn.",
 Rakish Audacity,Combat,"Rogue, Swashbuckler",5,3,,"Starting at 3rd level, your confidence propels you into battle. You can give yourself a bonus to your initiative rolls equal to your Charisma modifier.
 
 You also gain an additional way to use your Sneak Attack; you don't need advantage on the attack roll to use your Sneak Attack against a creature if you are within 5 feet of it, no other creatures are within 5 feet of you, and you don't have disadvantage on the attack roll. All the other rules for Sneak Attack still apply to you.",
-Fancy Footwork,Combat,"Rogue, Swashbuckler",2,3,,"When you choose this archetype at 3rd level, you learn how to land a strike and then slip away without reprisal. During your turn, if you make a melee attack against a creature, that creature can't make opportunity attacks against you for the rest of your turn.",
 Panache,Combat,"Rogue, Swashbuckler",4,9,,"At 9th level, your charm becomes extraordinarily beguiling. using 2 AP, you can make a Charisma (Persuasion) check contested by a creature's Wisdom (Insight) check. The creature must be able to hear you, and the two of you must share a language.
 
 If you succeed on the check and the creature is hostile to you, it has disadvantage on attack rolls against targets other than you and can't make opportunity attacks against targets other than you. This effect lasts for 1 minute, until one of your companions attacks the target or affects it with a spell, or until you and the target are more than 60 feet apart.
@@ -1616,12 +1976,76 @@ If you succeed on the check and the creature is hostile to you, it has disadvant
 If you succeed on the check and the creature isn't hostile to you, it is charmed by you for 1 minute. While charmed, it regards you as a friendly acquaintance. This effect ends immediately if you or your companions do anything harmful to it.",
 Elegant Maneuver,Combat,"Rogue, Swashbuckler",2,13,,"Starting at 13th level, you can use 1 AP on your turn to gain advantage on the next Dexterity (Acrobatics) or Strength (Athletics) check you make during the same turn.",1 AP
 Master Duelist,Combat,"Rogue, Swashbuckler",4,17,,"Beginning at 17th level, your mastery of the blade lets you turn failure into success in combat. If you miss with an attack roll, you can roll it again with advantage. Once you do so, you can't use this feature again until you finish a short or long rest.",
-Font of Magic,Magic,Sorcerer,7,2,,"At 2nd level, you tap into a deep wellspring of magic within yourself. This wellspring is represented by sorcery points, which allow you to create a variety of magical effects.
+Second-Story Work,General,"Rogue, Thief",3,3,,"You've trained to get into especially hard-to-reach places, granting you these benefits.
 
-•Sorcery Points. You have 2 sorcery points, and you gain more as you reach higher levels, as shown in the Sorcery Points column of the Sorcerer table. You can never have more sorcery points than shown on the table for your level. You regain all spent sorcery points when you finish a long rest.
-•Flexible Casting. You can use your sorcery points to gain additional spell slots, or sacrifice spell slots to gain additional sorcery points. You learn other ways to use your sorcery points as you reach higher levels.
-•Creating Spell Slots. You can transform unexpended sorcery points into one spell slot using 1 AP on your turn. The Creating Spell Slots table shows the cost of creating a spell slot of a given level. You can create spell slots no higher in level than 5th. Any spell slot you create with this feature vanishes when you finish a long rest.
-•Converting a Spell Slot to Sorcery Points. using 1 AP on your turn, you can expend one spell slot and gain a number of sorcery points equal to the slot's level.",1 AP
+• ***Climber***. You gain a Climb Speed equal to your Speed.
+
+• ***Jumper***. You can determine your jump distance using your Dexterity rather than your Strength.",
+Fast Hands,General,"Rogue, Thief",3,3,Cunning Action,"As 1 AP, you can do one of the following.
+
+• ***Sleight of Hand***. Make a Dexterity (Sleight of Hand) check to pick a lock or disarm a trap with Thieves' Tools or to pick a pocket.
+
+• ***Use an Object***. Take the Utilize action, or take the Magic action to use a magic item that requires that action.",1 AP
+Supreme Sneak,General,"Rogue, Thief",3,9,,"Starting at 9th level, you have advantage on a Dexterity (Stealth) check if you move no more than half your speed on the same turn.",
+Use Magic Device,General,"Rogue, Thief",5,13,,"You've learned how to maximize use of magic items, granting you the following benefits.
+
+• ***Attunement***. You can attune to up to four magic items at once.
+
+• ***Charges***. Whenever you use a magic item property that expends charges, roll 1d6. On a roll of 6, you use the property without expending the charges.
+
+• ***Scrolls***. You can use any Spell Scroll, using Intelligence as your spellcasting ability for the spell. If the spell is a cantrip or a level 1 spell, you can cast it reliably. If the scroll contains a higher-level spell, you must first succeed on an Intelligence (Arcana) check (DC 10 plus the spell's level). On a successful check, you cast the spell from the scroll. On a failed check, the scroll disintegrates.",
+Thief's Reflexes,General,"Rogue, Thief",8,17,,"When you reach 17th level, you have become adept at laying ambushes and quickly escaping danger. You can take two turns during the first round of any combat. You take your first turn at your normal initiative and your second turn at your initiative minus 10. You can't use this feature when you are surprised.",
+Font of Magic,Magic,Sorcerer,7,2,,"You can tap into the wellspring of magic within yourself. This wellspring is represented by Sorcery Points, which allow you to create a variety of magical effects.
+
+You have 2 Sorcery Points, and you gain more as you reach higher levels, as shown in the Sorcery Points column of the Sorcerer Features table. You can't have more Sorcery Points than the number shown in the table for your level. You regain all expended Sorcery Points when you finish a Long Rest.
+
+You can use your Sorcery Points to fuel the options below, along with other features, such as Metamagic, that use those points.
+
+• ***Converting Spell Slots to Sorcery Points***. You can expend a spell slot to gain a number of Sorcery Points equal to the slot's level (no action required).
+
+• ***Creating Spell Slots***. As a 1 Action Point (1 AP), you can transform unexpended Sorcery Points into one spell slot. The Creating Spell Slots table shows the cost of creating a spell slot of a given level, and it lists the minimum Sorcerer level you must be to create a slot. You can create a spell slot no higher than level 5.
+
+<h4 style=""margin: 16px 0 8px 0; color: var(--text-heading); font-family: 'Outfit', sans-serif; font-size: 1.05rem; border-bottom: 1px solid var(--accent-gold); padding-bottom: 4px;"">Creating Spell Slots</h4>
+<div class=""table-container"" style=""overflow-x: auto; margin-bottom: 16px;"">
+  <table class=""dnd-table"" style=""width: 100%; max-width: 500px; border-collapse: collapse; font-size: 0.95rem;"">
+    <thead>
+      <tr style=""border-bottom: 2px solid var(--accent-gold);"">
+        <th style=""text-align: left; padding: 10px; color: var(--accent-gold); font-weight: bold;"">Spell Slot Level</th>
+        <th style=""text-align: center; padding: 10px; color: var(--accent-gold); font-weight: bold;"">Sorcery Point Cost</th>
+        <th style=""text-align: center; padding: 10px; color: var(--accent-gold); font-weight: bold;"">Min. Sorcerer Level</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style=""border-bottom: 1px solid var(--accent-gold-light);"">
+        <td style=""text-align: left; padding: 8px; font-weight: bold;"">1</td>
+        <td style=""text-align: center; padding: 8px;"">2</td>
+        <td style=""text-align: center; padding: 8px;"">2</td>
+      </tr>
+      <tr style=""border-bottom: 1px solid var(--accent-gold-light);"">
+        <td style=""text-align: left; padding: 8px; font-weight: bold;"">2</td>
+        <td style=""text-align: center; padding: 8px;"">3</td>
+        <td style=""text-align: center; padding: 8px;"">3</td>
+      </tr>
+      <tr style=""border-bottom: 1px solid var(--accent-gold-light);"">
+        <td style=""text-align: left; padding: 8px; font-weight: bold;"">3</td>
+        <td style=""text-align: center; padding: 8px;"">5</td>
+        <td style=""text-align: center; padding: 8px;"">5</td>
+      </tr>
+      <tr style=""border-bottom: 1px solid var(--accent-gold-light);"">
+        <td style=""text-align: left; padding: 8px; font-weight: bold;"">4</td>
+        <td style=""text-align: center; padding: 8px;"">6</td>
+        <td style=""text-align: center; padding: 8px;"">7</td>
+      </tr>
+      <tr style=""border-bottom: 1px solid var(--accent-gold-light);"">
+        <td style=""text-align: left; padding: 8px; font-weight: bold;"">5</td>
+        <td style=""text-align: center; padding: 8px;"">7</td>
+        <td style=""text-align: center; padding: 8px;"">9</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+Any spell slot you create with this feature vanishes when you finish a Long Rest.",1 AP
 Metamagic,Magic,Sorcerer,2,3,,"At 3rd level, you gain the ability to twist your spells to suit your needs. You gain two of the following Metamagic options of your choice. You gain another one at 10th and 17th level.
 You can use only one Metamagic option on a spell when you cast it, unless otherwise noted.
 
@@ -1629,27 +2053,27 @@ You can use only one Metamagic option on a spell when you cast it, unless otherw
 Magical guidance,Magic,Sorcerer,3,5,,"When you reach 5th level, you can tap into your inner wellspring of magic to try and conjure success from failure. When you make an ability check that fails, you can spend 1 sorcery point to reroll the d20, and you must use the new roll, potentially turning the failure into a success.",
 Arcane Apotheosis,Magic,Sorcerer,7,20,,"You can expend 1 Action Point to enter a state of Arcane Apotheosis for 1 minute. While in this form, you gain the following benefits:
 
-• Unbridled Power. Once per turn, you can apply one Metamagic option to a spell you cast without expending Sorcery Points (SP).
+• ***Unbridled Power***. Once per turn, you can apply one Metamagic option to a spell you cast without expending Sorcery Points (SP).
 
-• Dual Metamagic. You can apply up to two Metamagic options to a single spell you cast.
+• ***Dual Metamagic***. You can apply up to two Metamagic options to a single spell you cast.
 
-Usage. You can use this feature two times without cost, and you regain all expended uses when you finish a long rest. You can use this feature additional times by expending 2 Sorcery Points when you activate it.",1 AP
-Divine Magic,Magic,Sorcerer Divine Soul,5,1,,"Your link to the divine allows you to learn spells normally associated with the cleric class. When your Spellcasting feature lets you learn a sorcerer cantrip or a sorcerer spell of 1st level or higher, you can choose the new spell from the cleric spell list or the sorcerer spell list. You must otherwise obey all the restrictions for selecting the spell, and it becomes a sorcerer spell for you.
-
-In addition, choose an affinity for the source of your divine power: good, evil, law, chaos, or neutrality. You learn an additional spell based on that affinity, as shown below. It is a sorcerer spell for you, but it doesn't count against your number of sorcerer spells known. If you later replace this spell, you must replace it with a spell from the cleric spell list.",
-Favored by the Gods,Magic,Sorcerer Divine Soul,4,1,,"Starting at 1st level, divine power guards your destiny. If you fail a saving throw or miss with an attack roll, you can roll 2d4 and add it to the total, possibly changing the outcome.
+***Usage***. You can use this feature two times without cost, and you regain all expended uses when you finish a long rest. You can use this feature additional times by expending 2 Sorcery Points when you activate it.",1 AP
+Favored by the Gods,Magic,"Sorcerer, Divine Soul",4,1,,"Starting at 1st level, divine power guards your destiny. If you fail a saving throw or miss with an attack roll, you can roll 2d4 and add it to the total, possibly changing the outcome.
 
 Once you use this feature, you can't use it again until you finish a short or long rest.",
-Empowered Healing,Magic,Sorcerer Divine Soul,1,6,,"Starting at 6th level, the divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn.",
-Angelic Form,Magic,Sorcerer Divine Soul,4,14,,"Starting at 14th level, you can use 1 AP to manifest a pair of spectral wings from your back. While the wings are present, you have a flying speed of 30 feet. The wings last until you're incapacitated, you die, or you dismiss them using 1 AP.
+Divine Magic,Magic,"Sorcerer, Divine Soul",5,1,,"Your link to the divine allows you to learn spells normally associated with the cleric class. When your Spellcasting feature lets you learn a sorcerer cantrip or a sorcerer spell of 1st level or higher, you can choose the new spell from the cleric spell list or the sorcerer spell list. You must otherwise obey all the restrictions for selecting the spell, and it becomes a sorcerer spell for you.
+
+In addition, choose an affinity for the source of your divine power: good, evil, law, chaos, or neutrality. You learn an additional spell based on that affinity, as shown below. It is a sorcerer spell for you, but it doesn't count against your number of sorcerer spells known. If you later replace this spell, you must replace it with a spell from the cleric spell list.",
+Empowered Healing,Magic,"Sorcerer, Divine Soul",1,6,,"Starting at 6th level, the divine energy coursing through you can empower healing spells. Whenever you or an ally within 5 feet of you rolls dice to determine the number of hit points a spell restores, you can spend 1 sorcery point to reroll any number of those dice once, provided you aren't incapacitated. You can use this feature only once per turn.",
+Angelic Form,Magic,"Sorcerer, Divine Soul",4,14,,"Starting at 14th level, you can use 1 AP to manifest a pair of spectral wings from your back. While the wings are present, you have a flying speed of 30 feet. The wings last until you're incapacitated, you die, or you dismiss them using 1 AP.
 
 The affinity you chose for your Divine Magic feature determines the appearance of the spectral wings: eagle wings for good or law, bat wings for evil or chaos, and dragonfly wings for neutrality.",1 AP
-Unearthly Recovery,Magic,Sorcerer Divine Soul,3,18,,"At 18th level, you gain the ability to overcome grievous injuries. using 1 AP when you have fewer than half of your hit points remaining, you can regain a number of hit points equal to half your hit point maximum.
+Unearthly Recovery,Magic,"Sorcerer, Divine Soul",3,18,,"At 18th level, you gain the ability to overcome grievous injuries. using 1 AP when you have fewer than half of your hit points remaining, you can regain a number of hit points equal to half your hit point maximum.
 
 Once you use this feature, you can’t use it again until you finish a long rest.",1 AP
 Dragon Ancestor,Magic,"Sorcerer, Draconic Bloodline",1,3,,"You can speak, read, and write Draconic. Additionally, whenever you make a Charisma check when interacting with dragons, your proficiency bonus is doubled if it applies to the check.",
-Draconic Scale,General,"Sorcerer, Draconic Bloodline",6,3,,"Parts of you are also covered by dragon-like scales. While you aren't wearing armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers.",
 Draconic Resilience,General,"Sorcerer, Draconic Bloodline",2,3,,"As magic flows through your body, it causes physical traits of your dragon ancestors to emerge. At 1st level, your hit point maximum increases by 1 and increases by 1 again whenever you gain a level in this class.",
+Draconic Scale,General,"Sorcerer, Draconic Bloodline",6,3,,"Parts of you are also covered by dragon-like scales. While you aren't wearing armor, your base Armor Class equals 10 plus your Dexterity and Charisma modifiers.",
 Elemental Affinity,Magic,"Sorcerer, Draconic Bloodline",3,6,,"Your draconic magic has an affinity with a damage type associated with dragons. Choose one of those types: Acid, Cold, Fire, Lightning, or Poison.
 
 You have Resistance to that damage type, and when you cast a spell that deals damage of that type, you can add your Charisma modifier to one damage roll of that spell.",
@@ -1659,19 +2083,19 @@ Once you use this feature, you can't use it again until you finish a Long Rest u
 Dragon Companion,Magic,"Sorcerer, Draconic Bloodline",3,18,,"You can cast Summon Dragon without a Material component. You can also cast it once without a spell slot, and you regain the ability to cast it in this way when you finish a Long Rest.
 
 Whenever you start casting the spell, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for that casting.",2 AP
-Eyes of the Dark,Magic,"Sorcerer, Shadow Magic",2,1,,"From 1st level, you have darkvision with a range of 120 feet.When you reach 3rd level in this class, you learn the darkness spell, which doesn't count against your number of sorcerer spells known. In addition, you can cast it by spending 2 sorcery points or by expending a spell slot. If you cast it with sorcery points, you can see through the darkness created by the spell.",
 Strength of the Grave,Magic,"Sorcerer, Shadow Magic",1,1,,"Starting at 1st level, your existence in a twilight state between life and death makes you difficult to defeat. When damage reduces you to 0 hit points, you can make a Charisma saving throw (DC 5 + the damage taken). On a success, you instead drop to 1 hit point. You can't use this feature if you are reduced to 0 hit points by radiant damage or by a critical hit. After the saving throw succeeds, you can't use this feature again until you finish a long rest.",
+Eyes of the Dark,Magic,"Sorcerer, Shadow Magic",2,1,,"From 1st level, you have darkvision with a range of 120 feet.When you reach 3rd level in this class, you learn the darkness spell, which doesn't count against your number of sorcerer spells known. In addition, you can cast it by spending 2 sorcery points or by expending a spell slot. If you cast it with sorcery points, you can see through the darkness created by the spell.",
 Hound of Ill Omen,Magic,"Sorcerer, Shadow Magic",3,6,,"At 6th level, you gain the ability to call forth a howling creature of darkness to harass your foes. using 1 AP, you can spend 3 sorcery points to summon a hound of ill omen to target one creature you can see within 120 feet of you. The hound uses the dire wolf's statistics, with the following changes: The hound is size Medium, not Large, and it counts as a monstrosity, not a beast. It appears with a number of temporary hit points equal to half your sorcerer level. It can move through other creatures and objects as if they were difficult terrain. The hound takes 5 force damage if it ends its turn inside an object. At the start of its turn, the hound automatically knows its target's location. If the target was hidden, it is no longer hidden from the hound. The hound appears in an unoccupied space of your choice within 30 feet of the target. Roll initiative for the hound. On its turn, it can move only toward its target by the most direct route, and it can use its action only to attack its target. The hound can make opportunity attacks, but only against its target. Additionally, while the hound is within 5 feet of the target, the target has disadvantage on saving throws against any spell you cast. The hound disappears if it is reduced to 0 hit points, if its target is reduced to 0 hit points, or after 5 minutes.",1 AP
 Shadow Walk,Magic,"Sorcerer, Shadow Magic",4,14,,"At 14th level, you gain the ability to step from one shadow into another. When you are in dim light or darkness, using 1 AP, you can teleport up to 120 feet to an unoccupied space you can see that is also in dim light or darkness.",1 AP
 Umbral Form,Magic,"Sorcerer, Shadow Magic",5,18,,"Starting at 18th level, you can spend 6 sorcery points using 1 AP to transform yourself into a shadowy form. In this form, you have resistance to all damage except force and radiant damage, and you can move through other creatures and objects as if they were difficult terrain. You take 5 force damage if you end your turn inside an object. You remain in this form for 1 minute. It ends early if you are incapacitated, if you die, or if you dismiss it using 1 AP.",1 AP
 Wind Speaker,Magic,"Sorcerer, Storm",1,1,,"The arcane magic you command is infused with elemental air. You can speak, read, and write Primordial. Knowing this language allows you to understand and be understood by those who speak its dialects: Aquan, Auran, Ignan, and Terran.",
 Tempestuous Magic,Magic,"Sorcerer, Storm",2,1,,"Starting at 1st level, you can use 1 AP on your turn to cause whirling gusts of elemental air to briefly surround you, immediately before or after you cast a spell of 1st level or higher. Doing so allows you to fly up to 10 feet without provoking opportunity attacks.",1 AP
-Heart of the Storm,Magic,"Sorcerer, Storm",4,6,,"At 6th level, you gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level.",
 Storm Guide,Magic,"Sorcerer, Storm",2,6,,"At 6th level, you gain the ability to subtly control the weather around you.
 
 If it is raining, you can use an action to cause the rain to stop falling in a 20-foot-radius sphere centered on you. You can end this effect using 1 AP.
 
 If it is windy, you can use 1 AP each round to choose the direction that the wind blows in a 100-foot-radius sphere centered on you. The wind blows in that direction until the end of your next turn. This feature doesn't alter the speed of the wind.","2 AP, 1 AP"
+Heart of the Storm,Magic,"Sorcerer, Storm",4,6,,"At 6th level, you gain resistance to lightning and thunder damage. In addition, whenever you start casting a spell of 1st level or higher that deals lightning or thunder damage, stormy magic erupts from you. This eruption causes creatures of your choice that you can see within 10 feet of you to take lightning or thunder damage (choose each time this ability activates) equal to half your sorcerer level.",
 Storm's Fury,Magic,"Sorcerer, Storm",5,14,,"Starting at 14th level, when you are hit by a melee attack, you can use your reaction to deal lightning damage to the attacker. The damage equals your sorcerer level. The attacker must also make a Strength saving throw against your sorcerer spell save DC. On a failed save, the attacker is pushed in a straight line up to 20 feet away from you.",Reaction
 Wind Soul,Magic,"Sorcerer, Storm",5,18,,"At 18th level, you gain immunity to lightning and thunder damage.
 
@@ -1679,21 +2103,20 @@ You also gain a magical flying speed of 60 feet. using 2 AP, you can reduce your
 Vampire Traits,General,Vampire,0,1,,"This ability is mandatory if you choos Vampire
 • Your type is Undead
 
-• Sunlight Hypersensitivity. You take 20 radiant damage when you start your turn in sunlight. While in sunlight, you have disadvantage on attack rolls and ability checks.
+• ***Sunlight Hypersensitivity***. You take 20 radiant damage when you start your turn in sunlight. While in sunlight, you have disadvantage on attack rolls and ability checks.
 
-• Radiant Vulnerability. You have vulnerability to radiant damage.
+• ***Radiant Vulnerability***. You have vulnerability to radiant damage.
 
-• Unusual Nature. You do not require food or drink.
+• ***Unusual Nature***. You do not require food or drink.
 
-• Blood Dependency. You must consume fresh blood at least once every 24 hours. If you fail to do so, you must succeed on a Wisdom saving throw to maintain control. The DC is 10 + the number of days since you last fed. On a failed save, you succumb to a diabolical frenzy: on your next turn, you must move toward the nearest creature and use your action to attack it in an attempt to feed. If you do not feed on fresh blood for a number of days equal to your character level, you fall Unconscious.",
-"Unarmored Defense, Vampire",Combat,Vampire,6,1,,"Beginning at 1st level, while you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Charisma modifier.",
+• ***Blood Dependency***. You must consume fresh blood at least once every 24 hours. If you fail to do so, you must succeed on a Wisdom saving throw to maintain control. The DC is 10 + the number of days since you last fed. On a failed save, you succumb to a diabolical frenzy: on your next turn, you must move toward the nearest creature and use your action to attack it in an attempt to feed. If you do not feed on fresh blood for a number of days equal to your character level, you fall Unconscious.",
 Vampire Sense,"General, Skill",Vampire,2,1,,"You are trained in Perception skill. If you are already trained in perception, you can double yor proficiency bonus.
 You gain Dark Vision 120ft",
 Vampire Natural Weapons,Combat,Vampire,3,1,,"Natural Weapons
 You gain two natural weapons: a Bite and Claws.
 
-• Claws. Your claws deal 1d4 slashing damage.
-• Bite. Your fangs deal 1d6 piercing damage.
+• ***Claws***. Your claws deal 1d4 slashing damage.
+• ***Bite***. Your fangs deal 1d6 piercing damage.
 
 **Blood Drain**
 You can use your Bite attack against a willing creature, or a creature that isGrappled by you and Incapacitated, or Restrained. On a hit, the target takes 1d6 piercing damage plus 10 necrotic damage.
@@ -1701,36 +2124,38 @@ If the target is Small or larger and is not a Construct, Elemental, Plant, or Un
 • You regain 10 hit points.
 • You regain 1 Blood Point (B.P.). You can regain only 1 B.P. per round with this attack.
 The target’s hit point maximum is reduced by 10. This reduction lasts until the target finishes a Long Rest and is the recipient of a Remove Curse or Greater Restoration spell. The target dies if this effect reduces its hit point maximum to 0. A humanoid slain in this way and then buried in the ground rises the following night as a vampire spawn under your control.",
+"Unarmored Defense, Vampire",Combat,Vampire,6,1,,"Beginning at 1st level, while you are wearing no armor and not wielding a shield, your AC equals 10 + your Dexterity modifier + your Charisma modifier.",
 Blood Power,Combat,Vampire,4,2,,"You gain 0 Blood Point.
 When you expend a Blood Point, it is unavailable until you recover it:
 • Short Rest: The Vampire can recover Blood Points during a Short Rest when he spends Hit Point Dice. Per ogni HD speso si recupera 1 BP. Il vampiro si cura
 • Long Rest: Recupera tutti i BP.
 You gain Blood Power.
 Blood Power save DC = 14
-- Extra Claw attack. Immediately after you take the Attack action on your turn, you can spend 1 Blood Point to make one Claw strikes with 1 AP.
-- Blood Defense. You can spend 1 B.P. to take the Dodge action using 1 AP on your turn.
-- Step in the Darkness. You can spend 1 B.P. to take the Disengage or Dash action 1 AP on your turn, and your jump distance is doubled for the turn. When you use the Dash movement you shift in a swarm of Bat and you can move in that form. As soon as you finish the Dash action, you return to your normal vampire form .",1 AP
+- ***Extra Claw attack***. Immediately after you take the Attack action on your turn, you can spend 1 Blood Point to make one Claw strikes with 1 AP.
+- ***Blood Defense***. You can spend 1 B.P. to take the Dodge action using 1 AP on your turn.
+- ***Step in the Darkness***. You can spend 1 B.P. to take the Disengage or Dash action 1 AP on your turn, and your jump distance is doubled for the turn. When you use the Dash movement you shift in a swarm of Bat and you can move in that form. As soon as you finish the Dash action, you return to your normal vampire form .",1 AP
 Spider Climb,General,Vampire,1,4,,"You have a climbing speed equal to your walking speed. In addition you can move up, down, and across vertical surfaces and upside down along ceilings, while leaving your hands free.",
 Vampire resistance,Combat,Vampire,2,4,,The Vampire gains resistance from necrotic damage and to non magical weapon.,
+Extra Attack,Combat,Vampire,5,5,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Blood Empowered Strikes,Magic,Vampire,3,7,,"Starting at 7th level, you can decide if your Unarmed Strike deals necrotic damage o normal damage.",
 Shapechanger,Magic,Vampire,3,8,,"If the vampire isn't in sunlight or running water and if it has at least 1 BP it can use 1 AP to polymorph into a Tiny bat or a Medium cloud of mist, or back into its true form.
 You stay in that form for a number of hours equal to half your Vampire level or until you use Shapechanger again, have the Incapacitated condition, or die. You can also leave the form early as 1 AP.
 
 While in mist form, the vampire can't take any actions, speak, or manipulate objects. It is weightless, has a flying speed of 20 feet, can hover, and can enter a hostile creature's space and stop there. In addition, if air can pass through a space, the mist can do so without squeezing, and it can't pass through water. It has advantage on Strength, Dexterity, and Constitution saving throws, and it is immune to all damage, except the damage it takes from sunlight.
 
-Rules While Transformed. While in a form, you retain your personality, memories, and ability to speak, and the following rules apply:
+***Rules While Transformed***. While in a form, you retain your personality, memories, and ability to speak, and the following rules apply:
 
-• Temporary Hit Points. When you assume a Shapechange form, you gain a number of Temporary Hit Points equal to your Vampire level x2.
+• ***Temporary Hit Points***. When you assume a Shapechange form, you gain a number of Temporary Hit Points equal to your Vampire level x2.
 
-• Game Statistics. Your game statistics are replaced by the Beast's stat block, but you retain your creature type; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats. You also retain your skill and saving throw proficiencies and use your Proficiency Bonus for them, in addition to gaining the proficiencies of the creature. If a skill or saving throw modifier in the Beast's stat block is higher than yours, use the one in the stat block.
+• ***Game Statistics***. Your game statistics are replaced by the Beast's stat block, but you retain your creature type; Hit Points; Hit Point Dice; Intelligence, Wisdom, and Charisma scores; class features; languages; and feats. You also retain your skill and saving throw proficiencies and use your Proficiency Bonus for them, in addition to gaining the proficiencies of the creature. If a skill or saving throw modifier in the Beast's stat block is higher than yours, use the one in the stat block.
 
-• No Spellcasting. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.
+• ***No Spellcasting***. You can't cast spells, but shape-shifting doesn't break your Concentration or otherwise interfere with a spell you've already cast.
 
-• Objects. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.",1 AP
-Regeneration,General,Vampire,4,10,,"the vampire regenerates hit points equal to the number of B.P. available, if it has at least 1 hit point. When the vampire ends B.P. he lost also the Regeneration Capacity.
-If the vampire takes radiant damage or damage from holy water, the Regeneration is suppressed at the start of the vampire's next turn.",
+• ***Objects***. Your ability to handle objects is determined by the form's limbs rather than your own. In addition, you choose whether your equipment falls in your space, merges into your new form, or is worn by it. Worn equipment functions as normal, but the DM decides whether it's practical for the new form to wear a piece of equipment based on the creature's size and shape. Your equipment doesn't change size or shape to match the new form, and any equipment that the new form can't wear must either fall to the ground or merge with the form. Equipment that merges with the form has no effect while you're in that form.",1 AP
 Vampire Supreme,General,Vampire,0,10,,"• The Vampire became supreme and he looses his weakness Sunlight Hypersensitivity and the vulnerability to radiant damage.
 • Unuasual Nature II: you don't require sleep and air.",
+Regeneration,General,Vampire,4,10,,"the vampire regenerates hit points equal to the number of B.P. available, if it has at least 1 hit point. When the vampire ends B.P. he lost also the Regeneration Capacity.
+If the vampire takes radiant damage or damage from holy water, the Regeneration is suppressed at the start of the vampire's next turn.",
 Misty Escape,Magic,Vampire,2,11,Shapechanger,"When it drops to 0 hit points outside its resting place, the vampire transforms into a cloud of mist (as in the Shapechanger trait) instead of falling unconscious, provided that it isn't in sunlight or running water. If it can't transform, it is destroyed.
 While it has 0 hit points in mist form, it can't revert to its vampire form, and it must reach its resting place within 2 hours or be destroyed. Once in its resting place, it reverts to its vampire form. It is then paralyzed until it regains at least 1 hit point. After spending 1 hour in its resting place with 0 hit points, it regains 1 hit point.",
 Purity of blood,General,Vampire,2,13,Blood Power,"If you have at least 1 B.P., your blood flowing through you makes you immune to disease and poison.",
@@ -1740,15 +2165,15 @@ You cannot use this feature if you are incapacitated.",No AP
 Predator Instict,General,Vampire,5,17,Blood Power,"When you attack a creature that can't see you, she must succed a Wisdom saving Throw or become Paralyzed for 1 round. If the target succeds on the saving throw, he is Frightened for 1 minutes. A creature can repeat the saving throw at the end of each of its turns, ending the effect on itself on a success. If a creature's saving throw is successful or the effect ends for it, the creature is immune to the vampire Predator Instinct for the next 24 hours.",
 Legendary Blood,General,Vampire,7,20,Blood Power,"You can expend 1 Action Point to assume a Legendary Form for 1 minute. While in this form, you gain the following benefit:
 
-• Blood Efficiency. Once per turn, you can activate a Vampire Power without expending Blood Points (BP).
+• ***Blood Efficiency***. Once per turn, you can activate a Vampire Power without expending Blood Points (BP).
 
-Usage. You can use this feature twice without cost, and you regain all expended uses when you finish a long rest. You can use this feature additional times by expending 2 Blood Points when you activate it.",1 AP
+***Usage***. You can use this feature twice without cost, and you regain all expended uses when you finish a long rest. You can use this feature additional times by expending 2 Blood Points when you activate it.",1 AP
 Primal Companion,General,"Vampire, Animalitas",5,3,Blood Power,"like ranger except that for that “If the beast has died within the last hour, you can 2 AP to touch it and expend 1 B.P.”",2 AP
 Speak with animals,Magic,"Vampire, Animalitas",1,6,Blood Power,"The vampire can speak with animals expended 1 B.P. In addition he can communicate with his Primal Companion always, as if the spell was always active with him, without spending any blood points",
 Pack Tactics,General,"Vampire, Animalitas",3,9,Blood Power,The Vampire has advantage on an attack roll against a creature if at least one of the vampire's allies is within 5 ft. of the creature and the ally isn't incapacitated.,
-Dominate Beast,Magic,"Vampire, Animalitas",3,12,Blood Power,Spendendo 3 B.P. puoi provare a dominare una bestia come per l’incantesimo. la durata è sempre di 8 ore e la bestia che si cerca di dominare ha tiro salvezza con svantaggio.,2 AP
+Dominate Beast,Magic,"Vampire, Animalitas",3,12,Blood Power,Spendendo 3 B.P. puoi provare a dominare una bestia come per l’incantesimo. la durata &egrave; sempre di 8 ore e la bestia che si cerca di dominare ha tiro salvezza con svantaggio.,2 AP
 Extra Primal Companion,General,"Vampire, Animalitas",4,15,Blood Power; Primal Companion,The vampire can summon another animal companion ma deve essere differente dal compagno evocato precedentemente,
-Summon Beast,Magic,"Vampire, Animalitas",5,18,Blood Power,spendendo 3 B.P. può lanciare l’incantesimo omonimo come se fosse aumentato al 9o livello.,2 AP
+Summon Beast,Magic,"Vampire, Animalitas",5,18,Blood Power,spendendo 3 B.P. pu&ograve; lanciare l’incantesimo omonimo come se fosse aumentato al 9° livello.,2 AP
 Vampire Sight,General,"Vampire, Auspex",1,3,Vampire Sense,The Vampire use his Charisma for Perception ability.,
 Blindsight,General,"Vampire, Auspex",4,6,Vampire Sight; Blood Power,The Vampire can spend 1B.P. using 1 AP to gain Blindsight 60ft for 10 Minuti.,1 AP
 Keen Sense,General,"Vampire, Auspex",2,9,Vampire Sight,"using 2 AP, he can use 1 B.P. and gain advantage on perception check until the next long rest.",2 AP
@@ -1763,18 +2188,18 @@ Quick Reaction,Combat,"Vampire, Celeritas",3,12,,When you roll initiative you ca
 Extra Reaction,Combat,"Vampire, Celeritas",8,15,,"Once per turn, if you've already taken your reaction, you may spend 3 B.P. to take an additional reaction. You can use only one reaction per triggering effect.",
 Extra AP,Combat,"Vampire, Celeritas",8,18,,You can spend 3 B.P. to gain an extra Action Point for 1 round.,
 "Confusion, target",Magic,"Vampire, Dementia",3,3,,like the spell but only to one creature in the range. 1 BP.,2 AP
-Continua Dementiae,Magic,"Vampire, Dementia",3,6,"Confusion, target",ogni volta che la creatura riceve un TS per liberarsi dall'effetto di confusione il vampiro può usare una Reazione per fare quel TS con svantaggio.,Reaction
-"Confusion, area",Magic,"Vampire, Dementia",2,9,"Confusion, target",Confusion ad area come per lo spell. 2 PS. Può essere aumentato di 10 piedi per ogni 1 PS speso in più ,2 AP
-Insane Confusion,Magic,"Vampire, Dementia",4,12,"Confusion, target",Spendendo 1 PS in più il TS può essere spostato su Int.,
+Continua Dementiae,Magic,"Vampire, Dementia",3,6,"Confusion, target",ogni volta che la creatura riceve un TS per liberarsi dall'effetto di confusione il vampiro pu&ograve; usare una Reazione per fare quel TS con svantaggio.,Reaction
+"Confusion, area",Magic,"Vampire, Dementia",2,9,"Confusion, target",Confusion ad area come per lo spell. 2 PS. Pu&ograve; essere aumentato di 10 piedi per ogni 1 PS speso in pi&ugrave; ,2 AP
+Insane Confusion,Magic,"Vampire, Dementia",4,12,"Confusion, target",Spendendo 1 PS in pi&ugrave; il TS pu&ograve; essere spostato su Int.,
 Fablemind,Magic,"Vampire, Dementia",5,15,"Confusion, target",Spendendo 4 PS you can cast spell Befuddlement,2 AP
-Superior Dementiae,Magic,"Vampire, Dementia",5,18,"Confusion, target",Spendendo 2 PS in più il tiro salvezza sui poteri ha svantaggio.,
+Superior Dementiae,Magic,"Vampire, Dementia",5,18,"Confusion, target",Spendendo 2 PS in pi&ugrave; il tiro salvezza sui poteri ha svantaggio.,
 Charme,Magic,"Vampire, Dominatio",3,3,Blood Power,"You can spend 2 B.P. and the vampire targets one humanoid it can see within 30 feet of it. If the target can see the vampire, the target must succeed on a DC Wisdom saving throw against this magic or be charmed by the vampire. The charmed target regards the vampire as a trusted friend to be heeded and protected. Although the target isn't under the vampire's control, it takes the vampire's requests or actions in the most favorable way it can, and it is a willing target for the vampire's bite attack.
 Each time the vampire or the vampire's companions do anything harmful to the target, it can repeat the saving throw, ending the effect on itself on a success. Otherwise, the effect lasts 24 hours or until the vampire is destroyed, is on a different plane of existence than the target, or takes 1 AP to end the effect.","2 AP, 1 AP"
-Perfectam Dominationem,Magic,"Vampire, Dominatio",3,6,Charme,ogni effetto di controllo mentale può essere prolungato spendendo 1 PS in più come se fosse lanciato l'incantesimo di 1 livello superiore. Inoltre se la creatura riceve un TS per liberarsi dall'effetto di incantamento il vampiro può usare una Reazione per fare quel TS con svantaggio.,Reaction
+Perfectam Dominationem,Magic,"Vampire, Dominatio",3,6,Charme,ogni effetto di controllo mentale pu&ograve; essere prolungato spendendo 1 PS in pi&ugrave; come se fosse lanciato l'incantesimo di 1 livello superiore. Inoltre se la creatura riceve un TS per liberarsi dall'effetto di incantamento il vampiro pu&ograve; usare una Reazione per fare quel TS con svantaggio.,Reaction
 Dominate Person,Magic,"Vampire, Dominatio",4,9,Charme,2 PS as the spell,2 AP
-Insane Domination,Magic,"Vampire, Dominatio",2,12,Charme,spendendo 1 PS in più si può spostare il TS su carisma,
+Insane Domination,Magic,"Vampire, Dominatio",2,12,Charme,spendendo 1 PS in pi&ugrave; si pu&ograve; spostare il TS su carisma,
 Dominate Monster,Magic,"Vampire, Dominatio",3,15,Dominate Person,4 PS as the spell,2 AP
-Superior Dominatio,Magic,"Vampire, Dominatio",5,18,Dominate Monster,spendendo 2 PS in più il tiro salvezza ha svantaggio. Se la creatura che si cerca di dominare è immune allo charme o al controllo mentale il vampiro riesce a bucare questa resistenza ma il TS viene effettuato con Vantaggio,
+Superior Dominatio,Magic,"Vampire, Dominatio",5,18,Dominate Monster,spendendo 2 PS in pi&ugrave; il tiro salvezza ha svantaggio. Se la creatura che si cerca di dominare &egrave; immune allo charme o al controllo mentale il vampiro riesce a bucare questa resistenza ma il TS viene effettuato con Vantaggio,
 Vampire claw,Combat,"Vampire, Ferox",3,3,,"You gain the following benefits while you are unarmed or wielding only monk weapons and you aren't wearing armor or wielding a shield:
 -You can use Dexterity instead of Strength for the attack and damage rolls of your Claw.
 -You gain a Claw attack (1d6, Slashing damage). This die changes as you gain Vampire levels (1d8 5°, 1d10 11°, 1d12 17°).
@@ -1783,7 +2208,7 @@ Grappling Claw,Combat,"Vampire, Ferox",2,6,Vampire claw,"When the vampire hit wi
 Restrained Claw,Combat,"Vampire, Ferox",2,9,Grappling Claw,"Until this grapple ends, the target is restrained, and the vampire can't use its claw on another target",
 Pounce,Combat,"Vampire, Ferox",3,12,Vampire claw,"If the vampire moves at least 20 feet straight toward a creature and hits it with a claw attack on the same turn, that target must succeed on a DC (8+prof+Str or Dex) Strength saving throw or be knocked prone. If the target is prone, the Vampire can make one claw attack against it using 1 AP.",1 AP
 Rampage,Combat,"Vampire, Ferox",3,15,Vampire claw,"When the Vampire reduces a creature to 0 hit points with a melee attack on its turn, the Vampire can use 1 AP to move up to half its speed and make a Claw attack.",1 AP
-Animal Shapes,Magic,"Vampire, Ferox",6,18,Restrained Claw; Shapechanger,Quando il Vampiro usa Shapechanger può trasformarsi in qualsiasi bestia di grado di sfida 1 o inferiore oppure spendendo 3 BP può assumere la sua forma animalesca primordiale: Nycteris.,1 AP
+Animal Shapes,Magic,"Vampire, Ferox",6,18,Restrained Claw; Shapechanger,Quando il Vampiro usa Shapechanger pu&ograve; trasformarsi in qualsiasi bestia di grado di sfida 1 o inferiore oppure spendendo 3 BP pu&ograve; assumere la sua forma animalesca primordiale: Nycteris.,1 AP
 Power attack,Combat,"Vampire, Potentia",5,3,Blood Power,1 PS ad 1 AP e aggiungi la proficienza ai danni per tutti gli attacchi in mischia e alle armi da lancio fino all'inizio prossimo turno.,1 AP
 "Improved Critical, Vampire",Combat,"Vampire, Potentia",4,6,Power Attack,"When the vampire use Power Attack, it gains critico 19/20 on all his melee attack and thrown weapon",
 Blood Strenght,Combat,"Vampire, Potentia",4,9,Blood Power,"using 1 AP, the vampire can spend 1B.P. and increase Strenght by 2 for 1 minute.",1 AP
@@ -1801,7 +2226,7 @@ Legendary Blood Resistance,General,"Vampire, Robur",5,15,Blood Power,"Using 1 AP
 Damage Immunity,General,"Vampire, Robur",3,18,Legendary Blood Resistance,"When you use the Legendary Blood Resistance ability you can spend 2 more B.P. and gain immunity to all damage (except for Radiant damage) until the beginning of the vampire next round. When you use this power, you can't do it again until you finish a short or long rest.",1 AP
 Devil's Sight,Magic,"Vampire, Tenebris",2,3,,Magical Darkness doesn't impede Vampire's darkvision,
 Darkness,Magic,"Vampire, Tenebris",5,6,Blood Power,1 PS come lo spell. 2 PS come lo spell ma utilizzando 1 AP,1 AP
-Darkness Attack,Combat,"Vampire, Tenebris",3,9,Darkness,"2 PS, 1 AP. Quando attacchi una creatura nell'oscurità di Darkness ottieni vantaggio sugli attacchi anche se la creatura riesce a percepirti.",1 AP
+Darkness Attack,Combat,"Vampire, Tenebris",3,9,Darkness,"2 PS, 1 AP. Quando attacchi una creatura nell'oscurit&agrave; di Darkness ottieni vantaggio sugli attacchi anche se la creatura riesce a percepirti.",1 AP
 Born from the shadow,"General, Skill","Vampire, Tenebris",4,12,Blood Power,"You are trained in Stealth skill. If you are already trained in Stealth, you can double yor proficiency bonus.
 While in dim light or darkness, you can Hide using 1 AP",1 AP
 Blood of shadow,Magic,"Vampire, Tenebris",5,15,Darkness,"While in Darkness spell the vampire has resistance to damage that isn't force, psychic, or radiant.",
@@ -1814,54 +2239,65 @@ Cursed Poison,Combat,"Vampire, Toxicus",5,15,Improved Hellish Weapon,"While is p
 The Cursed creature can’t regain Hit Point nor naturally neither with magic. All Toxicus ability overcome resistance on poison and immunity on poison is considered resistance. The immunity on poisoned condition is overcomed.
 The Poisoned target can't repeat the saving throw to end the poisoned condition. The Poisoned condition remains as long as the curse remains but if you remove the Poisoned condition you remove also the Curse.",
 Infesting Blood,Combat,"Vampire, Toxicus",5,18,Cursed Poison,"While the creature is Cursed by the Cursed Poison, the poison blocks every source of power of the creature. If the poisoned creature tries to cast a spell or to use his KI point, Blood Point or Sorcerer Point, it throws a D6. If the result is 4 or higher he can act normally. If is lower he can’t cast the spell or use his BP, SP, KP but he doesn’t spend the resources. In this case the AP used for the action is wasted",
-Bone Armor,Combat,"Vampire, Vicissitudo",0,3,"Unarmored Defense, Vampire; Blood Power","using 2 AP, spendendo 1 P.S. il vampiro può aggiungere la Cos alla CA al posto della normale abilità sul CAR ( vedi Unarmored Defense, vampire) until the next long rest",2 AP
-Enlarge,Magic,"Vampire, Vicissitudo",3,6,Bone Armor,"1 PS. Si può lanciare 1 AP a 3 Punti Sangue. For 1 minute the vampire's size doubles in all dimensions, and its weight is multiplied by eight. This growth increases its size by one category—from Medium to Large, for example. If there isn't enough room for the vampire to double its size, the creature or object attains the maximum possible size in the space available. Until the spell ends, the vampire also has advantage on Strength checks and Strength saving throws. The vampire's weapons also grow to match its new size. While these weapons are enlarged, the vampire's attacks with them deal 1d6 extra damage.",1 AP
+Bone Armor,Combat,"Vampire, Vicissitudo",0,3,"Unarmored Defense, Vampire; Blood Power","using 2 AP, spendendo 1 P.S. il vampiro pu&ograve; aggiungere la Cos alla CA al posto della normale abilit&agrave; sul CAR ( vedi Unarmored Defense, vampire) until the next long rest",2 AP
+Enlarge,Magic,"Vampire, Vicissitudo",3,6,Bone Armor,"1 PS. Si pu&ograve; lanciare 1 AP a 3 Punti Sangue. For 1 minute the vampire's size doubles in all dimensions, and its weight is multiplied by eight. This growth increases its size by one category—from Medium to Large, for example. If there isn't enough room for the vampire to double its size, the creature or object attains the maximum possible size in the space available. Until the spell ends, the vampire also has advantage on Strength checks and Strength saving throws. The vampire's weapons also grow to match its new size. While these weapons are enlarged, the vampire's attacks with them deal 1d6 extra damage.",1 AP
 Horrible Wings,Magic,"Vampire, Vicissitudo",3,9,Bone Armor,"using 2 AP, the vampire can spend 2 B.P., the vampire can grow wings (30ft fly speed) on his back until the next short rest or until he dismisses using 1 AP.",1 AP
 Long Arm,Combat,"Vampire, Vicissitudo",4,12,Bone Armor,the Vampire can use 1 B.P. and gains reach +5ft on his melee attack until the next long rest.,
 Bone Spikes,Combat,"Vampire, Vicissitudo",4,15,Bone Armor,"As 2 B.P. for the next 10 minutes the vampire can grow spikes from his body. When a creature within 5 feet of you hits you with a melee attack, the attacker takes 3d8 piercing damage.",
 Horrible Shapechanger,Magic,"Vampire, Vicissitudo",5,18,Bone Armor,as the spell. 4 P.S. Non si perde la concentrazione quando si subisce danno.,
-Magical Cunning,Magic,Warlock,4,1,Spellcasting Warlock,"You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest.",
+Magical Cunning,Magic,Warlock,4,1,,"You can perform an esoteric rite for 1 minute. At the end of it, you regain expended Pact Magic spell slots but no more than a number equal to half your maximum (round up). Once you use this feature, you can't do so again until you finish a Long Rest.",
+Eldritch Invocations,Magic,Warlock,5,2,,"You have unearthed Eldritch Invocations, pieces of forbidden knowledge that imbue you with an abiding magical ability or other lessons. You gain one invocation of your choice, such as Pact of the Tome. Invocations are described in the ""Eldritch Invocation Feats"" section.
+***Prerequisites***. If an invocation has a prerequisite, you must meet it to learn that invocation. For example, if an invocation requires you to be a level 5+ Warlock, you can select the invocation once you reach Warlock level 5.
+Replacing and Gaining Invocations. Whenever you gain a Warlock level, you can replace one of your invocations with another one for which you qualify. You can't replace an invocation if it's a prerequisite for another invocation that you have.
+When you gain certain Warlock levels, you gain more invocations of your choice, as shown in the next list:
+• **Livello 1**: -
+• **Livello 2-4**: 2 Invocazioni conosciute
+• **Livello 5-6**: 3 Invocazioni conosciute
+• **Livello 7-8**: 4 Invocazioni conosciute
+• **Livello 9-11**: 5 Invocazioni conosciute
+• **Livello 12-14**: 6 Invocazioni conosciute
+• **Livello 15-17**: 7 Invocazioni conosciute
+• **Livello 18-20**: 8 Invocazioni conosciute
+
+You can't pick the same invocation more than once unless its description says otherwise.",2 AP
+Pact of the Talisman,Magic,Warlock,3,3,,"Your patron gives you an amulet, a talisman that can aid the wearer when the need is great. When the wearer fails an ability check, they can add a d4 to the roll, potentially turning the roll into a success. This benefit can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.
+If you lose the talisman, you can perform a 1-hour ceremony to receive a replacement from your patron. This ceremony can be performed during a short or long rest, and it destroys the previous amulet. The talisman turns to ash when you die.",
+Pact of the Tome,Magic,Warlock,3,3,,"Stitching together strands of shadow, you conjure forth a book in your hand at the end of a Short or Long Rest. This Book of Shadows (you determine its appearance) contains eldritch magic that only you can access, granting you the benefits below. The book disappears if you conjure another book with this feature or if you die.
+
+***Cantrips and Rituals***. When the book appears, choose three cantrips, and choose two level 1 spells that have the Ritual tag. The spells can be from any class's spell list, and they must be spells you don't already have prepared. While the book is on your person, you have the chosen spells prepared, and they function as Warlock spells for you.
+
+***Spellcasting Focus***. You can use the book as a Spellcasting Focus.",
 Pact of the Chain,Magic,Warlock,3,3,,"You learn the Find Familiar spell and can cast it as a Magic action without expending a spell slot.
 
 When you cast the spell, you choose one of the normal forms for your familiar or one of the following special forms: Imp, Pseudodragon, Quasit, Skeleton, Slaad Tadpole, Sphinx of Wonder, Sprite, or Venomous Snake (see appendix B for the familiar's stat block).
 
 Additionally, when you take the Attack action, you can forgo one of your own attacks to allow your familiar to make one attack of its own with its Reaction.",2 AP
-Pact of the Talisman,Magic,Warlock,3,3,,"Your patron gives you an amulet, a talisman that can aid the wearer when the need is great. When the wearer fails an ability check, they can add a d4 to the roll, potentially turning the roll into a success. This benefit can be used a number of times equal to your proficiency bonus, and all expended uses are restored when you finish a long rest.
-If you lose the talisman, you can perform a 1-hour ceremony to receive a replacement from your patron. This ceremony can be performed during a short or long rest, and it destroys the previous amulet. The talisman turns to ash when you die.",
 Pact of the Blade,Magic,Warlock,8,3,,"As 1 AP, you can conjure a pact weapon in your hand—a Simple or Martial Melee weapon of your choice with which you bond—or create a bond with a magic weapon you touch; you can't bond with a magic weapon if someone else is attuned to it or another Warlock is bonded with it. Until the bond ends, you have proficiency with the weapon, and you can use it as a Spellcasting Focus.
 
 Whenever you attack with the bonded weapon, you can use your Charisma modifier for the attack and damage rolls instead of using Strength or Dexterity; and you can cause the weapon to deal Necrotic, Psychic, or Radiant damage or its normal damage type.
 
 Your bond with the weapon ends if you use this feature's 1 AP again, if the weapon is more than 5 feet away from you for 1 minute or more, or if you die. A conjured weapon disappears when the bond ends.",1 AP
-Pact of the Tome,Magic,Warlock,3,3,,"Stitching together strands of shadow, you conjure forth a book in your hand at the end of a Short or Long Rest. This Book of Shadows (you determine its appearance) contains eldritch magic that only you can access, granting you the benefits below. The book disappears if you conjure another book with this feature or if you die.
-
-Cantrips and Rituals. When the book appears, choose three cantrips, and choose two level 1 spells that have the Ritual tag. The spells can be from any class's spell list, and they must be spells you don't already have prepared. While the book is on your person, you have the chosen spells prepared, and they function as Warlock spells for you.
-
-Spellcasting Focus. You can use the book as a Spellcasting Focus.",
 Eldritch Smite,Magic,Warlock,2,5,Pact of the Blade,"Once per turn when you hit a creature with your pact weapon, you can expend a warlock spell slot to deal an extra 1d8 force damage to the target, plus another 1d8 per level of the spell slot, and you can knock the target prone if it is Huge or smaller.",
-Eldritch Invocations,Magic,Warlock,5,2,,"In your study of occult lore, you have unearthed Eldritch Invocations, fragments of forbidden knowledge that imbue you with an abiding magical ability.
-You know 0. Invocations
-Thirsting Blade e Devouring Blade si prendono come Extra Attack, mentre Eldritch Smite si prende a parte.
-
-",2 AP
+Extra Attack,Combat,Warlock,2,5,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Contact Patron,Magic,Warlock,2,9,,"In the past, you usually contacted your patron through intermediaries. Now you can communicate directly; you always have the Contact Other Plane spell prepared. With this feature, you can cast the spell without expending a spell slot to contact your patron, and you automatically succeed on the spell's saving throw.
 
 Once you cast the spell with this feature, you can't do so in this way again until you finish a Long Rest.",2 AP
+Extra Attack,Combat,Warlock,5,11,Pact of the Blade,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Eldritch Master,Magic,Warlock,5,20,Magical Cunning,"When you use your Magical Cunning feature, you regain all your expended Pact Magic spell slots.",
-"Expanded Spell List, Archfey",Magic,"Warlock, Archfey",2,3,"Spellcasting, Warlock","|3| Calm Emotions, Faerie Fire, Misty Step, Phantasmal Force, Sleep 
-|5| Blink, Plant Growth 
-|7| Dominate Beast, Greater Invisibility 
-|9| Dominate Person, Seeming",
 Step of the Fey,Magic,"Warlock, Archfey",5,1,,"Your patron grants you the ability to move between the boundaries of the planes. You can cast Misty Step without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.
 In addition, whenever you cast that spell, you can choose one of the following additional effects.
 
-• Refreshing Step. Immediately after you teleport, you or one creature you can see within 10 feet of yourself gains 1d10 Temporary Hit Points.
-• Taunting Step. Creatures within 5 feet of the space you left must succeed on a Wisdom saving throw against your spell save DC or have Disadvantage on attack rolls against creatures other than you until the start of your next turn.",1 AP
+• ***Refreshing Step***. Immediately after you teleport, you or one creature you can see within 10 feet of yourself gains 1d10 Temporary Hit Points.
+• ***Taunting Step***. Creatures within 5 feet of the space you left must succeed on a Wisdom saving throw against your spell save DC or have Disadvantage on attack rolls against creatures other than you until the start of your next turn.",1 AP
+"Expanded Spell List, Archfey",Magic,"Warlock, Archfey",2,3,,"|3| Calm Emotions, Faerie Fire, Misty Step, Phantasmal Force, Sleep 
+|5| Blink, Plant Growth 
+|7| Dominate Beast, Greater Invisibility 
+|9°| Dominate Person, Seeming",
 Misty Escape,Magic,"Warlock, Archfey",3,6,Step of Fey,"You can cast Misty Step as a Reaction in response to taking damage.
 
 In addition, the following effects are now among your Steps of the Fey options.
-• Disappearing Step. You have the Invisible condition until the start of your next turn or until immediately after you make an attack roll, deal damage, or cast a spell.
-• Dreadful Step. Creatures within 5 feet of the space you left or the space you appear in (your choice) must succeed on a Wisdom saving throw against your spell save DC or take 2d10 Psychic damage.",Reaction
+• ***Disappearing Step***. You have the Invisible condition until the start of your next turn or until immediately after you make an attack roll, deal damage, or cast a spell.
+• ***Dreadful Step***. Creatures within 5 feet of the space you left or the space you appear in (your choice) must succeed on a Wisdom saving throw against your spell save DC or take 2d10 Psychic damage.",Reaction
 Beguiling Defenses,Magic,"Warlock, Archfey",3,10,,"Your patron teaches you how to guard your mind and body. You are immune to the Charmed condition.
 
 In addition, immediately after a creature you can see hits you with an attack roll, you can take a Reaction to reduce the damage you take by half (round down), and you can force the attacker to make a Wisdom saving throw against your spell save DC. On a failed save, the attacker takes Psychic damage equal to the damage you take. Once you use this Reaction, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it.",Reaction
@@ -1874,12 +2310,12 @@ Radiant Soul,Magic,"Warlock, Celestial",3,6,,"Your link to your patron allows yo
 Celestial Resistance,Magic,"Warlock, Celestial",3,10,Magical Cunning,"You gain Temporary Hit Points whenever you use your Magical Cunning feature or finish a Short or Long Rest. These Temporary Hit Points equal your Warlock level plus your Charisma modifier. Additionally, choose up to five creatures you can see when you gain the points. Those creatures each gain Temporary Hit Points equal to half your Warlock level plus your Charisma modifier.",
 Searing Vengance,Magic,"Warlock, Celestial",5,14,,"When you or an ally within 60 feet of you is about to make a Death Saving Throw, you can unleash radiant energy to save the creature. The creature regains Hit Points equal to half its Hit Point maximum and can end the Prone condition on itself. Each creature of your choice that is within 30 feet of the creature takes Radiant damage equal to 2d8 plus your Charisma modifier, and each has the Blinded condition until the end of the current turn.
 Once you use this feature, you can't use it again until you finish a Long Rest.",
-"Expanded Spell List, Fiend",Magic,"Warlock, Fiend",2,3,"Spellcasting, Warlock","|3| Burning Hands, Command, Scorching Ray, Suggestion 
-|5| Fireball, Stinking Cloud 
-|7| Fire Shield, Wall of Fire 
-|9| Geas, Insect Plague",
 Dark One's Blessing,Combat,"Warlock, Fiend",2,3,,"Starting at 1st level, when you reduce a hostile creature to 0 hit points, you gain temporary hit points equal to your Charisma modifier + your warlock level (minimum of 1). 
 You also gain this benefit if someone else reduces an enemy within 10 feet of you to 0 Hit Points.",No AP
+"Expanded Spell List, Fiend",Magic,"Warlock, Fiend",2,3,,"|3| Burning Hands, Command, Scorching Ray, Suggestion 
+|5| Fireball, Stinking Cloud 
+|7| Fire Shield, Wall of Fire 
+|9°| Geas, Insect Plague",
 Dark One's Own Luck,Magic,"Warlock, Fiend",4,6,,"You can call on your fiendish patron to alter fate in your favor. When you make an ability check or a saving throw, you can use this feature to add 1d10 to your roll. You can do so after seeing the roll but before any of the roll's effects occur.
 
 You can use this feature a number of times equal to your Charisma modifier (minimum of once), but you can use it no more than once per roll. You regain all expended uses when you finish a Long Rest.",
@@ -1887,7 +2323,7 @@ Fiendish Resilience,Magic,"Warlock, Fiend",2,10,,"Choose one damage type, other 
 Hurl Through Hell,Magic,"Warlock, Fiend",5,14,,"Once per turn when you hit a creature with an attack roll, you can try to instantly transport the target through the Lower Planes. The target must succeed on a Charisma saving throw against your spell save DC, or the target disappears and hurtles through a nightmare landscape. The target takes 8d10 Psychic damage if it isn't a Fiend, and it has the Incapacitated condition until the end of your next turn, when it returns to the space it previously occupied or the nearest unoccupied space.
 
 Once you use this feature, you can't use it again until you finish a Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it.",No AP
-"Expanded Spell List, Genie",Magic,"Warlock, Genie",3,3,"Spellcasting, Warlock",,
+"Expanded Spell List, Genie",Magic,"Warlock, Genie",3,3,,,
 Genie's Vessel,Magic,"Warlock, Genie",5,3,,"While you are touching the vessel, you can use it in the following ways:
 
 Bottled Respite: using 2 AP, you can magically vanish and enter your vessel, which remains in the space you left. The interior of the vessel is an extradimensional space in the shape of a 20-foot-radius cylinder, 20 feet high, and resembles your vessel. The interior is appointed with cushions and low tables and is a comfortable temperature. While inside, you can hear the area around your vessel as if you were in its space. You can remain inside the vessel up to a number of hours equal to twice your proficiency bonus. You exit the vessel early if you use 1 AP to leave, if you die, or if the vessel is destroyed. When you exit the vessel, you appear in the unoccupied space closest to it. Any objects left in the vessel remain there until carried out, and if the vessel is destroyed, every object stored there harmlessly appears in the unoccupied spaces closest to the vessel's former space. Once you enter the vessel, you can't enter again until you finish a long rest.
@@ -1906,14 +2342,14 @@ In addition, anyone (including you) who remains within the vessel for at least 1
 Limited Wish,Magic,"Warlock, Genie",3,14,,"At 14th level, you entreat your patron to grant you a small wish. using 2 AP, you can speak your desire to your Genie's Vessel, requesting the effect of one spell that is 6th level or lower and has a casting time of 1 action. The spell can be from any class's spell list, and you don't need to meet the requirements in that spell, including costly components: the spell simply takes effect as part of this action.
 
 Once you use this feature, you can't use it again until you finish 1d4 long rests.",2 AP
-"Expanded Spell List, Great Old One",Magic,"Warlock, Great old one",3,3,"Spellcasting, Warlock","|3| Detect Thoughts, Dissonant Whispers, Phantasmal Force, Tasha's Hideous Laughter 
-|5| Clairvoyance, Hunger of Hadar 
-|7| Confusion, Summon Aberration 
-|9| Modify Memory, Telekinesis",
 Awakened Mind,Magic,"Warlock, Great old one",2,3,,"You can form a telepathic connection between your mind and the mind of another. As 1 AP, choose one creature you can see within 30 feet of yourself. You and the chosen creature can communicate telepathically with each other while the two of you are within a number of miles of each other equal to your Charisma modifier (minimum of 1 mile). To understand each other, you each must mentally use a language the other knows.
 
 The telepathic connection lasts for a number of minutes equal to your Warlock level. It ends early if you use this feature to connect with a different creature.",1 AP
-Psychic Spells,Magic,"Warlock, Great old one",3,3,"Spellcasting, Warlock","When you cast a Warlock spell that deals damage, you can change its damage type to Psychic. In addition, when you cast a Warlock spell that is an Enchantment or Illusion, you can do so without Verbal or Somatic components.",
+"Expanded Spell List, Great Old One",Magic,"Warlock, Great old one",3,3,,"|3| Detect Thoughts, Dissonant Whispers, Phantasmal Force, Tasha's Hideous Laughter 
+|5| Clairvoyance, Hunger of Hadar 
+|7| Confusion, Summon Aberration 
+|9°| Modify Memory, Telekinesis",
+Psychic Spells,Magic,"Warlock, Great old one",3,3,,"When you cast a Warlock spell that deals damage, you can change its damage type to Psychic. In addition, when you cast a Warlock spell that is an Enchantment or Illusion, you can do so without Verbal or Somatic components.",
 Clairvoyant Combatant,Magic,"Warlock, Great old one",4,6,,"When you form a telepathic bond with a creature using your Awakened Mind, you can force that creature to make a Wisdom saving throw against your spell save DC. On a failed save, the creature has Disadvantage on attack rolls against you, and you have Advantage on attack rolls against that creature for the duration of the bond.
 
 Once you use this feature, you can't use it again until you finish a Short or Long Rest unless you expend a Pact Magic spell slot (no action required) to restore your use of it.",
@@ -1922,27 +2358,26 @@ Thought Shield,Magic,"Warlock, Great old one",4,10,,"Your thoughts can't be read
 Create Thrall,Magic,"Warlock, Great old one",3,14,,"When you cast Summon Aberration, you can modify it so that it doesn't require Concentration. If you do so, the spell's duration becomes 1 minute for that casting, and when summoned, the Aberration has a number of Temporary Hit Points equal to your Warlock level plus your Charisma modifier.
 
 In addition, the first time each turn the Aberration hits a creature under the effect of your Hex, the Aberration deals extra Psychic damage to the target equal to the bonus damage of that spell.",2 AP
-"Expanded Spell List, Hexblade",Magic,"Warlock, Hexblade",4,3,"Spellcasting, Warlock","| 3 | Arcane Vigor, Hex, Magic Weapon, Shield, Wrathful Smite | 
+"Expanded Spell List, Hexblade",Magic,"Warlock, Hexblade",4,3,,"| 3 | Arcane Vigor, Hex, Magic Weapon, Shield, Wrathful Smite | 
 | 5 | Conjure Barrage, Dispel Magic | 
 | 7 | Freedom of Movement, Staggering Smite | 
-| 9 | Animate Objects, Steel Wind Strike |",
-Hexblade Manifest,Magic,"Warlock, Hexblade",5,3,Spellcaster,"Your patron grants you the power to summon cursed echoes of its blade to hinder your foes. You gain the following benefits.
+| 9° | Animate Objects, Steel Wind Strike |",
+Hexblade Manifest,Magic,"Warlock, Hexblade",5,3,,"Your patron grants you the power to summon cursed echoes of its blade to hinder your foes. You gain the following benefits.
 
 Hexblade's Curse. You can cast Hex without expending a spell slot a number of times equal to your Charisma modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. When you cast Hex, a spectral weapon resembling your patron orbits the cursed target.
 
 Hexblade's Maneuvers. Once per turn, when you hit a target cursed by your Hex with an attack roll, you can cause one of these additional effects:
-• Draining Slash. The target makes a Constitution saving throw against your spell save DC. On a failed save, the target can't make Opportunity Attacks and its Speed is halved until the start of your next turn.
-• Harrowing Blade. The target makes a Wisdom saving throw against your spell save DC. On a failed save, the next time the target makes an attack roll against a creature other than you before the start of your next turn, the target takes Necrotic damage equal to your Charisma modifier.
-• Stymying Mark. The target has Disadvantage on the next saving throw it makes before the start of your next turn.",1 AP
+• ***Draining Slash***. The target makes a Constitution saving throw against your spell save DC. On a failed save, the target can't make Opportunity Attacks and its Speed is halved until the start of your next turn.
+• ***Harrowing Blade***. The target makes a Wisdom saving throw against your spell save DC. On a failed save, the next time the target makes an attack roll against a creature other than you before the start of your next turn, the target takes Necrotic damage equal to your Charisma modifier.
+• ***Stymying Mark***. The target has Disadvantage on the next saving throw it makes before the start of your next turn.",1 AP
 Lifestealer,Magic,"Warlock, Hexblade",3,6,Hexblade Manifest,"Your patron's might allows you to drain vitality from those you curse, granting you the following benefits.
-• Hungering Hex. Whenever the target cursed by your Hex drops to 0 Hit Points, you regain Hit Points equal to 1d8 plus your Charisma modifier.
-• Inevitable Blade. Once per turn, if you make an attack roll against the target cursed by your Hex and miss, you can deal Necrotic damage to that creature equal to your Charisma modifier (minimum of 1 Necrotic damage).",
+• ***Hungering Hex***. Whenever the target cursed by your Hex drops to 0 Hit Points, you regain Hit Points equal to 1d8 plus your Charisma modifier.
+• ***Inevitable Blade***. Once per turn, if you make an attack roll against the target cursed by your Hex and miss, you can deal Necrotic damage to that creature equal to your Charisma modifier (minimum of 1 Necrotic damage).",
 Armor of Hexes,Magic,"Warlock, Hexblade",3,10,Hexblade Manifest,"When you take damage from the cursed target of your Hex, you can take a Reaction to reduce the damage taken by an amount equal to 2d8 plus your Charisma modifier. You can use this feature a number of times equal to your Charisma modifier, and you regain all expended uses when you finish a Long Rest.",Reaction
 Master of Hexes,Magic,"Warlock, Hexblade",3,14,Hexblade Manifest,"Your patron's accursed might flows even more strongly through you, granting the following benefits.
-• Accursed Critical. Any attack roll you make against the target cursed by your Hex scores a Critical Hit on a roll of a 19 or 20 on the d20.
-• Infectious Hex. When you use one of your Hexblade's Maneuvers, you can target one additional creature within 30 feet of the cursed target. The additional target takes 1d6 Necrotic damage.
-• Resilient Hex. Taking damage can't break your Concentration on Hex.",
-"Expanded Spell List, Undead",Magic,"Warlock, Undead",3,3,"Spellcasting, Warlock",,
+• ***Accursed Critical***. Any attack roll you make against the target cursed by your Hex scores a Critical Hit on a roll of a 19 or 20 on the d20.
+• ***Infectious Hex***. When you use one of your Hexblade's Maneuvers, you can target one additional creature within 30 feet of the cursed target. The additional target takes 1d6 Necrotic damage.
+• ***Resilient Hex***. Taking damage can't break your Concentration on Hex.",
 Form of Dread,Magic,"Warlock, Undead",5,1,,"At 1st level, you manifest an aspect of your patron’s dreadful power. using 1 AP, you transform for 1 minute. You gain the following benefits while transformed:
 
 You gain temporary hit points equal to 1d10 + your warlock level.
@@ -1951,6 +2386,7 @@ You are immune to the frightened condition.
 You can transform a number of times equal to your proficiency bonus, and you regain all expended uses when you finish a long rest.
 
 The appearance of your Form of Dread reflects some aspect of your patron. For example, your form could be a shroud of shadows forming the crown and robes of your lich patron, or your body might glow with glyphs from ancient funerary rites and be surrounded by desert winds, suggesting your mummy patron.",1 AP
+"Expanded Spell List, Undead",Magic,"Warlock, Undead",3,3,,,
 Grave Touched,Magic,"Warlock, Undead",4,6,,"At 6th level, your patron’s powers have a profound effect on your body and magic. You don’t need to eat, drink, or breathe.
 
 In addition, once during each of your turns, when you hit a creature with an attack and roll damage against the creature, you can replace the damage type with necrotic damage. While you are using your Form of Dread, you can roll one additional damage die when determining the necrotic damage the target takes.",
@@ -1972,38 +2408,40 @@ Arcane Recovery,Magic,Wizard,3,1,,"You have learned to regain some of your magic
 
 For example, if you're a 4th-level wizard, you can recover up to two levels worth of spell slots. You can recover either a 2nd-level spell slot or two 1st-level spell slots.",
 Cantrip Formulas,Magic,Wizard,2,3,,,
+Extra Attack,Combat,Wizard,5,6,,Non valgono le regole del multiclasse in questo caso. Si pu&ograve; prendere Extra Attack ogni volta che si vuole: l'unico vincolo &egrave; spendere punti creazione nella classe predefinita. Esempio: un Fighter5/Paladin5/Barbarian5 pu&ograve; prendere Extra Attack 3 volte,
 Spell Mastery,Magic,Wizard,5,18,,"At 18th level, you have achieved such mastery over certain spells that you can cast them at will. Choose a 1st-level wizard spell and a 2nd-level wizard spell that are in your spellbook. You can cast those spells at their lowest level without expending a spell slot when you have them prepared. If you want to cast either spell at a higher level, you must expend a spell slot as normal.
 
 By spending 8 hours in study, you can exchange one or both of the spells you chose for different spells of the same levels.",
 Signature Spell,Magic,Wizard,3,20,,"When you reach 20th level, you gain mastery over two powerful spells and can cast them with little effort. Choose two 3rd-level wizard spells in your spellbook as your signature spells. You always have these spells prepared, they don't count against the number of spells you have prepared, and you can cast each of them once at 3rd level without expending a spell slot. When you do so, you can't do so again until you finish a short or long rest.
 
 If you want to cast either spell at a higher level, you must expend a spell slot as normal.",
-Abjuration Savant,Magic,"Wizard, Abjuration School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a abjuration spell into your spellbook is halved.",
-Arcane Ward,Magic,"Wizard, Abjuration School",3,2,,"Starting at 2nd level, you can weave magic around yourself for protection. When you cast an abjuration spell of 1st level or higher, you can simultaneously use a strand of the spell's magic to create a magical ward on yourself that lasts until you finish a long rest. The ward has hit points equal to twice your wizard level + your Intelligence modifier. Whenever you take damage, the ward takes the damage instead. If this damage reduces the ward to 0 hit points, you take any remaining damage.
+Abjuration Savant,Magic,"Wizard, Abjuration School",1,3,,"Choose two Wizard spells from the Abjuration school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-While the ward has 0 hit points, it can't absorb damage, but its magic remains. Whenever you cast an abjuration spell of 1st level or higher, the ward regains a number of hit points equal to twice the level of the spell.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Abjuration school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Arcane Ward,Magic,"Wizard, Abjuration School",3,3,,"You can weave magic around yourself for protection. When you cast an Abjuration spell with a spell slot, you can simultaneously use a strand of the spell's magic to create a magical ward on yourself that lasts until you finish a Long Rest. The ward has a Hit Point maximum equal to twice your Wizard level plus your Intelligence modifier. Whenever you take damage, the ward takes the damage instead, and if you have any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points. If the damage reduces the ward to 0 Hit Points, you take any remaining damage. While the ward has 0 Hit Points, it can't absorb damage, but its magic remains.
 
-Once you create the ward, you can't create it again until you finish a long rest.",
-Projected Ward,Magic,"Wizard, Abjuration School",2,6,Arcane Ward,"Starting at 6th level, when a creature that you can see within 30 feet of you takes damage, you can use your reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 hit points, the warded creature takes any remaining damage.",Reaction
-Improved Abjuration,Magic,"Wizard, Abjuration School",5,10,,"You always have the Counterspell and Dispel Magic spells prepared. In addition, you cast Dispel Magic as 1 AP, and you can add your Proficiency Bonus to its ability check.
+Whenever you cast an Abjuration spell with a spell slot, the ward regains a number of Hit Points equal to twice the level of the spell slot. Alternatively, as 1 Action Point (1 AP), you can expend a spell slot, and the ward regains a number of Hit Points equal to twice the level of the spell slot expended.
+
+Once you create the ward, you can't create it again until you finish a Long Rest.",
+Projected Ward,Magic,"Wizard, Abjuration School",2,6,Arcane Ward,"When a creature that you can see within 30 feet of yourself takes damage, you can take a Reaction to cause your Arcane Ward to absorb that damage. If this damage reduces the ward to 0 Hit Points, the warded creature takes any remaining damage. If that creature has any Resistances or Vulnerabilities, apply them before reducing the ward's Hit Points.",Reaction
+Spell Breaker,Magic,"Wizard, Abjuration School",5,10,,"You always have the Counterspell and Dispel Magic spells prepared. In addition, you can cast Dispel Magic as 1 Action Point (1 AP), and you can add your Proficiency Bonus to its ability check.
+
 When you cast either spell with a spell slot, that slot isn't expended if the spell fails to stop a spell.",1 AP
-Spell Resistance,Magic,"Wizard, Abjuration School",7,14,,"Starting at 14th level, you have advantage on saving throws against spells.
-
-Furthermore, you have resistance against the damage of spells.",
-Training in war and song,"Combat, Skill","Wizard, Bladesinging",2,2,,"You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.
+Spell Resistance,Magic,"Wizard, Abjuration School",7,14,,"You have Advantage on saving throws against spells, and you have Resistance to the damage of spells.",
+Training in war and song,"Combat, Skill","Wizard, Bladesinging",2,3,,"You gain proficiency with all Melee Martial weapons that don't have the Two-Handed or Heavy property. You can use a Melee weapon with which you have proficiency as a Spellcasting Focus for your Wizard spells.
 
 You also gain proficiency in one of the following skills of your choice: Acrobatics, Athletics, Performance, or Persuasion.",
-Bladesong,Magic,"Wizard, Bladesinging",10,2,,"As 1 AP, you invoke an elven magic called the Bladesong, provided you aren't wearing armor or using a Shield.
+Bladesong,Magic,"Wizard, Bladesinging",10,3,,"As 1 AP, you invoke an elven magic called the Bladesong, provided you aren't wearing armor or using a Shield.
 
 The Bladesong lasts for 1 minute and ends early if you have the Incapacitated condition, if you don armor or a Shield, or if you use two hands to make an attack with a weapon. You can dismiss the Bladesong at any time (no action required).
 
 While the Bladesong is active, you gain the following benefits. You can invoke the Bladesong a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest. You regain one expended use when you use Arcane Recovery.
 
-• Agility. You gain a bonus to your AC equal to your Intelligence modifier (minimum of +1), and your Speed increases by 10 feet. In addition, you have Advantage on Dexterity (Acrobatics) checks.
+• ***Agility***. You gain a bonus to your AC equal to your Intelligence modifier (minimum of +1), and your Speed increases by 10 feet. In addition, you have Advantage on Dexterity (Acrobatics) checks.
 
-• Bladework. Whenever you attack with a weapon with which you have proficiency, you can use your Intelligence modifier for the attack and damage rolls instead of using Strength or Dexterity.
+• ***Bladework***. Whenever you attack with a weapon with which you have proficiency, you can use your Intelligence modifier for the attack and damage rolls instead of using Strength or Dexterity.
 
-• Focus. When you make a Constitution saving throw to maintain Concentration, you can add your Intelligence modifier to the total.",1 AP
+• ***Focus***. When you make a Constitution saving throw to maintain Concentration, you can add your Intelligence modifier to the total.",1 AP
 Song of Defense,Magic,"Wizard, Bladesinging",3,10,,"Beginning at 10th level, you can direct your magic to absorb damage while your Bladesong is active. When you take damage, you can use your reaction to expend one spell slot and reduce that damage to you by an amount equal to five times the spell slot's level",Reaction
 Song of Victory,Magic,"Wizard, Bladesinging",3,14,,"After you cast a spell that has a casting time of an action, you can make one attack with a weapon as 1 AP.",1 AP
 Chronal Shift,Magic,"Wizard, Chronurgy Magic",3,2,,"At 2nd level, you can magically exert limited control over the flow of time around a creature. As a reaction, after you or a creature you can see within 30 feet of you makes an attack roll, an ability check, or a saving throw, you can force the creature to reroll. You make this decision after you see whether the roll succeeds or fails. The target must use the result of the second roll.
@@ -2021,94 +2459,149 @@ Once you create a bead with this feature, you can't do so again until you finish
 Convergent Future,Magic,"Wizard, Chronurgy Magic",3,14,,"Starting at 14th level, you can peer through possible futures and magically pull one of them into events around you, ensuring a particular outcome. When you or a creature you can see within 60 feet of you makes an attack roll, an ability check, or a saving throw, you can use your reaction to ignore the die roll and decide whether the number rolled is the minimum needed to succeed or one less than that number (your choice).
 
 When you use this feature, you gain one level of exhaustion. Only by finishing a long rest can you remove a level of exhaustion gained in this way.",Reaction
-Conjuration Savant,Magic,"Wizard, Conjuration School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Conjuration spell into your spellbook is halved.",
-Minor Conjuration,Magic,"Wizard, Conjuration School",1,2,,"Starting at 2nd level when you select this school, you can use 2 AP to conjure up an inanimate object in your hand or on the ground in an unoccupied space that you can see within 10 feet of you. This object can be no larger than 3 feet on a side and weigh no more than 10 pounds, and its form must be that of a nonmagical object that you have seen. The object is visibly magical, radiating dim light out to 5 feet.
+Conjuration Savant,Magic,"Wizard, Conjuration School",1,3,,"Choose two Wizard spells from the Conjuration school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-The object disappears after 1 hour, when you use this feature again, or if it takes or deals any damage.",2 AP
-Benign Transportation,Magic,"Wizard, Conjuration School",2,6,,"Starting at 6th level, you can use 2 AP to teleport up to 30 feet to an unoccupied space that you can see. Alternatively, you can choose a space within range that is occupied by a Small or Medium creature. If that creature is willing, you both teleport, swapping places.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Conjuration school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Benign Transportation,Magic,"Wizard, Conjuration School",3,3,,"As a 1 Action Point (1 AP), you teleport up to 30 feet to an unoccupied space that you can see. Alternatively, you can choose a space within range that is occupied by a Medium or smaller creature. If that creature is willing, you both teleport, swapping places.
 
-Once you use this feature, you can't use it again until you finish a long rest or you cast a conjuration spell of 1st level or higher.",2 AP
-Focused Conjuration,Magic,"Wizard, Conjuration School",2,10,,"Beginning at 10th level, while you are concentrating on a conjuration spell, your concentration can't be broken as a result of taking damage.",
-Durable Summons,Magic,"Wizard, Conjuration School",2,14,,"Starting at 14th level, any creature that you summon or create with a conjuration spell has 30 temporary hit points.",
-Portent,Magic,"Wizard, Divination School",6,2,,"Starting at 2nd level when you choose this school, glimpses of the future begin to press in on your awareness. When you finish a long rest, roll two d20s and record the numbers rolled. You can replace any attack roll, saving throw, or ability check made by you or a creature that you can see with one of these foretelling rolls. You must choose to do so before the roll, and you can replace a roll in this way only once per turn.
+You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",1 AP
+Distant Transportation,Magic,"Wizard, Conjuration School",1,6,Benign Transportation,"The range of your Benign Transposition feature increases to 60 feet. Additionally, you can restore one use of it by expending a level 3+ spell slot (no action required).",2 AP
+Durable Summons,Magic,"Wizard, Conjuration School",2,6,,"When you cast a Conjuration spell to summon or create a creature using a spell slot, that creature gains Temporary Hit Points equal to twice your Wizard level when it first appears. While it has these Temporary Hit Points, the creature has Resistance to every damage type except Force, Necrotic, Psychic, and Radiant.",
+Focused Conjuration,Magic,"Wizard, Conjuration School",2,10,,Taking damage can't break your Concentration on Conjuration spells.,
+Splintered Summons,Magic,"Wizard, Conjuration School",2,14,,"When you use a spell slot to cast a Conjuration spell that summons a spirit whose stat block is included in the spell description, such as Summon Aberration, you can modify the spell to summon two creatures with the spell instead of one. Each creature is of the same kind, uses the stat block and rules denoted by the spell, and manifests in a different unoccupied space of your choice within the spell's range, but the summoned creatures' Hit Point maximums and current Hit Points are halved. If you lose Concentration on the spell, both creatures disappear.
 
-Each foretelling roll can be used only once. When you finish a long rest, you lose any unused foretelling rolls.",
-Expert Divination,Magic,"Wizard, Divination School",2,6,,"Beginning at 6th level, casting divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a divination spell of 2nd level or higher using a spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the spell you cast and can't be higher than 5th level.",
-The Third Eye,Magic,"Wizard, Divination School",2,10,,"Starting at 10th level, you can use 2 AP to increase your powers of perception. When you do so, choose one of the following benefits, which lasts until you are incapacitated or you take a short or long rest. You can't use the feature again until you finish a short or long rest.
+Once you use this feature to modify a spell in this way, you must finish a Long Rest before you can do so again. You can also restore your use of it by expending a level 5+ spell slot (no action required).",
+Divination Savant,Magic,"Wizard, Divination School",1,3,,"Choose two Wizard spells from the Divination school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-• Darkvision. You gain darkvision out to a range of 60 feet.
-• Ethereal Sight. You can see into the Ethereal Plane within 60 feet of you.
-• Greater Comprehension. You can read any language.
-• See Invisibility. You can see invisible creatures and objects within 10 feet of you that are within line of sight.",2 AP
-Greater Portent,Magic,"Wizard, Divination School",3,14,Portent,"Starting at 14th level, the visions in your dreams intensify and paint a more accurate picture in your mind of what is to come. You roll three d20s for your Portent feature, rather than two.",
-Enchantment Savant,Magic,"Wizard, Enchantment School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Enchantment spell into your spellbook is halved.",
-Hypnotic Gaze,Magic,"Wizard, Enchantment School",3,2,,"Starting at 2nd level when you choose this school, your soft words and enchanting gaze can magically enthrall another creature. using 2 AP, choose one creature that you can see within 5 feet of you. If the target can see or hear you, it must succeed on a Wisdom saving throw against your wizard spell save DC or be charmed by you until the end of your next turn. The charmed creature's speed drops to 0, and the creature is incapacitated and visibly dazed.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Divination school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Portent,Magic,"Wizard, Divination School",6,3,,"Glimpses of the future begin to press on your awareness. Whenever you finish a Long Rest, roll two d20s and record the numbers rolled. You can replace any D20 Test made by you or a creature that you can see with one of these foretelling rolls. You must choose to do so before the roll, and you can replace a roll in this way only once per turn.
 
-On subsequent turns, you can use your action to maintain this effect, extending its duration until the end of your next turn. However, the effect ends if you move more than 5 feet away from the creature, if the creature can neither see nor hear you, or if the creature takes damage.
+Each foretelling roll can be used only once. When you finish a Long Rest, you lose any unused foretelling rolls.",
+Expert Divination,Magic,"Wizard, Divination School",2,6,,"Casting Divination spells comes so easily to you that it expends only a fraction of your spellcasting efforts. When you cast a Divination spell using a level 2+ spell slot, you regain one expended spell slot. The slot you regain must be of a level lower than the slot you expended and can't be higher than level 5.",
+The Third Eye,Magic,"Wizard, Divination School",2,10,,"You can increase your powers of perception. As a 1 Action Point (1 AP), choose one of the following benefits, which lasts until you start a Short or Long Rest. You can't use this feature again until you finish a Short or Long Rest.
 
-Once the effect ends, or if the creature succeeds on its initial saving throw against this effect, you can't use this feature on that creature again until you finish a long rest.",2 AP
-Instinctive Charm,Magic,"Wizard, Enchantment School",2,6,,"Beginning at 6th level, when a creature you can see within 30 feet of you makes an attack roll against you, you can use your reaction to divert the attack, provided that another creature is within the attack's range. The attacker must make a Wisdom saving throw against your wizard spell save DC. On a failed save, the attacker must target the creature that is closest to it, not including you or itself. If multiple creatures are closest, the attacker chooses which one to target.
+Darkvision. You gain Darkvision with a range of 120 feet.
 
-On a successful save, you can't use this feature on the attacker again until you finish a long rest.
+Greater Comprehension. You can read any language.
 
-You must choose to use this feature before knowing whether the attack hits or misses. Creatures that can't be charmed are immune to this effect.",Reaction
-Split Enchantment,Magic,"Wizard, Enchantment School",4,10,,"Starting at 10th level, when you cast an enchantment spell of 1st level or higher that targets only one creature, you can have it target a second creature.",
-Alter Memories,Magic,"Wizard, Enchantment School",3,14,,"At 14th level, you gain the ability to make a creature unaware of your magical influence on it. When you cast an enchantment spell to charm one or more creatures, you can alter one creature's understanding so that it remains unaware of being charmed.
+See Invisibility. You can cast See Invisibility without expending a spell slot.",1 AP
+Greater Portent,Magic,"Wizard, Divination School",3,14,Portent,The visions in your dreams intensify and paint a more accurate picture in your mind of what is to come. Roll three d20s for your Portent feature rather than two.,
+Enchantment Savant,Magic,"Wizard, Enchantment School",1,3,,"Choose two Wizard spells from the Enchantment school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-Additionally, once before the spell expires, you can use 2 AP to try to make the chosen creature forget some of the time it spent charmed. The creature must succeed on an Intelligence saving throw against your wizard spell save DC or lose a number of hours of its memories equal to 1 + your Charisma modifier (minimum 1). You can make the creature forget less time, and the amount of time can't exceed the duration of your enchantment spell.",2 AP
-Evocation Savant,Magic,"Wizard, Evocation School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Evocation spell into your spellbook is halved.",
-Sculpt Spells,Magic,"Wizard, Evocation School",3,2,,"Beginning at 2nd level, you can create pockets of relative safety within the effects of your evocation spells. When you cast an evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 + the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save.",
-Potent Cantrip,Magic,"Wizard, Evocation School",1,6,,"Starting at 6th level, your damaging cantrips affect even creatures that avoid the brunt of the effect. When a creature succeeds on a saving throw against your cantrip, the creature takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip.",
-Empowered Spell,Magic,"Wizard, Evocation School",2,10,,"Beginning at 10th level, you can add your Intelligence modifier (minimum of +1) to one damage roll of any wizard evocation spell that you cast.",
-Overchannel,Magic,"Wizard, Evocation School",3,14,,"Starting at 14th level, you can increase the power of your simpler spells. When you cast a wizard spell of 1st through 5th level that deals damage, you can deal maximum damage with that spell.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Enchantment school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Enchanting Conversationalist,Magic,"Wizard, Enchantment School",1,3,,"You gain proficiency in one of the following skills of your choice: Deception, Intimidation, or Persuasion.
 
-The first time you do so, you suffer no adverse effect. If you use this feature again before you finish a long rest, you take 2d12 necrotic damage for each level of the spell, immediately after you cast it. Each time you use this feature again before finishing a long rest, the necrotic damage per spell level increases by 1d12. This damage ignores resistance and immunity.",
-Illusion Savant,Magic,"Wizard, Illusion School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Illusion spell into your spellbook is halved.",
-Improved Minor Illusion,Magic,"Wizard, Illusion School",1,2,,"When you choose this school at 2nd level, you learn the Minor Illusion cantrip. If you already know this cantrip, you learn a different wizard cantrip of your choice. The cantrip doesn't count against your number of cantrips known.
+In addition, when you make an ability check with the chosen skill, you gain a bonus to the check equal to your Intelligence modifier (minimum of +1).",
+Hypnotic Gaze,Magic,"Wizard, Enchantment School",3,3,,"Your charming words and enchanting gaze can enthrall another creature. As a Magic action, choose one creature that you can see within 10 feet of yourself. If the target can see or hear you, it must succeed on a Wisdom saving throw against your spell save DC or have the Charmed condition for 1 minute or until the target is more than 10 feet away from you, the target can neither see nor hear you, or the target takes damage. While Charmed, the target has the Incapacitated condition and a Speed of 0.
 
-When you cast Minor Illusion, you can create both a sound and an image with a single casting of the spell.",
-Malleable Illusions,Magic,"Wizard, Illusion School",1,6,,"Starting at 6th level, when you cast an illusion spell that has a duration of 1 minute or longer, you can use 2 AP to change the nature of that illusion (using the spell's normal parameters for the illusion), provided that you can see the illusion.",2 Ap
-Illusory Self,Magic,"Wizard, Illusion School",2,10,,"Beginning at 10th level, you can create an illusory duplicate of yourself as an instant, almost instinctual reaction to danger. When a creature makes an attack roll against you, you can use your reaction to interpose the illusory duplicate between the attacker and yourself. The attack automatically misses you, then the illusion dissipates.
+You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",2 AP
+Split Enchantment,Magic,"Wizard, Enchantment School",3,6,,"When you use a spell slot to cast an Enchantment spell, such as Charm Person, that can be cast with a higher-level spell slot to target an additional creature, you can increase the spell's effective level by 1.
 
-Once you use this feature, you can't use it again until you finish a short or long rest.",Reaction
-Illusory Reality,Magic,"Wizard, Illusion School",2,14,,"By 14th level, you have learned the secret of weaving shadow magic into your illusions to give them a semi-reality. When you cast an illusion spell of 1st level or higher, you can choose one inanimate, nonmagical object that is part of the illusion and make that object real. You can do this on your turn using 1 AP while the spell is ongoing. The object remains real for 1 minute. For example, you can create an illusion of a bridge over a chasm and then make it real long enough for your allies to cross.
+You can use this feature a number of times equal to your Intelligence modifier, and you regain all expended uses when you finish a Long Rest.",
+Instinctive Charm,Magic,"Wizard, Enchantment School",4,10,,"When a creature within 30 feet of you that you can see hits you with an attack roll, you can take a Reaction to force the attacker to make a Wisdom saving throw against your spell save DC. On a failed save, the attack misses instead, and if there is another creature within range of the attack other than the attacker, the attacker targets that creature with the triggering attack, using the same attack roll. If multiple creatures are within the attack's range, you choose which one to target.
 
-The object can't deal damage or otherwise directly harm anyone.",1 AP
-Necromancy Savant,Magic,"Wizard, Necromancy School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Necromancy spell into your spellbook is halved.",
-Grim Harvest,Magic,"Wizard, Necromancy School",1,2,,"At 2nd level, you gain the ability to reap life energy from creatures you kill with your spells. Once per turn when you kill one or more creatures with a spell of 1st level or higher, you regain hit points equal to twice the spell's level, or three times its level if the spell belongs to the School of Necromancy. You don't gain this benefit for killing constructs or undead.",
-Undead Thralls,Magic,"Wizard, Necromancy School",2,6,,"At 6th level, you add the Animate Dead spell to your spellbook if it is not there already. When you cast Animate Dead, you can target one additional corpse or pile of bones, creating another zombie or skeleton, as appropriate.
+Once you take this Reaction, you can't do so again until you finish a Long Rest. You can also restore your use of it by casting an Enchantment spell with a spell slot.",Reaction
+Alter Memories,Magic,"Wizard, Enchantment School",3,14,,"You can make a creature unaware of your magical influence. When you cast an Enchantment spell that imposes the Charmed condition using a spell slot, you can choose one creature targeted by the spell. That creature remains unaware of being Charmed by you.
 
-Whenever you create an undead using a necromancy spell, it has additional benefits:
+In addition, once before the spell ends, you can take a Magic action to force the chosen creature to make an Intelligence saving throw against your spell save DC. On a failed save, you can make the creature lose a number of hours of its memories equal to 1 plus your Intelligence modifier (minimum of 1 hour lost). You can make the creature forget less time, and the amount of time can't exceed the duration of your Enchantment spell.",2 AP
+Evocation Savant,Magic,"Wizard, Evocation School",1,3,,"Choose two Wizard spells from the Evocation school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-• The creature's hit point maximum is increased by an amount equal to your wizard level.
-• The creature adds your proficiency bonus to its weapon damage rolls.",
-Inured to Undeath,Magic,"Wizard, Necromancy School",3,10,,"Beginning at 10th level, you have resistance to necrotic damage, and your hit point maximum can't be reduced. You have spent so much time dealing with undead and the forces that animate them that you have become inured to some of their worst effects.",
-Command Undead,Magic,"Wizard, Necromancy School",2,14,,"Starting at 14th level, you can use magic to bring undead under your control, even those created by other wizards. using 2 AP, you can choose one undead that you can see within 60 feet of you. That creature must make a Charisma saving throw against your wizard spell save DC. If it succeeds, you can't use this feature on it again. If it fails, it becomes friendly to you and obeys your commands until you use this feature again.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Evocation school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Sculpt Spells,Magic,"Wizard, Evocation School",2,6,,"You can create pockets of relative safety within the effects of your evocations. When you cast an Evocation spell that affects other creatures that you can see, you can choose a number of them equal to 1 plus the spell's level. The chosen creatures automatically succeed on their saving throws against the spell, and they take no damage if they would normally take half damage on a successful save.",
+Potent Cantrip,Magic,"Wizard, Evocation School",2,3,,"Your damaging cantrips affect even creatures that avoid the brunt of the effect. When you cast a cantrip at a creature and you miss with the attack roll or the target succeeds on a saving throw against the cantrip, the target takes half the cantrip's damage (if any) but suffers no additional effect from the cantrip.",
+Empowered Spell,Magic,"Wizard, Evocation School",2,10,,"Whenever you cast a Wizard spell from the Evocation school, you can add your Intelligence modifier to one damage roll of that spell.",
+Overchannel,Magic,"Wizard, Evocation School",3,14,,"You can increase the power of your spells. When you cast a Wizard spell with a spell slot of levels 1–5 that deals damage, you can deal maximum damage with that spell on the turn you cast it.
 
-Intelligent undead are harder to control in this way. If the target has an Intelligence of 8 or higher, it has advantage on the saving throw. If it fails the saving throw and has an Intelligence of 12 or higher, it can repeat the saving throw at the end of every hour until it succeeds and breaks free.",2 AP
-Transmutation Savant,Magic,"Wizard, Transmutation School",1,2,,"Beginning when you select this school at 2nd level, the gold and time you must spend to copy a Transmutation spell into your spellbook is halved.",
-Minor Alchemy,Magic,"Wizard, Transmutation School",1,2,,"Starting at 2nd level when you select this school, you can temporarily alter the physical properties of one nonmagical object, changing it from one substance into another. You perform a special alchemical procedure on one object composed entirely of wood, stone (but not a gemstone), iron, copper, or silver, transforming it into a different one of those materials. For each 10 minutes you spend performing the procedure, you can transform up to 1 cubic foot of material. After 1 hour, or until you lose your concentration (as if you were concentrating on a spell), the material reverts to its original substance.",
-Transmuter's Stone,Magic,"Wizard, Transmutation School",3,6,,"Starting at 6th level, you can spend 8 hours creating a transmuter's stone that stores transmutation magic. You can benefit from the stone yourself or give it to another creature. A creature gains a benefit of your choice as long as the stone is in the creature's possession. When you create the stone, choose the benefit from the following options:
+The first time you do so, you suffer no adverse effect. If you use this feature again before you finish a Long Rest, you take 2d12 Necrotic damage for each level of the spell slot immediately after you cast it. This damage ignores Resistance and Immunity.
 
-Darkvision out to a range of 60 feet
-An increase to speed of 10 feet while the creature is unencumbered
-Proficiency in Constitution saving throws
-Resistance to acid, cold, fire, lightning, or thunder damage (your choice whenever you choose this benefit)
-Each time you cast a transmutation spell of 1st level or higher, you can change the effect of your stone if the stone is on your person.
+Each time you use this feature again before finishing a Long Rest, the Necrotic damage per spell level increases by 1d12.",
+Illusion Savant,Magic,"Wizard, Illusion School",1,3,,"Choose two Wizard spells from the Illusion school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-If you create a new transmuter's stone, the previous one ceases to function.",
-Shapechanger,Magic,"Wizard, Transmutation School",2,10,,"At 10th level, you add the Polymorph spell to your spellbook, if it is not there already. You can cast Polymorph without expending a spell slot. When you do so, you can target only yourself and transform into a beast whose challenge rating is 1 or lower.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Illusion school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Improved Illusion,Magic,"Wizard, Illusion School",2,3,,"You can cast Illusion spells without providing Verbal components, and if an Illusion spell you cast has a range of 10+ feet, the range increases by 60 feet.
 
-Once you cast Polymorph in this way, you can't do so again until you finish a short or long rest, though you can still cast it normally using an available spell slot.",
-Master Transmuter,Magic,"Wizard, Transmutation School",2,14,Transmuter's Stone,"Starting at 14th level, you can use 2 AP to consume the reserve of transmutation magic stored within your transmuter's stone in a single burst. When you do so, choose one of the following effects. Your transmuter's stone is destroyed and can't be remade until you finish a long rest.
+You also know the Minor Illusion cantrip. If you already know it, you learn a different Wizard cantrip of your choice. The cantrip doesn't count against your number of cantrips known. You can create both a sound and an image with a single casting of Minor Illusion, and you can cast it as 1 Action Point (1 AP).",
+Phantasmal Creatures,Magic,"Wizard, Illusion School",2,6,,"You always have the Summon Beast and Summon Fey spells prepared. Whenever you cast either spell, you can change its school to Illusion, which causes the summoned creature to appear spectral. You can cast the Illusion version of each spell without expending a spell slot, but casting it without a slot halves the creature's Hit Points. Once you cast either spell without a spell slot, you must finish a Long Rest before you can cast the spell in that way again.",
+Illusory Self,Magic,"Wizard, Illusion School",2,10,,"When a creature hits you with an attack roll, you can take a Reaction to interpose an illusory duplicate of yourself between the attacker and yourself. The attack automatically misses you, then the illusion dissipates.
 
-Major Transformation. You can transmute one nonmagical object – no larger than a 5-foot cube – into another nonmagical object of similar size and mass and of equal or lesser value. You must spend 10 minutes handling the object to transform it.
+Once you use this feature, you can't use it again until you finish a Short or Long Rest. You can also restore your use of it by expending a level 2+ spell slot (no action required).",Reaction
+Illusory Reality,Magic,"Wizard, Illusion School",2,14,,"You have learned to weave shadow magic into your illusions to give them a semi-reality. When you cast an Illusion spell with a spell slot, you can choose one inanimate, nonmagical object that is part of the illusion and make that object real. You can do this on your turn as 1 Action Point (1 AP) while the spell is ongoing. The object remains real for 1 minute, during which it can't deal damage or give any conditions. For example, you can create an illusion of a bridge over a chasm and then make it real and cross it.",1 AP
+Necromancy Savant,Magic,"Wizard, Necromancy School",1,3,,"Choose two Wizard spells from the Necromancy school, each of which must be no higher than level 2, and add them to your spellbook for free.
 
-Panacea. You remove all curses, diseases, and poisons affecting a creature that you touch with the transmuter's stone. The creature also regains all its hit points.
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Necromancy school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Necromancy Spellbook,Magic,"Wizard, Necromancy School",4,3,,"Your spellbook's necromantic secrets grant you additional powers. You gain the following benefits.
 
-Restore Life. You cast the Raise Dead spell on a creature you touch with the transmuter's stone, without expending a spell slot or needing to have the spell in your spellbook.
+• **Necrotic Resistance.** You have Resistance to Necrotic damage.
 
-Restore Youth. You touch the transmuter's stone to a willing creature, and that creature's apparent age is reduced by 3d10 years, to a minimum of 13 years. This effect doesn't extend the creature's lifespan.",2 AP
+• **Undead Familiar.** The Find Familiar spell appears in your spellbook. When you cast the spell, you choose one of the normal forms for your familiar or one of the following special forms: Skeleton or Zombie (see appendix B of the Player's Handbook for the familiar's stat block). When you choose one of the normal forms, you can choose Undead as its creature type.
+
+Additionally, when you take the Attack action, you can forgo one of your own attacks to allow your familiar to make one attack of its own with its Reaction.
+
+• **Undead Vitality.** When you cast a Necromancy spell using a spell slot, you can choose an Undead creature you can see within 60 feet of yourself to regain a number of Hit Points equal to the level of the spell slot expended plus your Wizard level.",
+Grave Power,Magic,"Wizard, Necromancy School",,,"Arcane Recovery;
+Necromancy Spellbook","You have discovered more necromantic insights and inscribed them in your spellbook. While holding your spellbook, you gain the following benefits.
+
+• **Grave Resilience.** When you use Arcane Recovery, your Exhaustion level, if any, decreases by 1.
+
+• **Overwhelming Necrosis.** Damage from your Wizard spells and Wizard features ignores Resistance to Necrotic damage.",
+Undead Thralls,Magic,"Wizard, Necromancy School",2,6,Necromancy Spellbook,"You always have Animate Dead prepared and can cast it without expending a spell slot, but you must finish a Long Rest before you can cast it in this way again. Whenever you start casting the spell, you can increase the spell's effective level by 1.
+
+In addition, while holding your spellbook, you gain the following benefits.
+
+• **Undead Fortitude.** Whenever you cast a Necromancy spell that creates or summons an Undead, the Undead's Hit Point maximum and current Hit Points increase by a number equal to your Intelligence modifier plus half your Wizard level (round down).
+
+• **Withering Strike.** Whenever an Undead you control within 60 feet of you hits a creature with an attack roll, the Undead deals extra Necrotic damage equal to your Intelligence modifier (minimum of 1 Necrotic damage).",
+Harvest Undead,Magic,"Wizard, Necromancy School",2,10,,"You have learned more secrets about the nuances of life and death. Immediately after you become Bloodied but aren't reduced to 0 Hit Points from taking damage, you can take a Reaction to reduce an Undead creature under your control that you can see to 0 Hit Points. You then immediately regain a number of Hit Points equal to your Wizard level.",
+Death's Master,Magic,"Wizard, Necromancy School",3,14,,"Abstruse rituals within your spellbook allow you mastery over undeath. While holding your spellbook, you gain the following benefits.
+
+• **Bolster Undead.** As a 1 Action Point (1 AP), choose any number of Undead you have created or summoned with a Necromancy spell that are within 60 feet of you. Those Undead each gain Temporary Hit Points equal to your Wizard level. Once you use this 1 Action Point (1 AP), you can't do so again until you finish a Long Rest.
+
+• **Extinguish Undead.** When an Undead creature you can see is reduced to 0 Hit Points, you can cause it to explode with necrotic energy. Roll a number of d6s equal to half the creature's unexpended Hit Dice (round up, minimum of 1d6), and add them together. Each creature in a 10-foot Emanation originating from the Undead makes a Dexterity saving throw. On a failed save, a target takes Necrotic damage equal to the number rolled and can't take Reactions until the start of its next turn. On a successful save, a target takes half as much damage only. When you use this feature to explode an Undead creature you don't control, you must take a Reaction and expend a level 5+ spell slot to do so.",2 AP
+Transmutation Savant,Magic,"Wizard, Transmutation School",1,3,,"Choose two Wizard spells from the Transmutation school, each of which must be no higher than level 2, and add them to your spellbook for free.
+
+In addition, whenever you gain access to a new level of spell slots in this class, you can add one Wizard spell from the Transmutation school to your spellbook for free. The chosen spell must be of a level for which you have spell slots.",
+Transmuter's Stone,Magic,"Wizard, Transmutation School",6,3,,"When you finish a Long Rest, you can create a magic stone that lasts until you use this feature again. The stone is a Tiny object, and you can use it as a Spellcasting Focus for your Wizard spells. A creature with the stone in its possession gains proficiency in Constitution saving throws and one of the following benefits, which you choose when you create the stone. You can change the stone's benefit when you cast a Transmutation spell using a spell slot.
+
+• **Darkvision.** The bearer gains Darkvision with a range of 60 feet or increases the range of its Darkvision by 60 feet.
+
+• **Resistance.** The bearer gains Resistance to Acid, Cold, Fire, Lightning, Poison, or Thunder damage (your choice each time you choose this benefit).
+
+• **Speed.** The bearer's Speed increases by 10 feet.",
+Wondrous Alteration,Magic,"Wizard, Transmutation School",3,3,,"You always have the Alter Self spell prepared and can cast it once without expending a spell slot. You regain the ability to cast it in this way when you finish a Long Rest.
+
+While under the effects of Alter Self, you gain an additional benefit for each of its options.
+
+• **Aquatic Adaptation.** While underwater, you can take the Dash action as 1 Action Point (1 AP).
+
+• **Change Appearance.** You have Advantage on Charisma (Deception) checks.
+
+• **Natural Weapons.** The damage of your new growth increases to 2d6 damage of the type associated with the growth. You also have Advantage on Constitution saving throws to maintain Concentration.",
+Empowered Transmutation,Magic,"Wizard, Transmutation School",2,6,,"When you use a spell slot to cast a Transmutation spell that doesn't make an attack roll or force a saving throw, such as Fly or Magic Weapon, you can increase the spell's effective level by 1.
+
+You can use this feature a number of times equal to your Intelligence modifier (minimum of once), and you regain all expended uses when you finish a Long Rest.",
+Potent Stone,Magic,"Wizard, Transmutation School",2,10,Transmuter's Stone,"Your Transmuter's Stone is more versatile. When you create your Transmuter's Stone, you can choose up to two benefits. You can choose each option other than Resistance only once. If you choose Resistance twice, you must choose different damage types. You can change either or both benefits when you cast a Transmutation spell using a spell slot.
+
+In addition, the following are now among your benefit options for Transmuter's Stone.
+
+• **Mighty Build.** The bearer has Advantage on Strength saving throws. The bearer also counts as one size larger when determining its carrying capacity.
+
+• **Tremorsense.** The bearer gains Tremorsense with a range of 30 feet.",
+Shape-Shifter,Magic,"Wizard, Transmutation School",4,10,,"You always have the Polymorph spell prepared and can cast it once without expending a spell slot. You regain the ability to cast it in this way when you finish a Long Rest.
+
+In addition, when you target yourself with the spell, you can modify the spell to gain the benefits below. Once you modify the spell using this feature, you can't do so again until you finish a Long Rest.
+
+• **Game Statistics.** In addition to retaining the features specified in the spell, you retain your memories and ability to communicate. You also retain your Intelligence, Wisdom, and Charisma scores; proficiencies; class features; and feats.
+
+• **Transmute Spells.** While shape-shifted, you can cast spells, but only Transmutation spells that don't have a Material component that has a specified cost or that is consumed by the spell.",
+Master Transmuter,Magic,"Wizard, Transmutation School",4,14,,"While you carry your Transmuter's Stone, you can take a Magic action to consume the reserve of transmutation magic stored inside and choose one of the following benefits. After you use the stone in this way, it crumbles to dust. You can prevent the stone from crumbling by expending a level 7+ spell slot as part of the Magic action you take using this feature.
+
+• **Major Transformation.** You can transmute one nonmagical object—no larger than a 10-foot Cube or eight connected 5-foot Cubes—into another nonmagical object of similar size and mass and of equal or lesser value. You must spend 10 minutes handling the object to transform it.
+
+• **Panacea.** You touch a creature as part of this Magic action, and the target regains a number of Hit Points equal to half its Hit Point maximum (round down). The target is cured of all magical contagions, and any curses affecting the target are lifted, including the target's Attunement to a cursed item. If the target has the Poisoned or Petrified condition, those conditions end.
+
+• **Restore Life.** You cast the Raise Dead spell without expending a spell slot, using the stone in place of the required Material components.
+
+• **Restore Youth.** You touch one willing creature as part of this Magic action, and the target's Exhaustion level, if any, decreases to 0, and it permanently appears 3d10 years younger, to a minimum of young adulthood.",2 AP
 Arcane Deflection,Magic,"Wizard, War Magic",4,2,,"At 2nd level, you have learned to weave your magic to fortify yourself against harm. When you are hit by an attack or you fail a saving throw, you can use your reaction to gain a +2 bonus to your AC against that attack or a +4 bonus to that saving throw.
 
 When you use this feature, you can't cast spells other than cantrips until the end of your next turn.",Reaction
@@ -2120,202 +2613,33 @@ You can store a maximum number of power surges equal to your Intelligence modifi
 Once per turn when you deal damage to a creature or object with a wizard spell, you can spend one power surge to deal extra force damage to that target. The extra damage equals half your wizard level.",
 Durable Magic,Magic,"Wizard, War Magic",5,10,,"Beginning at 10th level, the magic you channel helps ward off harm. While you maintain concentration on a spell, you have a +2 bonus to AC and all saving throws.",
 Deflecting Shroud,Magic,"Wizard, War Magic",2,14,Arcane Deflection,"At 14th level, your Arcane Deflection becomes infused with deadly magic. When you use your Arcane Deflection feature, you can cause magical energy to arc from you. Up to three creatures of your choice within 60 feet of you each take force damage equal to half your wizard level.",
-Subtle Telekinesis,Magic,Psion,1,1,,"You know the Mage Hand cantrip. You can cast it without Somatic components, and you can make the spectral hand Invisible when you cast it. ",
-Psionic Disciipline,Magic,Psion,3,3,Psionic Power,"You learn further psionic techniques that are fueled by your Psionic Energy Dice. You gain two disciplines of your choice. You can use only one Discipline each turn and only once per turn unless otherwise noted.
-
-",
-Psionic Restoration,Magic,Psion,3,5,Psionic Power,"You can perform a meditation that focuses the mind for 1 minute. At the end of it, you regain expended Psionic Energy Dice. Once you use this feature, you can't do so again until you finish a Long Rest. ",
-Psionic Surge,Magic,Psion,3,7,Psionic Power,"You can push your psionic powers using your life force. After you roll one or more Psionic Energy Dice, you can expend one of your Hit Point Dice and treat any roll of 1, 2, or 3 on those Psionic Energy Dice as a 4.",
-Psionic Reserves,Magic,Psion,4,18,Psionic Power,"When you roll Initiative, you regain expended uses of Psionic Energy Dice until you have four if you have fewer than that.",
-Enkindled Life,Magic,Psion,6,20,Psionic Power,"Once per turn, when you roll one or more Psionic Energy Dice for a Psion feature or Psionic Discipline, you can expend one or two of your Hit Point Dice. For each Hit Point Die expended, roll an additional Psionic Energy Die and add the numbers rolled to the total. This roll does not expend the Psionic Energy Die",
-"Discipline Power, Egoist",Magic,"Psion, Egoist",3,3,,"|3| Alter Self, Cure Wounds, Inflict Wounds, Lesser Restoration
-|5| Aura of Vitality, Haste
-|7| Polymorph, Stoneskin
-|9| Contagion, Mass Cure Wounds",
-Thicken Skin,Magic,"Psion, Egoist",6,3,,"Al 3° livello il manifester è in grado di alterare lo spessore della propria pelle rendendola più robusta agli attacchi. While you aren't wearing armor or wielding a Shield, your base Armor Class equals 10 plus your Dexterity and Intelligence modifiers.",
-Mutable Form,Magic,"Psion, Egoist",4,3,Psionic Power,"As 1 Action Point, you can expend one Psionic Energy Die to psionically stretch your limbs for 1 minute. Roll the expended Psionic Energy Die and gain a number of Temporary Hit Points equal to the number rolled plus your Intelligence modifier (minimum of 1 Temporary Hit Point). In addition, you gain the following benefits while this feature is active: Reach (+5 feet), Speed (+5 feet), Touch (Touch spells become range 10 feet)",1 AP
-Organic Weapon,Magic,"Psion, Egoist",5,3,,"As a Magic action, you can reform your free hand into one of the following organic weapons: Bone Blade, Flesh Maul, or Viscera Launcher. Whenever you attack with the weapon, you can use your Intelligence modifier for the attack and damage rolls instead of using Strength or Dexterity.",2 AP
-Flesh Weaver,Magic,"Psion, Egoist",4,6,Mutable Form,"When you use Mutable Form, you can expend an additional Psionic Energy Die to gain the following benefits: 
-• Organic Defense (+2 bonus to AC) 
-• Empowered Healing (When you cast a spell that restores Hit Points, expend one Psionic Energy Die and add the number rolled to the HP regained). ",
-Die Hard,Magic,"Psion, Egoist",3,6,,"A partire dal 6° livello quando vieni ridotto a 0 punti ferita o meno, puoi rigenerare all’istante le ferite mortali e andare a 1 punto ferita. Nessuna azione è richiesta.
-Non puoi usare nuovamente questa abilità prima di effettuare un riposo lungo.",
-Improved Mutable Form,Magic,"Psion, Egoist",4,10,Mutable Form,"When you use Mutable Form, the duration increases to 10 minutes and you gain one of the following benefits:
-• Stony Epidermis (Advantage on Con saves for Concentration, Resistance to one damage type)
-• Superior Stride (Dash as Bonus Action, Climb/Swim Speed)
-• Unnatural Flexibility (+1 AC, move through 1 inch spaces, escape restraints and end Grappled condition).",
-Metamorphosis,Magic,"Psion, Egoist",6,14,Thicken Skin,"Dal 14° il tuo corpo viene pervaso dall’energia psichica. Any critical hit against you becomes a normal hit. In addition, when you are subjected to a magical effect that allows you to make a Strength or Constitution saving throw to take only half damage, you instead take no damage if you succeed on the saving throw.",
-Life-Bending Weapons,Magic,"Psion, Egoist",5,14,Organic Weapon,"When you hit a target with an attack roll using your Organic Weapon, roll one Psionic Energy Die. The target takes extra Necrotic damage equal to the number rolled. This roll doesn't expend the die. Alternatively, you can expend one Psionic Energy Die to deal extra Necrotic damage equal to the roll and heal creatures in a 30-foot Emanation. ",
-"Discipline Power, Nomad",Magic,"Psion, Nomad",3,3,,"|3| Long Strider, Misty Step, Vortex Varp, Kinetic Jaunt
-|5| Blink, Thunder Step
-|7| Dimensional Door, Dimensional Anchor*
-|9| Far Step, Steel Wind Strike",
-Bend space fabric,Magic,"Psion, Nomad",3,3,Psionic Power,Spendendo un Dado di Energia rendi difficile il movimento in un'area di 20 piedi attorno a te. Le creature selezionate all'interno di quest'area devono spendere il doppio del normale costo di movimento fino all'inizio del tuo prossimo turno.,1 AP
-Teleportation Master,Magic,"Psion, Nomad",4,3,Psionic Power,"Su tutti i poteri di teletrasporto a bersaglio o bersaglio multiplo, puoi usare un Energy Dice per applicare una delle seguenti opzioni (ove applicabile)
-è possibile influenzare un numero di creature addizionali pari al valore dell’Energy Dice. Tutte le condizioni di eleggibilità restano valide.
-Puoi modificare il raggio da personale a Touch (nessun tiro per colpire richiesto)
-Puoi modificare la destinazione di un numero di bersagli pari al valore dell’Energy Dice rispetto agli altri.
-Puoi applicare l’effetto a creature non consenzienti anche se non previsto. Tiro salvezza Saggezza contro la tua spell DC nega.",
-Warp Propel,Magic,"Psion, Nomad",2,3,Psionic Power,"When a target fails its saving throw against your Telekinetic Propel, instead of pushing it, you can teleport the target to an unoccupied space you can see within 30 feet of you that is horizontal to you.",
-Nomad's Step,Magic,"Psion, Nomad",3,6,,"Quando sei bersaglio di un attacco, puoi usare un Energy Dice come Reaction per evitare l’attacco e teletrasportarti in una zona che puoi vedere a 30 piedi da te.",Reaction
-Fast Traveler,Magic,"Psion, Nomad",2,6,Psionic Power,"Starting at 6th level, usando un Energy Dice può lanciare un potere della lista del Nomade con 1 Action Point.",1 AP
-Teleporter Combat,Magic,"Psion, Nomad",4,6,,"Immediately after you cast Misty Step, you can cast one of your Psion cantrips that has a casting time of an action as part of the Bonus Action.",1 AP
-Duplicity Target,Magic,"Psion, Nomad",3,10,Psionic Power,"When a creature you can see makes an attack roll against you, you can take a Reaction to expend one Psionic Energy Die and choose a willing creature you can see within 30 feet of yourself that doesn’t have the Incapacitated condition. You and the willing creature teleport, swapping places with each other.
-The creature then becomes the target of the attack roll.",Reaction
-Incantesimi Transdimensionali,Magic,"Psion, Nomad",5,14,Psionic Power,"Puoi spendere un Energy Dice per lanciare incantesimi che influenzano bersagli nascosti in piani coesistenti e spazi extradimensionali gli ingressi dei quali rientrano all'interno dell'area dell'incantesimo.
-
-Beneficio: Un incantesimo transdimensionale ha il suo effetto normale completo sulle creature incorporee, sulle creature sul Piano Etereo o sul Piano delle Ombre, e sulle creature dentro uno spazio extradimensionale nell'area dell'incantesimo. Tali creature comprendono le creature eteree, le creature che sono soggette a intermittenza o camminare nelle ombre, i fantasmi manifestati e le creature all'interno dello spazio extradimensionale di un trucco della corda, buco portatile o tasca per famiglio.
-Il personaggio deve essere in grado di percepire una creatura per mirarla con un incantesimo transdimensionale, ma non ha bisogno di percepire una creatura per catturarla nell'area di un'esplosione, un cono, una emanazione o una propagazione.
-Nel momento in cui viene usato un incantesimo transdimensional il caster si affaccia nel piano di destinazione ed è soggetto agli effetti di entrambi i piani.",
-Mass Teleportation,Magic,"Psion, Nomad",3,14,Psionic Power,"As a Magic action, you expend four Psionic Energy Dice and choose Huge or smaller creatures within 30 feet of yourself, up to a number of creatures equal to your Intelligence modifier (minimum of one creature). Each of the chosen creatures is teleported to an unoccupied space you can see within 150 feet of you. An unwilling creature that succeeds on a Wisdom saving throw against your spell save DC is unaffected.",2 AP
-"Discipline Power, Time Bender",Magic,"Psion, Time Bender",3,3,,"|3| Gift of Alacrity, Time Freeze, Expeditious Retreat, Elminster’s Elusion
-|5| Temporal Rewind, Slow
-|7| Time Warden, Banishment
-|9| Time Hop, Temporal Shunt
-",
-Alter time flow,Magic,"Psion, Time Bender",2,3,Psionic Power,Il manifester è in grado di alterare marginalmente lo scorrere del tempo per brevi istanti. Puoi usare un Action Point e un Energy Dice per ottenere la condizione Quickened fino all’inizio del prossimo round.,1 AP
-Omniscence,Skill,"Psion, Time Bender",4,3,,"Choose 3 skills you are trained in between Arcana, Society, Insight, Investigation, Medicine, Nature or Religion. You can add double the proficiency bonus to any check.",
-Alter Probability,Magic,"Psion, Time Bender",3,6,Psionic Power,Una volta per riposo breve puoi decidere di usare 1 Energy Dice ed aggiungere il suo valore ad un D20 Test (dopo aver tirato ma prima di sapere il risultato).,
-Improved Alter Time Flow,Magic,"Psion, Time Bender",3,6,Alter time flow,"Quando usi Alter Time Flow, puoi rimanere nella condizione Quickened per un numero di round pari al valore ottenuto dall’Energy Dice.",
-Timer screenshot,Magic,"Psion, Time Bender",2,10,,"As a Magic Action you can impress a picture of a creature or an object in a stone or a crystal.
-You can store only one picture at a time. At any time later, you can restore the photo (Will deny). If you do not restore the picture within a week, it will fade away with no effect.
-The target will be restored in the exact same condition as it was. It also loses any memory collected after the shot, but will not be moved in space, nor will it lose any object.
-Experience points and levels will also be lost, but the original value will be tracked and called ghost XP Value.
-Whenever the creature earns XP, the amount will be added to the ghost value and double of the amount will be added to the actual value. When actual value reaches or surpasses the ghost value the creature will gain XP as normal again.",2 AP
-Time Master,Magic,"Psion, Time Bender",6,14,Psionic Power,Al 14° livello spendendo un Energy Dice con un Action Point il manifester può rendere quickened un numero di creature pari al modificatore di Intelligenza. L’effetto dura fino all’inizio del round successivo del manifester. Non è un effetto a concentrazione,1 AP
-"Discipline Power, Telepathy",Magic,"Psion, Telepathy",3,3,,"|3| Bane, Command, Detect Thoughts, Mind Spike
-|5| Counterspell, Schism
-|7| Compulsion, Confusion
-|9| Modify Memory, Yolande’s Regal Presence",
-Telepathy,Magic,"Psion, Telepathy",2,3,,"• You can speak telepathically to any creature you can see within 120 feet of you. Your telepathic utterances are in a language you know, and the creature understands you only if it knows that language. Your communication doesn't give the creature the ability to respond to you telepathically.
-• You can cast the Detect Thoughts spell, requiring no spell slot or components, and you must finish a long rest before you can cast it this way again. Your spellcasting ability for the spell is the ability increased by this feat. If you have spell slots of 2nd level or higher, you can cast this spell with them.",
-Mind Affecting Master,Magic,"Psion, Telepathy",6,3,Psionic Power,"Su tutti i poteri di telepatia a bersaglio o bersaglio multiplo, puoi sempre selezionare le seguenti opzioni di aumento (ove applicabile)
-• Spendendo 2 Energy Dice puoi avere effetto anche su bestie, folletti e giganti
-• Spendendo 3 Energy Dice puoi avere effetto su qualsiasi tipo di creatura
-• Spendendo 1 o più Energy Dice la durata aumenta di 1 ora per ogni PP di aumento
-• Spendendo 1 o più Energy Dice è possibile influenzare un numero di creature addizionali pari al numero di Energy Dice usato",
-Mind Infiltrator,Magic,"Psion, Telepathy",2,3,Psionic Power,"When you cast Detect Thoughts, you can expend one Psionic Energy Die to modify the spell so that the spell doesn't require spell components or Concentration. In addition, when you use the Read Thoughts effect of the spell, the target doesn't know you're probing its mind if it fails the Wisdom saving throw. ",
-Telepathic Distraction,Magic,"Psion, Telepathy",3,3,"Psionic Power, Telepathy","When a creature you can see within range of your telepathy hits with an attack roll, you can take a Reaction to roll one Psionic Energy Die and subtract the number rolled from attack roll, potentially causing the attack to miss. The die is expended only if the target misses the attack. ",Reaction
-Mind Link,Magic,"Psion, Telepathy",2,6,,Puoi lanciare Telepathic Bond una volta per riposo breve senza spendere uno slot. Puoi sempre inoltre lanciarlo come rituale.,
-Bulwark Mind,Magic,"Psion, Telepathy",4,6,Psionic Power,"At the start of your turn, you can expend one Psionic Energy Die to strengthen your mind and enter a fortified state. For the next 10 minutes, you have Resistance to Psychic damage; and whenever you make an Intelligence, Wisdom, or Charisma saving throw, you add a roll of your Psionic Energy Die to the save. Rolling the Psionic Energy Die doesn't expend it. You can’t use this benefit if you have the Incapacitated condition.",
-Potent Thoughts,Magic,"Psion, Telepathy",1,6,Psionic Power,"You have telepathy with a range of 180 feet. In addition, you add your Intelligence modifier to the damage you deal with any Psion cantrip.",
-Telepathic Bolstering,Magic,"Psion, Telepathy",2,10,"Psionic Power, Telepathy","When you or a creature you can see within range of your telepathy fails an ability check or misses with an attack roll, you can take a Reaction to expend one Psionic Energy Die. Roll the die and add the number rolled to the d20. The Psionic Energy Die is expended only if the check succeeds or the attack hits.",Reaction
-Mind Piercing Power,Magic,"Psion, Telepathy",5,10,,Quando lanci uno spell di Enchantment puoi spendere 3 Dadi di Energia per superare l’immunità di un target alla condizione Charmed o Frightned. In generale qualsiasi protezione o immunità che protegga specificatamente dagli effetti di influenza mentale viene ignorata.,
-Scarmble Minds,Magic,"Psion, Telepathy",4,10,Psionic Power,"You can cast Confusion without expending a spell slot by instead expending four Psionic Energy Dice. Radius becomes 30 feet, you can choose one creature to automatically succeed. You choose their behavior from the table for the turn instead of the creature rolling.",
-Psychic Transfer,Magic,"Psion, Telepathy",6,14,,"Guadagni la capacità di accedere alle capacità mentali delle creature sotto l’effetto di dominate, mind seed o mind switch. Fintanto che il legame con la mente della creatura perdura puoi lanciare qualsiasi potere dal soggetto come se fossi tu a manifestarlo. I parametri sono calcolati in base a quelli che hai (proficiency bonus, CD tiri salvezza, tiri per colpire). Se il potere manifestato richiede concentrazione, la creatura dominata può tenere la concentrazione attiva al posto del manifester.",
-Hunter's Bane,Magic,Blood-Hunter,3,1,,"At 1st level, you have survived the Hunter’s Bane—a dangerous, long-guarded ritual that alters your life’s blood, forever binding you to the darkness and honing your senses against it. You have advantage on Wisdom (Survival) checks to track fey, fiends, or undead, as well as on Intelligence checks to recall information about such creatures.
-
-The Hunter’s Bane also empowers your body to control and shape hemocraft magic, using your own blood and life essence to fuel your abilities. Some of your features require your target to make a saving throw to resist the feature’s effects. The saving throw DC is calculated as follows:
-
-Hemocraft save DC = 8 + your proficiency bonus + your Hemocraft modifier (your choice between Intelligence and Wisdom)",
-Blood Maledict,Magic,Blood-Hunter,6,1,,"Also at 1st level, you gain the ability to channel—or sometimes sacrifice—a part of your vital essence to curse and manipulate creatures through hemocraft magic. You know one Blood Curse of your choice. You learn one additional blood curse of your choice at 6th, 10th, 14th, and 18th level. Each time you learn a new blood curse, you can also choose one of the blood curses you know and replace it with another blood curse.
-
-Each time you use your Blood Maledict feature, you choose which curse to invoke from the curses you know. While invoking a blood curse, but before it affects the target, you can choose to amplify the curse by taking necrotic damage equal to one roll of your hemocraft die. This damage can’t be reduced in any way. An amplified curse gains an additional effect, noted in the curse’s description. Creatures that do not have blood are immune to blood curses unless you have amplified the curse.
-
-Once you use this feature, you must finish a short or long rest before you can use it again. You can use Blood Maledict twice between rests starting at 6th level, three times starting at 13th level, and four times starting at 17th level.",
-Crimson Rite,Magic,Blood-Hunter,4,2,,"Also at 2nd level, you learn to invoke a rite of hemocraft that infuses your weapon strikes with elemental energy. using 1 AP, you can activate any rite you know on one weapon you’re holding. The effect of the rite lasts until you finish a short or long rest. When you activate a rite, you take necrotic damage equal to one roll of your hemocraft die. This damage can’t be reduced in any way.
-
-While the rite is in effect, attacks you make with this weapon are magical, and deal extra damage equal to your hemocraft die of the type determined by the chosen rite. A weapon can hold only one active rite at a time. Other creatures can’t gain the benefit of your rite.
-
-You choose one rite from the crimson rites below when you first gain this feature. You learn an additional crimson rite at 7th level, and again at 14th level.",1 AP
-Brand of Castigation,Magic,Blood-Hunter,3,6,Crimson Rite,"At 6th level, when you damage a creature with a weapon for which you have an active crimson rite, you can channel hemocraft magic to sear an arcane brand into that creature (no action required). You always know the direction to the branded creature as long as it’s on the same plane as you. Further, each time the branded creature deals damage to you or a creature you can see within 5 feet of you, the branded creature takes psychic damage equal to your Hemocraft modifier (minimum of 1).
-
-Your brand lasts until you dismiss it or until you use this feature to apply a brand to another creature. Your brand can be dispelled with Dispel Magic, and is treated as a spell with a level equal to half your Blood-Hunter level (maximum 9th level).
-
-Once you use this feature, you can’t use it again until you finish a short or long rest.",
-Grim Psychometry,Magic,Blood-Hunter,1,9,,"When you reach 9th level, you gain a supernatural talent for discerning the secrets surrounding mysterious relics or places touched by evil. Whenever you make an Intelligence (History) check to recall information about the sinister or tragic history of an object you are touching or your current location, you have advantage on the check. At the DM’s discretion, a suitably high roll might cause your character to experience brief visions of the past connected to the object or location.",
-Dark Augmentation,Magic,Blood-Hunter,6,10,,"Starting at 10th level, the magic of hemocraft suffuses your body to permanently reinforce your resilience. Your speed increases by 5 feet, and you have a bonus to Strength, Dexterity, and Constitution saving throws equal to your Hemocraft modifier (minimum of +1).",
-Brand of Tethering,Magic,Blood-Hunter,5,13,Brand of Castigation,"Starting at 13th level, the psychic damage from your Brand of Castigation increases to twice your Hemocraft modifier (minimum of 2). Additionally, a branded creature can’t take the Dash action, and if it attempts to teleport or to leave its current plane by any means, it takes 4d6 psychic damage and must make a Wisdom saving throw. On a failure, the attempt to teleport or leave the plane fails.",
-Hardened Soul,Magic,Blood-Hunter,2,14,,"When you reach 14th level, you have advantage on saving throws against being charmed and frightened.",
-Sanguine Mastery,Magic,Blood-Hunter,5,20,Crimson Rite,"Upon reaching 20th level, your mastery of blood magic reaches its height, mitigating your sacrifice and empowering your expertise. Once per turn, whenever a Blood-Hunter feature requires you to roll a hemocraft die, you can reroll the die and use either roll.
-
-Additionally, whenever you score a critical hit with a weapon for which you have an active crimson rite, you regain one expended use of your Blood Maledict feature.",
-Rite of the Dawn,Magic,"Blood-Hunter, Ghostslayer",4,3,Crimson Rite,"When you join this order at 3rd level, you learn the Rite of the Dawn as part of your Crimson Rite feature. When you activate the Rite of the Dawn, the extra damage dealt by your rite is radiant damage. Additionally, while that rite is active on your weapon, you gain the following benefits:
-
-•Your weapon sheds bright light out to a radius of 20 feet.
-•You have resistance to necrotic damage.
-•When you hit an undead creature with a weapon for which the Rite of the Dawn is active, you roll an additional hemocraft die when determining the extra damage from the rite.",
-Curse Specialist,Magic,"Blood-Hunter, Ghostslayer",3,3,Blood Maledict,"Starting at 3rd level, you learn to master blood curses. You gain an additional use of your Blood Maledict feature. In addition, your blood curses can target any creature, whether it has blood or not.",
-Aether Walk,Magic,"Blood-Hunter, Ghostslayer",3,7,,"Upon reaching 7th level, at the start of your turn, you can magically step into the veil between the planes as long as you aren’t incapacitated. You can move through other creatures and objects as if they were difficult terrain, as well as see and affect creatures and objects on the Ethereal Plane. You take 1d10 force damage if you end your turn inside an object.
-
-This feature lasts for a number of rounds equal to your Hemocraft modifier (minimum of 1 round). If you are inside an object when it ends, you are immediately shunted to the nearest unoccupied space and you take force damage equal to twice the number of feet you moved.
-
-Once you use this feature, you must finish a short or long rest before you can use it again. You can use Aether Walk twice between rests starting at 15th level.",
-Brand of Sundering,Magic,"Blood-Hunter, Ghostslayer",4,11,Crimson Rite,"Starting at 11th level, your Brand of Castigation exposes a fragment of your foe’s essence, leaving them vulnerable to your Crimson Rite feature. Whenever you hit a creature with a weapon for which you have an active crimson rite, you roll an additional hemocraft die when determining the extra damage from the rite. Additionally, if a branded creature has the Incorporeal Movement trait or a similar feature, it can’t move through creatures or objects while branded.",
-Blood Curse of the Exorcist,Magic,"Blood-Hunter, Ghostslayer",2,15,Blood Maledict,"At 15th level, you hone your hemocraft to tear corruption from the minds and bodies of your allies — and to punish those responsible for it. You gain the Blood Curse of the Exorcist for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
-Rite Revival,Magic,"Blood-Hunter, Ghostslayer",3,18,,"Upon reaching 18th level, you learn to protect your fading life by reabsorbing the energy you feed to your weapons. If you have one or more crimson rites active and you are reduced to 0 hit points but don’t die outright, you can choose to have all your active crimson rites end and drop to 1 hit point instead.",
-Heightened Senses,Magic,"Blood-Hunter, Lycan",3,3,,"When you choose this archetype at 3rd level, you gain the improved senses of a natural predator. You have advantage on Wisdom (Perception) checks that rely on hearing or smell.",
-Hybrid Transformation,Magic,"Blood-Hunter, Lycan",6,3,,"Also at 3rd level, you learn to control the lycanthropic curse that courses through your veins. using 1 AP, you transform into a special hybrid form for up to 1 hour. You can speak, use equipment, and wear armor while in this form, and can revert to your normal form using 1 AP. You automatically revert to your normal form if you fall unconscious or die.
-
-This feature replaces the rules for lycanthropy in the Monster Manual. Once you use this feature, you must finish a short or long rest before you can use it again. While you are transformed, you gain the following features:
-
-•Feral Might. You have advantage on Strength checks and Strength saving throws, and you have a +1 bonus to melee damage rolls. This bonus increases to +2 at 11th level and to +3 at 18th level.
-•Resilient Hide. You have resistance to bludgeoning, piercing, and slashing damage from nonmagical attacks not made with silvered weapons. Additionally, while you are not wearing heavy armor, you have a +1 bonus to AC.
-•Predatory Strikes. You can apply your Crimson Rite feature to your unarmed strikes, which you treat as one weapon. You can use Dexterity instead of Strength for the attack and damage rolls of your unarmed strikes, which deal 1d6 bludgeoning or slashing damage (your choice). This damage increases to 1d8 at 11th level.
-Additionally, when you use the Attack action to make an unarmed strike, you can make one additional unarmed strike using 1 AP.
-•Bloodlust. If you start your turn with fewer hit points than half your hit point maximum, you must succeed on a DC 8 Wisdom saving throw or move directly toward the nearest creature and use the Attack action against that creature. If you’re concentrating on a spell or are under an effect that prevents you from concentrating (such as the barbarian’s Rage feature), you automatically fail this saving throw.
-If you have your Extra Attack feature, you can choose whether to use it for this frenzied attack. If more than one creature is equally near to you, roll randomly to determine your target. Once your attack is resolved, you regain control of yourself.",1 AP
-Stalker's Prowess,Magic,"Blood-Hunter, Lycan",5,7,Hybrid Transformation,"At 7th level, your speed increases by 10 feet, and you add 10 feet to your long jump distance and 3 feet to your high jump distance. Your hybrid form also gains the following additional benefit.
-
-Improved Predatory Strikes. You have a +1 bonus to attack rolls made with your unarmed strike. This bonus increases to +2 at 11th level and to +3 at 18th level. Additionally, when you have an active crimson rite on your unarmed strike while in your hybrid form, your unarmed strikes are considered magical for the purpose of overcoming resistance and immunity to nonmagical attacks and damage.",
-Advanced Transformation,Magic,"Blood-Hunter, Lycan",3,11,Hybrid Transformation,"At 11th level, you learn to unleash and control more of the beast within. You can use your Hybrid Transformation feature twice, regaining all expended uses when you finish a short or long rest. Your hybrid form also gains the following additional benefit.
-
-Lycan Regeneration. At the start of each of your turns when you have at least 1 hit point but fewer hit points than half your hit point maximum, you gain hit points equal to 1 + your Constitution modifier (minimum of 1). If you are in hybrid form, you gain these hit points before you must make the saving throw for your bloodlust.",
-Brand of the Voracious,Magic,"Blood-Hunter, Lycan",4,15,Hybrid Transformation; Brand of Castigation,"Starting at 15th level, you have advantage on the saving throw for your bloodlust while in hybrid form. Additionally, your Brand of Castigation can now bind a foe to your hunter’s ferocity. While in your hybrid form, you have advantage on attack rolls against a creature branded by you.",
-Hybrid Transformation Mastery,Magic,"Blood-Hunter, Lycan",4,18,Hybrid Transformation,"At 18th level, you have mastered your inner predator. You can use your Hybrid Transformation feature an unlimited number of times, and your hybrid form lasts until you revert to your normal form, fall unconscious, or die.
-
-You also gain the Blood Curse of the Howl for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
-Mutagencraft,Magic,"Blood-Hunter, Mutant",4,3,,"When you choose this archetype at 3rd level, you learn to master forbidden alchemical formulas—known as mutagens—that can temporarily alter your mental and physical abilities.
-
-using 1 AP, you consume a mutagen, whose effects and side effects last until you finish a short or long rest unless otherwise specified. While one or more mutagens are affecting you, you can use an action to focus and flush all mutagens from your system, ending their effects and side effects.
-
-Mutagens are designed for the specific biology of the character who concocted them, and your mutagens have no effect on other creatures. They are also unstable by nature, losing their potency over time and becoming inert if not used before you finish your next short or long rest.","2 AP, 1 AP"
-Formulas,Magic,"Blood-Hunter, Mutant",1,3,Mutagencraft,"The number of mutagens you can concoct when you finish a rest, and the number of formulas you know, increases as you gain levels in the Blood-Hunter class, as shown on the Mutagencraft table above. Additionally, when you learn a new mutagen formula, you can replace one formula you already know with a new mutagen formula. You choose four mutagen formulas to learn, and you can concoct one mutagen when you finish a short or long rest.",
-Strange Metabolism,Magic,"Blood-Hunter, Mutant",3,7,Mutagencraft,"When you reach 7th level, your body begins to adapt to toxins and venoms, ignoring their corrupting effects. You gain immunity to poison damage and the poisoned condition.
-
-Additionally, you can trigger a burst of adrenaline that lets you temporarily resist the negative effects of a mutagen. using 1 AP, you can ignore the negative side effect of one mutagen affecting you for 1 minute. Once you do so, you can’t do so again until you finish a long rest.",1 AP
-Brand of Axiom,Magic,"Blood-Hunter, Mutant",3,11,Brand of Castigation,"At 11th level, your mutagenic hemocraft lets your Brand of Castigation reveal a foe’s true nature. Any illusion or invisibility in effect on a creature when you brand it ends, and the creature can’t benefit from invisibility or illusion effects while branded by you. If a creature branded by you is in an alternative form (by way of the Polymorph spell, the Change Shape action or Shapechanger trait, the Wild Shape feature, and similar effects), it must succeed on a Wisdom saving throw or revert to its true form and be stunned until the end of your next turn. Whenever a branded creature attempts to alter its form, it must succeed on a Wisdom saving throw or have the attempt fail, and it is stunned until the end of your next turn.",
-Blood Curse of Corrosion,Magic,"Blood-Hunter, Mutant",3,15,Blood Maledict,"Starting at 15th level, your blood curse can infuse a creature’s body with terrible toxins. You gain the Blood Curse of Corrosion for your Blood Maledict feature. This doesn’t count against your number of blood curses known.",
-Exalted Mutation,Magic,"Blood-Hunter, Mutant",2,18,Mutagencraft,"At 18th level, your body has adapted to produce mutagens naturally in a moment of need. using 1 AP, choose one mutagen currently affecting you. Its effects and side effects end, and you can immediately have a mutagen you know the formula for take effect in its place.
-
-You can use this feature a number of times equal to your Hemocraft modifier (minimum of once). You regain all expended uses when you finish a long rest.",1 AP
-Magic Essence,Magic,"Kandra, Rogue",4,1,Token of the Departed,"Il Kandra è in grado di incanalare il potere ancestrale della magia presente nei ninnoli all’interno del suo corpo e di manifestarlo come residuo del potere di Preservazione e di Rovina.
-Prerequisito: Token of the Departed, Ghost walk
-Il Kandra è in grado di consumare il potere dei ninnolo ottenuti. Gli spell devono rispettare le seguenti caratteristiche.
-Livello di incantesimo: possono essere lanciati incantesimi di qualsiasi livello.
-Livello di incantatore: lo stesso livello del Kandra.
-CD dello spell: 8+proficiency+una caratteristica a scelta tra INT/WIS/CHA.
-Spell attack: il tiro per colpire e il danno sono calcolati sulla caratteristica scelta dal Kandra per lanciare incantesimi.
-Spell slot: l’incantesimo può essere lanciato da qualsiasi lista e di qualsiasi livello, compatibilmente con il livello di spellcaster del Kandra. Ad esempio un kandra di livello 13 può lanciare incantesimi di livello 7 massimo.
-Metamagia: non è possibile applicare talenti di metamagia agli incantesimi lanciati in questo modo.
-Numeri di utilizzi: possono essere lanciati un numero massimo di incantesimi pari al bonus di proficienza. Ulteriori utilizzi successivi comportano un livello di esaurimento aggiuntivo per ogni utilizzo. Dopo un riposo breve, un kandra recupera un numero di utilizzi aggiuntivo pari alla metà del bonus di proficienza. Dopo un riposo lungo un kandra recupera tutti gli utilizzi.
-Costo C.P. 4",1 AP or 2 AP
-Kandra Heritage,Magic,"Kandra, Liv 19",10,19,,"Un Kandra antico, che si avvicina al retaggio della Prima Generazione, ha avuto la possibilità di conoscere e intraprendere numerose esistenze mortali. Questo patrimonio che lo ha accompagnato in tutta la sua vita gli ha permesso di evolversi come custode stesso del sapere e come erede stesso dei poteri assorbiti durante le sue trasformazioni.
-Grazie all’utilizzo di un Ruin, un kandra è in grado di richiamare un potere rimasto assopito nel suo DNA. è in grado di replicare qualsiasi potere di qualsiasi classe di pari livello, purchè questo potere non richieda un uso continuo di una determinata risorsa. La risorsa della classe che un kandra può apprendere deve essere di una durata diversa da permanente: un kandra non può replicare per esempio la capacità del monaco Diamond Soul. Se l’abilità replicata richiede una risorsa (punti ki, mana, channel diviinity…), questa risorsa viene considerata soddisfatta quando si consuma il Ruin.
-Il kandra può replicare un’abilità che ha un utilizzo giornaliero, purchè rispetti il numero di utilizzi giornaliero. Se il Kandra possiede già un potere di classe, non può eccedere il numero giornaliero di utilizzo utilizzando un Ruin. Esempio: se Koddak (Kandra di 19o livello) ha già Action Surge come guerriero di 8o livello, ha un uso giornaliero di classe come guerriero, ma potrebbe utilizzare un Ruin per usare un’altra volta Action Surge come se fosse un guerriero di 18o livello. Non può tuttavia utilizzare un altro Ruin perchè l’utilizzo giornaliero massimo è stato raggiunto.
-Nessun Kandra può replicare i poteri del vampiro.
-",
-Martellone,Combat,Martello Zormannu,2,10,,"You gain a +2 bonus to attack and damage rolls made with this magic weapon. On a hit, the weapon deals an extra 1d6 bludgeoning damage, for a total of 3d6 bludgeoning damage.",2 AP
-Slam the Maul (recharge 5-6),Combat,Martello Zormannu,5,12,Martellone,"Zormannu can slam the maul to the ground 1 AP. One charge, and recharge once per round launching a d6 and getting a 5 or 6. As an action, you can slam the maul into the ground and shatter the ground in a 25-foot square in front of you. Each grounded creature in that area must make a DC (8+prof+STR mod) Dexterity saving throw, taking 3d6 thunder damage and 3d6 bludgeoning damage and being knocked prone on a failed save, or half as much damage and remain standing on a successful one. Small or smaller creatures automatically fail this save. All land affected by this action becomes difficult terrain. Once this action is used, it can't be used again until the short rest.",1 AP
 `;
-        
+
         const PRELOADED_FEATS_CSV = `,Feat,Prerequisite,Description,Cost,Action Type
+,Ability Score Improvement (Aumento dei Punteggi di Caratteristica),-,"Il personaggio tempra il proprio corpo o affina la propria mente, espandendo il suo potenziale naturale. Puoi aumentare di 1 punto una Caratteristica.
+
+**I Limiti del Sistema:** Questo incremento deve sottostare tassativamente ai tetti matematici di D20 Revolution: non può superare il valore massimo standard di 20 per le caratteristiche secondarie, o il valore massimo di 24 per l'unica abilità designata come primaria dal personaggio.
+
+**Ripetibile:** Questo talento può essere acquistato più di una volta per livello o nel corso della progressione, fino al raggiungimento dei limiti massimi assoluti consentiti.",2,
 ,Actor,-,"+1 in Cha., advantage on Deception and Performance checks, mimic the speech of a person or the sounds made by a creature.",4,
 ,Alert,-,"• +1 Wis or Dex
-• Initiative Proficiency. When you roll Initiative, you can add your Proficiency Bonus to the roll.
-• Initiative Swap. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally is incapacitated. ",4,
+• ***Initiative Proficiency***. When you roll Initiative, you can add your Proficiency Bonus to the roll.
+• ***Initiative Swap***. Immediately after you roll Initiative, you can swap your Initiative with the Initiative of one willing ally in the same combat. You can't make this swap if you or the ally is incapacitated. ",4,
 ,Armored Brawler,Martial Arts,You can use your Martial Arts also if you wear armor or shield,5,
 ,Artificer Initiate,-,"You learn one cantrip and one 1st-level artificier spell (cast without slot), proficiency with one type of artisan's tools.",4,
-,Athlete,-,"+1 in Str. or Dex., you stand up and climb more quickly, and you can jump with only a 5-ft run.",4,
-,Bountiful Luck,Halfling,You can let an ally within 30 ft of you to reroll a 1 on a d20.,4,
+,Athlete,"Level 4+, Strength or Dexterity 13+","• +1 a Forza o Destrezza (massimo 20).
+• Velocità di Scalata (Climb Speed) pari alla normale velocità sul terreno (Speed).
+• ***Hop Up (Balzo in Piedi)***: Quando ti trovi nella condizione Prono (Prone), puoi rimetterti in piedi eseguendo l'azione Step (0 AP), anziché spendere 1 AP per l'azione Stand Up.
+• ***Salto Rapido (Jumping)***: Puoi compiere un Salto in Lungo o in Alto con rincorsa muovendoti di soli 5 piedi prima dello stacco.",4,0 AP / Step
+,Bountiful Luck,Halfling,You can let an ally within 30 ft of you to reroll a 1 on a d20.,4,Reaction
 ,Charger,-,"- +1 to Str or Dex
 - Improved Dash: When you take the Dash action your speed increases by 10 ft for that Action.
 - Charge Attack: If you move at least in straight line toward a target immediately before hitting it with a melee attack roll as part of the Attack action choose one of the following effect: gain 1d8 bonus to the attack's damage roll or push the target up to 10 ft away if is is nomore than one size larger than you. You can use this benefit only once on each of your turns.",4,
 ,Chef,-,"+1 in Con. or Wis., proficiency with cook's utensils and cook special food to regain hp.",4,
 ,Combine Metamagic,Metamagic,you can combine two effect of metamagic. The cost is the sum of the cost of each metamagic ability +1 S.P.,4,
-,Cold Caster,,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
-• Cantrip. You learn the Ray of Frost cantrip. If you already know it, you learn a different Wizard cantrip of your choice. The spell's spellcasting ability is the ability increased by this feat.
-• Frostbite. Once per turn when you hit a creature with an attack roll and deal Cold damage, you can temporarily negate the creature's defenses. The creature subtracts 1d4 from the next saving throw it makes before the end of your next turn.",4,
+,Cold Caster,,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1.
+• ***Cantrip***. You learn the Ray of Frost cantrip. If you already know it, you learn a different Wizard cantrip of your choice. The spell's spellcasting ability is the ability increased by this feat.
+• ***Frostbite***. Once per turn when you hit a creature with an attack roll and deal Cold damage, you can temporarily negate the creature's defenses. The creature subtracts 1d4 from the next saving throw it makes before the end of your next turn.",4,
 ,Crossbow Expert,-,You ignore the loading property of crossbows and don't have disadvantage for being in contact with a creature when you shoot.,4,1 AP
 ,Crusher,-,"+1 in Str. or Con., 5 ft extra move when you hit (bludgeoning) and attacks with advantage after a critical hit.",4,
 ,Defensive Duelist,Dexterity 13 or higher,"You can add your proficiency bonus to your AC if you are wielding a finesse weapon, in reaction to a melee attack.",5,Reaction
@@ -2324,44 +2648,49 @@ Slam the Maul (recharge 5-6),Combat,Martello Zormannu,5,12,Martellone,"Zormannu 
 ,Drow High Magic,Elf (drow),You can cast the detect magic spell (at will) and the levitate and dispel magic spells (1/long rest).,4,
 ,Dual Wielder,-,"+1 to AC if you're wielding a melee weapon in each hand, two-weapon fighting with non-light weapon, draw two weapons.",4,1 AP
 ,Dungeon Delver,-,"Advantage to Perception and Investigation checks, to saving throws vs traps, and search for traps at normal pace.",4,
-,Durable,-,"•+1 in Con
+,Durable,-,"• +1 in Con
 • You have advantage on Death Saving Throws
 • As 1 Action Points, you can expend one of your Hit Point Dice: roll the die, and regaing a number of HP equal to the roll",4,1 AP
 ,Dwarf Fortitude,Dwarf,"+1 in Con., and you can spend one Hit Die to heal yourself taking the Dodge action.",4,
-,Eldritch Adept,Spellcasting or Pact Magic feature,You learn one Eldritch Invocation.,4,
-,Elemental Adept,The ability to cast at least one spell,"Your spells ignore resistance to a damage type (acid, cold, fire, lightning, or thunder) and treat any 1 in damage as a 2.",4,
+,Elemental Adept,The ability to cast at least one spell,"You gain the following benefits.
+
+**Energy Mastery.** Choose one of the following damage types: Acid, Cold, Fire, Lightning, or Thunder. Spells you cast ignore Resistance to damage of the chosen type. In addition, when you roll damage for a spell you cast that deals damage of that type, you can treat any 1 on a damage die as a 2.
+
+**Repeatable.** You can take this feat more than once, but you must choose a different damage type each time for Energy Mastery.",4,
 ,Ember of the Fire Giant,"4th Level, Strike of the Giants (Fire Strike) feat","+1 in Str., Con., or Wis. ; resistance to fire damage ; 1d8+PB fire damage + blinded (15-ft-radius ; PB/day).",4,
 ,Extra Ki Point,Ki Point,"• You obtain 2 extra Ki Points.
-• Ability Score Increase. Increase your Wisdom by 1, to a maximum of 20",4,
-,Fairy Trickster,,"• Ability Score Increase. Increase your Dexterity or Charisma by 1, to a maximum of 20.
-•Faerie Trod Trotter. When you take the Disengage action on your turn, Difficult Terrain doesn't cost you extra movement for the rest of that turn.
-• Flustering Strike. When you hit a creature with an attack roll, you can attempt to fluster the target. The target must succeed on a Wisdom saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or have Disadvantage on saving throws until the end of your next turn. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",5,
+• ***Ability Score Increase***. Increase your Wisdom by 1",4,
+,Extra Skill Known (Conoscenza Abilit&agrave; Extra),-,"Il personaggio espande il proprio bagaglio di competenze, guadagnando immediatamente la competenza in una nuova Abilità (Skill) a sua scelta.
+
+**Ripetibile:** Questo talento può essere acquistato più di una volta. Ogni volta che viene selezionato, il giocatore deve scegliere un'abilità differente rispetto a quelle in cui possiede già la competenza.",1,
+,Fairy Trickster,,"• Ability Score Increase. Increase your Dexterity or Charisma by 1.
+• ***Faerie Trod Trotter***. When you take the Disengage action on your turn, Difficult Terrain doesn't cost you extra movement for the rest of that turn.
+• ***Flustering Strike***. When you hit a creature with an attack roll, you can attempt to fluster the target. The target must succeed on a Wisdom saving throw (DC 8 plus the ability modifier of the score increased by this feat and your Proficiency Bonus) or have Disadvantage on saving throws until the end of your next turn. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",5,
 ,Fade away,Gnome,"+1 in Dex. or Int., and you can use your reaction to become invisible if you take damage.",4,Reaction
 ,Fey Teleportation,Elf (high),"+1 in Int. or Cha., you speak Sylvan, and you can cast the misty step spell (1/short rest).",4,
 ,Fey Touched,-,"+1 in Int., Wis., or Cha., and you learn misty step and one 1st-level spell from divination or enchantment school.",4,
-,Fighting Initiate,Proficiency with a martial weapon,You learn one Fighting Style option from the fighter class.,4,
 ,Flames of Phlegethos,Tiefling,"+1 in Int. or Cha., reroll any 1 on fire spell damage, and cause flames to wreathe you if you cast a fire spell.",4,
 ,Fresh Blood,Blood Point,Quando succhi il sangue una volta per riposo lungo puoi ripristinare tutti i punti sangue che hai. Altrimenti succhiando il sangue recuperi 2 ps,4,
 ,Fury of the Frost Giant,"4th Level, Strike of the Giants (Frost Strike) feat","+1 in Str., Con., or Wis. ; resistance to cold damage ; 1d8+PB cold damage + speed reduced to 0 (PB/day).",4,
-,Gift of the Chromatic Dragon,-,"Extra 1d4 acid, cold, fire, lightning, or poison damage for 1 min (bonus action). Resistance to 1 of these damages (reaction).",4,"1 AP, Reaction"
+,Gift of the Chromatic Dragon,-,"Extra 1d4 acid, cold, fire, lightning, or poison damage for 1 min (1 AP). Resistance to 1 of these damages (reaction).",4,"1 AP, Reaction"
 ,Gift of the Gem Dragon,-,"+1 in Int., Wis., or Cha., Strength saving throw or 2d8 force damage and pushed away 10 ft in reaction to an attack (PB/day).",4,Reaction
 ,Gift of the Metallic Dragon,-,"You can cast cure wounds (1/long rest). As a reaction to an attack, can manifest wings to get +PB to your AC (PB/day).",4,Reaction
 ,Grappler,Str or Dex 13+,"Punch and Grab. When you hit a creature with an Unarmed Strike as part of the Attack action on your turn, you can use both the Damage and the Grapple option. You can use this benefit only once per turn.
-• Attack Advantage. You have Advantage on attack rolls against a creature Grappled by you.
-• Fast Wrestler. You don't have to spend extra movement to move a creature Grappled by you if the creature is your size or smaller.",4,
+• ***Attack Advantage***. You have Advantage on attack rolls against a creature Grappled by you.
+• ***Fast Wrestler***. You don't have to spend extra movement to move a creature Grappled by you if the creature is your size or smaller.",4,
 ,Great Weapon Master,-,"• Cleave. Immediately after you score a Critical Hit with a Melee Weapon or reduce a creature to 0 Hit Points with one, you can make one attack with the same weapon as a 1 AP.
-• Heavy Weapon Mastery. When you hit a creature with a Heavy Weapon as part of the Attack Action on your turn, you can cause the weapon to deal extra damage to the target. The extra damage equals your Proficiency Bonus.",4,1 AP
+• ***Heavy Weapon Mastery***. When you hit a creature with a Heavy Weapon as part of the Attack Action on your turn, you can cause the weapon to deal extra damage to the target. The extra damage equals your Proficiency Bonus.",4,1 AP
 ,Greater Spell Focus,Spell Focus,Add +1 to the CD for all saving throws against your spell. this bonus stack with the bonus from Spell Focus,4,
 ,Guile of the Cloud Giant,"4th Level, Strike of the Giants (Cloud Strike) feat","+1 in Str., Con., or Wis. ; resistance to attack's damage ; teleport within 30 ft (PB/day).",4,
 ,Gunner,-,"+1 in Dex., proficiency with firearms, ignore loading property of firearms and no disadvantage to attacks within 5 ft.",4,
 ,Healer,-,"You can stabilize a creature and restore it to 1 hp, or restore [1d6+4+its number of Hit Dice] hp to it.",4,
 ,Heavily Armored,Proficiency with medium armor,+1 in Str. and you gain proficiency with heavy armor.,3,
 ,Heavy Armor Master,Proficiency with heavy armor,"You can use your armor to deflect strikes that would kill others. You gain the following benefits:
-•Increase your Strength score by 1, to a maximum of 20.
-•While you are wearing heavy armor, you gain resistance to non magical bludgeoning, piercing, and slashing damage.
+• Increase your Strength score by 1.
+• While you are wearing heavy armor, you gain resistance to non magical bludgeoning, piercing, and slashing damage.
 If the armor is magical, you gain resistance also on magical damage bludgeoning, piercing, and slashing.",5,
-,Hit Accuracy,,"• Increase your Strenght, Dexterity, Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
-•Whenever you have advantage on an attack roll you can reroll one of the dice once and only once per round.",5,
+,Hit Accuracy,,"• Increase your Strenght, Dexterity, Intelligence, Wisdom, or Charisma by 1.
+• Whenever you have advantage on an attack roll you can reroll one of the dice once and only once per round.",5,
 ,Improved Cunning Strike,"Cunning strike, Rogue 11 liv.","You can use up to two Cunning Strike effects when you deal Sneak Attack damage, paying the die cost for each effect.",4,
 ,Infernal Constitution,Tiefling,"+1 in Con., resistance to cold and poison damage, and you have advantage on saving throws against being poisoned.",4,
 ,Inspiring Leader,Charisma 13 or higher,Up to 6 creatures within 30 ft of you can gain temporary hp equal to your level + your Cha. modifier.,4,
@@ -2375,21 +2704,19 @@ If the armor is magical, you gain resistance also on magical damage bludgeoning,
 ,Linguist,-,"+1 in Int., you learn three languages, and you can ably create ciphers.",4,
 ,Lucky,-,"• Luck Points. You have a number of Luck Points equal to your Proficiency Bonus and can spend the points on the benefits below. You regain your expended Luck Points when you finish a Long Rest.
 
-• Advantage. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
+• ***Advantage***. When you roll a d20 for a D20 Test, you can spend 1 Luck Point to give yourself Advantage on the roll.
 
-• Disadvantage. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.",5,
+• ***Disadvantage***. When a creature rolls a d20 for an attack roll against you, you can spend 1 Luck Point to impose Disadvantage on that roll.",5,
 ,Mage Slayer,-,"You have practiced techniques useful in melee combat against spellcasters, gaining the following benefits:
-•When a creature within 5 feet of you casts a spell, you can use your reaction to make a melee weapon attack against that creature.
+• When a creature within 5 feet of you casts a spell, you can use your reaction to make a melee weapon attack against that creature.
 • Quando si danneggia un caster che sta mantenendo la concentrazione ad un incantesimo, il caster deve effettuare un tiro di concentrazione anche se sta mantenendo la concentrazione su un solo incantesimo. Se il caster invece ha 2 incantesimi attivi deve effettuare una prova di concentrazione con svantaggio. Se la prova ha successo mantiene la concentrazione su tutti e due gli incantesimi attivi. Se la prova fallisce perde la concentrazione su uno dei due incantesimi e deve effettuare un'ulteriore prova di concentrazione, questa volta senza svantaggio, per mantenere la concentrazione sul secondo incantesimo. Se anche la seconda prova viene fallita, il caster perde la concentrazione anche sul secondo incantesimo.
 • Guarded Mind: if you fall an INT, WIS or CHA saving throw, you can cause yourself to succeed instead. Once you use this benefit, you can't use again until you finish a Short or Long Rest.",4,Reaction
-,Magic Blood,Blood Point,"•The Vampire can use B.P. as Sorcery point in order to use metamagic power.
-•You learn two Metamagic options of your choice from the sorcerer class. You can use only one Metamagic option on a spell when you cast it, unless the option says otherwise. Whenever you reach a level that grants the Ability Score Improvement feature, you can replace one of these Metamagic options with another one from the sorcerer class",4,
+,Magic Blood,Blood Point,"• The Vampire can use B.P. as Sorcery point in order to use metamagic power.
+• You learn two Metamagic options of your choice from the sorcerer class. You can use only one Metamagic option on a spell when you cast it, unless the option says otherwise. Whenever you reach a level that grants the Ability Score Improvement feature, you can replace one of these Metamagic options with another one from the sorcerer class",4,
 ,Magic Initiate,-,You learn two cantrips and one 1st-level spell from one class.,3,
-,Martial Adept,-,You learn two maneuvers from Battle Master archetype and gain one superiority die (d6).,4,
 ,Martial Weapon Training,-,+1 in Str. or Dex. and you gain proficiency with martial weapons.,3,
 ,Medium Armor Master,Proficiency with medium armor,"• +1 to Dex or Str
 • No disadvantage to Stealth checks wearing medium armor and Dexterity bonus max to +3 instead of +2.",4,
-,Metamagic Adept,Spellcasting or Pact Magic feature,You learn two metamagic options and gain 2 sorcery points.,5,
 ,Mobile,-,"• Your speed increase by 10 ft
 • you can Dash on difficult terrain without malus
 • Opportunity Attacks have Disadvantage against you.",4,
@@ -2398,12 +2725,12 @@ If the armor is magical, you gain resistance also on magical damage bludgeoning,
 ,Mystic Conflux,,"You can attune one magic items more at once.
 You can cast the identify spell without expending a spell slot or material components. You must finish a long rest before you can do so again.",4,
 ,Observant,-,"Quick to notice details of your environment, you gain the following benefits:
-• Increase your Intelligence or Wisdom by 1, to a maximum of 20.
+• Increase your Intelligence or Wisdom by 1.
 • Choose one of the following skills:arcana, Insight, Investigation or Perception. If you lack proficiency in the chosen skill, you gain proficiency in it. You get also +5 bonus on it.
 • You can use Search Action with 1 AP",5,1 AP
 ,Orcish Fury,Half-orc,"+1 in Str. or Con., add one of the weapon's damage dice, and use a reaction to attack after using Relentless Endurance.",4,Reaction
 ,Piercer,-,"+1 in Str. or Dex., reroll one damage dice when you hit (piercing) and one additional damage dice in case of critical hit.",4,
-,Poisoner,-,"Proficiency with poisoner's kit, apply as a bonus action and your attacks ignore resistance to poison damage.",4,1 AP
+,Poisoner,-,"Proficiency with poisoner's kit, apply with 1 AP and your attacks ignore resistance to poison damage.",4,1 AP
 ,Polearm Master,-,"You can make an extra attack with a polearm weapon, and make an opportunity attack if a creature enter your reach.",4,1 AP
 ,Prodigy,"Half-elf, half-orc, or human","You gain proficiency with one skill, one tool or one language, and you gain expertise with one skill.",4,
 ,Resilient,-,+1 in one ability and you gain proficiency in saving throws using this ability.,5,
@@ -2415,12 +2742,18 @@ You can cast the identify spell without expending a spell slot or material compo
 ,Second Chance,Halfling,"+1 in Dex., Con., or Cha., and you can force a creature to reroll its attack roll if it hits you.",4,
 ,Sentinel,-,A successful OA reduce creature's speed to 0 for this turn and possibility to make an OA even if the ennemy take Disengage.,4,
 ,Shadow Touched,-,"+1 in Int., Wis., or Cha., and you learn invisibility and one 1st-level spell from illusion or necromancy school.",4,
-,Sharpshooter,-,"• Ability Score Increase. Increase your Dexterity score by 1, to a maximum of 20.
-• Bypass Cover. Your Ranged Attacks with Weapons ignore Half Cover and Three-Quarters Cover.
-• Firing in Melee. Being within 5 feet of an enemy doesn’t impose Disadvantage on your ranged Attack Rolls with Weapons.
-• Long Shots. Attacking at Long Range doesn’t impose Disadvantage on your ranged Attack Rolls with Weapons",5,
+,Sharpshooter,-,"• Ability Score Increase. Increase your Dexterity score by 1.
+• ***Bypass Cover***. Your Ranged Attacks with Weapons ignore Half Cover and Three-Quarters Cover.
+• ***Firing in Melee***. Being within 5 feet of an enemy doesn’t impose Disadvantage on your ranged Attack Rolls with Weapons.
+• ***Long Shots***. Attacking at Long Range doesn’t impose Disadvantage on your ranged Attack Rolls with Weapons",5,
 ,Shield Master,-,"Attack also allows to shove, shield bonus to Dex. saving throws againts spells, and no 1/2 damage on successful saving throw.",4,Reaction
-,Skill Expert,-,"+1 in one ability, proficiency in one skill and expertise in one other in which you have proficiency.",5,
+,Skill Expert,-,"You gain the following benefits.
+
+**Ability Score Increase.** Increase one ability score of your choice by 1.
+
+**Skill Proficiency.** You gain proficiency in one skill of your choice.
+
+**Expertise.** Choose one skill in which you have proficiency but lack Expertise. You gain Expertise with that skill.",5,
 ,Skulker,Dexterity 13 or higher,"• Fog of  war: You exploit the distractions of battle, gaining Advage on any Dexterity  (Stealth) check you make as part of the Hide or Seek action during combat.
 • Sniper: If you make an attack roll while hidden and the roll misses, making the attack roll doesn't reveal your location.",4,
 ,Slasher,-,"+1 in Str. or Dex., reduce target's speed by 10 ft when you hit (slashing) and target has disadvantage on attacks rolls.",4,
@@ -2431,8 +2764,7 @@ You can cast the identify spell without expending a spell slot or material compo
 ,Spell Sniper,The ability to cast at least one spell,"• Being within 5 feet of ana enemy does'nt impose Disadvantage on your attack rolls with spells.
 • Your attack rolls for spells ignore Half Cover and Three-Quarter Cover.
 • When you cast spell that has a range of at least 10 feet and requires you to make an attack roll, you can increase the spell's range by 60 feet.",4,
-,Spell strike,,"FEAT: Spell strike (COSTO 5)
-• Una volta per turno è possibile castare e incanalare un cantrip che abbia un tiro per colpire in un colpo con l'arma. Gli attacchi in mischia (melee spell strike) possono essere incanalati in un'arma da mischia mentre quelli a distanza (ranged spell strike) possono essere incanalati in armi a distanza.
+,Spell strike,,"• Una volta per turno è possibile castare e incanalare un cantrip che abbia uno spell attack in un colpo con l'arma. Gli attacchi in mischia (melee spell strike) possono essere incanalati in un'arma da mischia mentre quelli a distanza (ranged spell strike) possono essere incanalati in armi a distanza.
 L'attacco si svolge come un normale attacco in mischia o a distanza e gli effetti dell'incantesimo vanno aggiunti contemporaneamente a quelli dell'attacco.
 Scaricare l'incantesimo con l'arma è parte dell'azione di ""casting spell"".
 Se l'attacco con l'arma è un critico (anche con critico migliorato) anche gli effetti dell'incantesimo saranno critici.
@@ -2444,24 +2776,133 @@ Se l'attacco con l'arma è un critico (anche con critico migliorato) anche gli e
 ,Superior Deflect attack,Deflect attack,"• During the round, you can use 1 Ki Point and you can use extra Deflect Attack reaction a number of times equal to half your proficiency bonus, rounded down. However you can redirect only one attack per round using 1 ki point.",4,Reaction
 ,Superior Font of Magic,,• Ottieni un numero di S.P. pari a metà del tuo Casterl Level arrotondato per difetto.,4,
 ,Superior Parry,Battle Maneuver: Parry,"• During the round, you can use extra Parry reaction a number of times equal to half your proficiency bonus, rounded up. You expend only one dice of superiority and mantain the bonus for the rest of parries.",4,Reaction
-,Superior Spell strike,Spell strike,"FEAT: SUPERIOR SPELL STRIKE (COSTO 4):
-PREREQUISITI: SPELL STRIKE 
-• +1 a una caratteristica tra INT, WIS e CHA.
+,Superior Spell strike,Spell strike,"• +1 a una caratteristica tra INT, WIS e CHA.
 • È possibile incanalare nell'arma qualsiasi incantesimo abbia un tiro per colpire in mischia o a distanza.
 Se l'incantesimo ha una durata diversa da quella instantea, l'incantesimo resta attivo e può essere incanalato nell'arma normalmente ma può essere incanalato nell'arma una sola volta per turno.
 È possibile utilizzare questo talento su un numero di incantesimi al giorno pari al bonus di proficienza. Gli utilizzi sono ricaricati dopo un riposo lungo.",4,
 ,Superior Uncanny Dodge,Uncanny Dodge,"• +1 Dex
 • During the round, you can use one extra Uncanny Dodge reaction on your round",5,Reaction
-,Tavern Brawler,-,"+1 in Str. or Con., proficiency with improvised weapons, d4 for unarmed strike, and grapple with a bonus action.",4,
+,Tavern Brawler,-,"+1 in Str. or Con., proficiency with improvised weapons, d4 for unarmed strike, and grapple with 1 AP.",4,1 AP
 ,Telekinetic,-,"+1 in Int., Wis., or Cha., you learn mage hand and you can try to telekinetically shove one creature (5 ft).",4,1 AP
 ,Telepathic,-,"+1 in Int., Wis., or Cha., you can cast detect thoughts and you can speak telepathically to any creature within 60 ft.",4,
 ,Thrown Arms Master,,+1 Str or Dex. Increase thrown range. Thrown weapons come back like boomerang.,4,
 ,Tough,-,Your hit point maximum increases by an amount equal to twice your level then by +2 at each level.,4,
+,Transcendent Mind,"Livello 21+, Spellcasting o Pact Magic / Psionics","Scegli due caratteristiche tra INT, SAG e CAR: aumentano entrambe di +4. Il Cap della caratteristica primaria sale a 30, quello della secondaria a 24 (se entrambe secondarie, Cap a 24).",11,
 ,Vigor of the Hill Giant,"4th Level, Strike of the Giants (Hill Strike) feat","+1 in Str., Con., or Wis. ; resistance to be prone ; Hit Dice to regain additional hit points equals to your Con. modifier + PB.",4,
 ,War Caster,The ability to cast at least one spell,You have advantage on saving throws to maintain concentration and you can cast some spells as part of an OA with a reaction.,4,Reaction
-,Weapon Mastery,,"•+1 Dex o Str
+,Weapon Mastery,,"• +1 Dex o Str
 • accesso ad una weapon mastery. Ogni weapon mastery può essere usata una sola volta per turno. Quando si finisce un Long Rest, si può cambiare la weapon mastery su un'altra arma. ",4,
 ,Wood Elf Magic,Elf (wood),You learn one druid cantrip and can cast the longstrider and pass without trace spells (1/long rest).,4,
+,Abjuration Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. Your prowess allows you to always have certain spells at the ready. When you have spell slots of a level specified in the Abjuration Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Shield; 2: Lesser Restoration; 3: Protection from Energy; 4: Banishment; 5: Mass Cure Wounds).
+
+• Protective Ward. When you cast a spell from the Abjuration school using a spell slot, you or one creature you can see within 30 feet of yourself gains Temporary Hit Points equal to twice the level of spell slot expended.",4,
+,Arcane Artist,None (Origin Feat),"• Cantrip. You learn the Minor Illusion cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Inspiring Magic. When you cast a spell from the Illusion school, you can choose one ally within 30 feet of yourself who can see you. That ally gains Heroic Inspiration. Once you use this benefit, you can't use it again until you finish a Long Rest.",4,
+,Arcane Eloquence,None (Origin Feat),"• Cantrip. You learn the Vicious Mockery cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Smooth Talker. When you make a Charisma (Deception, Intimidation, or Persuasion) check, you can roll 1d4 and add the number rolled to the ability check.",3,
+,Arcane Infiltrator,None (Origin Feat),"• Cantrip. You learn the Friends cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Cunning Diversion. You can take the Dodge action as a 1 Action Point. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",4,1 AP
+,Arcane Omens,None (Origin Feat),"• Cantrip. You learn the Guidance cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Helpful Premonition. When you or a creature you can see within 30 feet of yourself fails a saving throw, you can take a Reaction to roll 1d4 and add the number rolled to the save's total, potentially turning the failure into a success. You can use this benefit a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.",4,Reaction
+,Arcane Overload,None (Origin Feat),"• Cantrip. You learn the Fire Bolt cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Power Surge. When you cast an Evocation spell and deal damage with it, you can add your Proficiency Bonus to one damage roll of that spell. Once you use this benefit, you can't do so again until you finish a Long Rest.",3,
+,Arcane Safeguard,None (Origin Feat),"• Cantrip. You learn the Resistance cantrip. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat). You can cast the Resistance cantrip as a 1 Action Point a number of times equal to your Proficiency Bonus, and you regain all expended uses when you finish a Long Rest.
+
+• Sheltering Aid. When you take the Help action to assist with an ally's ability check, that ally gains a number of Temporary Hit Points equal to your Proficiency Bonus.",3,1 AP
+,Arcane Undertaker,None (Origin Feat),"• Cantrip. You learn one Cleric or Wizard cantrip of your choice from the Necromancy school. Intelligence, Wisdom, or Charisma is your spellcasting ability for this spell (choose when you select this feat).
+
+• Knowledge from the Dead. When you make an Intelligence (History) or Wisdom (Medicine) check, you can roll 1d4 and add the number rolled to the ability check.
+
+• Understanding of Death. When you take the Help action to stabilize a creature with 0 Hit Points, you gain Heroic Inspiration. Once you use this benefit, you can't use it again until you finish a Long Rest.",3,
+,Arcane Warrior,None (Origin Feat),"• Cantrips. You learn two Wizard cantrips of your choice (Mage Hand and Ray of Frost are recommended). Intelligence, Wisdom, or Charisma is your spellcasting ability for these spells (choose when you select this feat).
+
+• Cantrip Replacement. Whenever you gain a level, you can replace one of these cantrips with another Wizard cantrip.",3,
+,Conjuration Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Conjuration Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Entangle; 2: Misty Step; 3: Conjure Animals; 4: Dimension Door; 5: Conjure Elemental).
+
+• Persistent Conjuration. While maintaining Concentration on a spell from the Conjuration school, you gain a bonus to Constitution saving throws to maintain this Concentration equal to the ability modifier of the score increased by this feat.",4,
+,Divination Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Divination Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Detect Evil and Good; 2: Mind Spike; 3: Clairvoyance; 4: Divination; 5: Scrying).
+
+• Prescient Intervention. When a creature you can see within 60 feet of yourself makes a D20 Test, you can take a Reaction to give that creature Advantage or Disadvantage (your choice) on that roll. Once you use this benefit, you can't do so again until you finish a Long Rest. You can also regain use of this feature when you cast a spell from the Divination school using a spell slot.",5,Reaction
+,Elemental Familiar,"Level 4+, Familiar Friend","• Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.
+
+• Elemental Energy. When you cast Find Familiar, choose Acid, Cold, Fire, Lightning, or Thunder damage. Your familiar is imbued until you cast the spell again.
+
+• Elemental Resistance. Your familiar has Resistance to the chosen damage type.
+
+• Energy Pulse. As a 1 Action Point, command your familiar (within 120 ft) to take a Reaction to unleash an energy burst. Each creature in a 5-foot Emanation makes a Dexterity saving throw (DC 8 + spellcasting mod + PB) or takes 2d4 damage of the chosen type and is Prone if Medium or smaller.",4,1 AP
+,Enchantment Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Enchantment Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Dissonant Whispers; 2: Enthrall; 3: Hold Person; 4: Dominate Beast; 5: Modify Memory).
+
+• Subtle Enchantments. When you cast a spell from the Enchantment school using a spell slot, you can cast it without Verbal, Somatic, or Material components, except Material components consumed or having a cost.",4,
+,Evocation Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Evocation Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Chromatic Orb; 2: Shatter; 3: Fireball; 4: Vitriolic Sphere; 5: Wall of Force).
+
+• Fueled Evocation. Once per turn when you cast an Evocation spell and deal damage, you can roll up to two of your unexpended Hit Point Dice and add the total rolled to one damage roll. Those dice are then expended.",4,
+,Familiar Friend,None (Origin Feat),"• Faithful Companion. You always have Find Familiar prepared (choose Int, Wis, or Cha). You can cast it once without a spell slot or Material components (regained after a Long Rest), or cast it using spell slots.
+
+• Fortified Familiar. Familiar's HP maximum and current HP increase by twice your character level.
+
+• Helpful Friend. When making an ability check using a proficient skill while familiar is within 5 feet, gain Advantage (PB uses per Long Rest).",4,
+,Illusion Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Illusion Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Silent Image; 2: Phantasmal Force; 3: Major Image; 4: Hallucinatory Terrain; 5: Seeming).
+
+• Masterful Illusions. Cast Illusion spells using a spell slot without Verbal, Somatic, or Material components (except consumed or costly ones). Additionally, creatures have Disadvantage on Intelligence (Investigation) checks to discern your illusions.",5,
+,Magic Connoisseur,"Level 4+, Magic Initiate","• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. Choose a level 1 and a level 2 spell from the Magic Initiate class spell list; you always have them prepared. Cast each once per Long Rest without a slot, or cast them using spell slots.
+
+• Spell Change. Replace one spell with another of the same level from the chosen list whenever you gain a level.",4,
+,Necromancy Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Necromancy Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Inflict Wounds; 2: Ray of Enfeeblement; 3: Vampiric Touch; 4: Blight; 5: Raise Dead).
+
+• Life Manipulation. When casting a Necromancy spell with a slot, roll up to two unexpended Hit Point Dice: regain HP equal to the roll plus slot level; those dice are then expended.",4,
+,Otherworldly Familiar,"Level 4+, Familiar Friend","• Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.
+
+• Otherworldly Power. When casting Find Familiar, imbue your familiar with otherworldly power.
+
+• Energy Resistance. Choose Necrotic, Poison, Psychic, Radiant, or Thunder damage; familiar gains Resistance.
+
+• Phase Walk. Familiar moves through creatures and objects as Difficult Terrain (shunted to last unoccupied space if turn ends inside an object).",5,
+,Portal Jumper,None (Origin Feat),"• Otherworldly Resilience. Gain Resistance to Necrotic, Psychic, or Radiant damage (choose when selected).
+
+• Portal Step. During your Move Action, you can spend 15 feet of movement to teleport to an unoccupied space you can see within 15 feet (PB times per Long Rest, max once per turn).",4,
+,Soothing Familiar,"Level 4+, Familiar Friend","• Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.
+
+• Healing Beacon. In a 5-foot Emanation originating from your familiar (within 120 ft of you), whenever an ally rolls a die to restore HP, they can treat a roll of 1 or 2 as a 3.",4,
+,Spell Resistant,Level 4+,"• Magical Resilience. Resistance to Necrotic, Psychic, Radiant, or Thunder damage.
+
+• Magic Resistant. When you would fail a saving throw against a spell or magical effect, roll 1d6 and add it to the save (PB times per Long Rest).",5,
+,Spell Subterfuge,Level 4+; Spellcasting or Pact Magic Feature,"• Shrouding Spells. After casting an action spell using a spell slot, take both Dash and Hide as a 1 Action Point (uses equal to Proficiency Bonus/Long Rest).
+
+• Sneaky Casting. Casting verbal spells or making spell attacks while hidden/Invisible does not end the condition if you end the turn behind Three-Quarters Cover or Total Cover.",5,1 AP
+,Transmutation Adept,Level 4+; Spellcasting or Pact Magic Feature,"• Ability Score Increase. Increase your Intelligence, Wisdom, or Charisma by 1, to a maximum of 20.
+
+• Additional Spells. When you have spell slots of a level specified in the Transmutation Adept Spells table, you thereafter always have the spells listed for that level and lower prepared (1: Jump; 2: Spider Climb; 3: Slow; 4: Polymorph; 5: Animate Objects).
+
+• Magical Augmentation. When you cast a Transmutation spell with a slot, your Speed increases by 5 × slot level until the end of the turn.",4,
+,Transmuted Anatomy,None (Origin Feat),"• Lengthened Stride. Your Speed increases by 5 feet.
+
+• Resilient Anatomy. Advantage on saves against unwilling shape-shifting effects. In addition, when you fail a Constitution save, take a Reaction to roll 1d4 and add it to the total (PB times per Long Rest).",3,Reaction
+,Warlike Familiar,"Level 4+, Familiar Friend","• Ability Score Increase. Increase one ability score of your choice by 1, to a maximum of 20.
+
+• Battle Familiar. Battle Familiar spell always prepared; cast once per Long Rest without slot, or cast using regular slots.
+
+• Intercept Attack. When a creature within 5 feet of familiar is hit by an attack, familiar takes a Reaction to add PB to that creature's AC against the attack.",4,
 `;
         
         const PRELOADED_FIGHTING_STYLES_CSV = `Name,Action,Description
@@ -2476,6 +2917,31 @@ Superior Technique,,"You learn one maneuver of your choice from among those avai
 You gain one superiority die, which is a d6 (this die is added to any superiority dice you have from another source). This die is used to fuel your maneuvers. A superiority die is expended when you use it. You regain your expended superiority dice when you finish a short or long rest."
 Thrown Weapon Fighting,," You can draw a weapon that has the thrown property as part of the attack you make with the weapon. In addition, when you hit with a ranged attack using a thrown weapon, you gain a +2 bonus to the damage roll."`;
 
+        const PRELOADED_MANEUVERS_CSV = `Name,Action,Description
+"Ambush","Passiva / Nessuna","When you make a Dexterity (Stealth) check or an initiative roll, you can expend one superiority die and add the die to the roll, provided you aren't incapacitated."
+"Bait and Switch","Passiva / Nel turno","When you're within 5 feet of a creature on your turn, you can expend one superiority die and switch places with that creature, provided you spend at least 5 feet of movement and the creature is willing and isn't incapacitated. This movement doesn't provoke opportunity attacks. Roll the superiority die. Until the start of your next turn, you or the other creature (your choice) gains a bonus to AC equal to the number rolled."
+"Brace","Reaction","When a creature you can see moves into the reach you have with the melee weapon you're wielding, you can use your reaction to expend one superiority die and make one attack against the creature, using that weapon. If the attack hits, add the superiority die to the weapon's damage roll."
+"Commander's Strike","Reaction","When you take the Attack action on your turn, you can replace one of your attacks to direct one of your companions to strike. When you do so, choose a friendly creature who can see or hear you and expend one superiority die. That creature can immediately use its reaction to make one weapon attack, adding the superiority die to the attack's damage roll."
+"Commanding Presence","Passiva / Nessuna","When you make a Charisma (Intimidation), a Charisma (Performance), or a Charisma (Persuasion) check, you can expend one superiority die and add the superiority die to the ability check."
+"Disarming Attack","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to attempt to disarm the target, forcing it to drop one item of your choice that it's holding. You add the superiority die to the attack's damage roll, and the target must make a Strength saving throw. On a failed save, it drops the object you choose. The object lands at its feet."
+"Distracting Strike","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to distract the creature, giving your allies an opening. You add the superiority die to the attack's damage roll. The next attack roll against the target by an attacker other than you has advantage if the attack is made before the start of your next turn."
+"Evasive Footwork","Passiva / In movimento","When you move, you can expend one superiority die, rolling the die and adding the number rolled to your AC until you stop moving."
+"Feinting Attack","1 AP","You can expend one superiority die and use 1 AP on your turn to feint, choosing one creature within 5 feet of you as your target. You have advantage on your next attack roll against that creature this turn. If that attack hits, add the superiority die to the attack's damage roll."
+"Goading Attack","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to attempt to goad the target into attacking you. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw. On a failed save, the target has disadvantage on all attack rolls against targets other than you until the end of your next turn."
+"Grappling Strike","1 AP","Immediately after you hit a creature with a melee attack on your turn, you can expend one superiority die and then try to grapple the target as 1 AP (see the Player's Handbook for rules on grappling). Add the superiority die to your Strength (Athletics) check."
+"Lunging Attack","Passiva / All'attacco","When you make a melee weapon attack on your turn, you can expend one superiority die to increase your reach for that attack by 5 feet. If you hit, you add the superiority die to the attack's damage roll."
+"Maneuvering Attack","Reaction","When you hit a creature with a weapon attack, you can expend one superiority die to maneuver one of your comrades into a more advantageous position. You add the superiority die to the attack's damage roll, and you choose a friendly creature who can see or hear you. That creature can use its reaction to move up to half its speed without provoking opportunity attacks from the target of your attack."
+"Menacing Attack","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to attempt to frighten the target. You add the superiority die to the attack's damage roll, and the target must make a Wisdom saving throw. On a failed save, it is frightened of you until the end of your next turn."
+"Parry","Reaction","When another creature damages you with a melee attack, you can use your reaction and expend one superiority die to reduce the damage by the number you roll on your superiority die + your Dexterity modifier."
+"Precision Attack","Passiva / All'attacco","When you make a weapon attack roll against a creature, you can expend one superiority die to add it to the roll. You can use this maneuver before or after making the attack roll, but before any effects of the attack are applied."
+"Pushing Attack","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to attempt to drive the target back. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you push the target up to 15 feet away from you."
+"Quick Toss","1 AP","As 1 AP, you can expend one superiority die and make a ranged attack with a weapon that has the thrown property. You can draw the weapon as part of making this attack. If you hit, add the superiority die to the weapon's damage roll."
+"Rally","1 AP","On your turn, you can use 1 AP and expend one superiority die to bolster the resolve of one of your companions. When you do so, choose a friendly creature who can see or hear you. That creature gains temporary hit points equal to the superiority die roll + half your FIghter level."
+"Riposte","Reaction","When a creature misses you with a melee attack, you can use your reaction and expend one superiority die to make a melee weapon attack against the creature. If you hit, add the superiority die to the attack's damage roll."
+"Sweeping Attack","Passiva / Al colpo","When you hit a creature with a melee weapon attack, you can expend one superiority die to attempt to damage another creature with the same attack. Choose another creature within 5 feet of the original target and within your reach. If the original attack roll would hit the second creature, it takes damage equal to the number you roll on your superiority die. The damage is of the same type dealt by the original attack."
+"Tactical Assessment","Passiva / All'abilità","When you make an Intelligence (Investigation), an Intelligence (History), or a Wisdom (Insight) check, you can expend one superiority die and add the superiority die to the ability check."
+"Trip Attack","Passiva / Al colpo","When you hit a creature with a weapon attack, you can expend one superiority die to attempt to knock the target down. You add the superiority die to the attack's damage roll, and if the target is Large or smaller, it must make a Strength saving throw. On a failed save, you knock the target prone."`;
+
         const PRELOADED_CUNNING_STRIKES_CSV = `Name,Sneak Dice,Description
 Poison,1d6,"Lev.5 - Cost 1d6. You add a toxin to your strike, forcing the target to make a Constitution saving throw. On a failed save, the target has the Poisoned condition for 1 minute. At the end of each of its turns, the Poisoned target repeats the save, ending the effect on itself on a success."
 Trip,1d6,"Lev. 5 - Cost: 1d6. If the target is Large or smaller, it must succeed on a Dexterity saving throw or gain the Prone condition."
@@ -2488,7 +2954,7 @@ Stealth Attack,1d6,"Lev. 9 - Cost: 1d6. If you have the Hide action's Invisible 
         const PRELOADED_METAMAGIC_CSV = `Metamagic Feat,Sorcere Point,Description
 Careful Spell,1 SP,"When you cast a spell that forces other creatures to make a saving throw, you can protect some of those creatures from the spell's full force. To do so, you spend 1 sorcery point and choose a number of those creatures up to your Charisma modifier (minimum of one creature). A chosen creature automatically succeeds on its saving throw against the spell."
 Distant Spell,1 SP,"When you cast a spell that has a range of 5 feet or greater, you can spend 1 sorcery point to double the range of the spell. When you cast a spell that has a range of touch, you can spend 1 sorcery point to make the range of the spell 30 feet."
-Extended Spell,1 SP,"When you cast a spell that has a duration of 1 minute or longer, you can spend 1 sorcery point to double its duration, to a maximum duration of 24 hours."
+Extended Spell,1 SP,"When you cast a spell with a duration of 1 minute or longer, spend 1 Sorcery Point to double its duration (max 24 hours). If the spell requires Concentration, you gain Advantage on saving throws made to maintain that Concentration. Any check made to dispel the spell (e.g. via Dispel Magic) has its DC increased by +5."
 Heightened Spell,3 SP,"When you cast a spell that forces a creature to make a saving throw to resist its effects, you can spend 3 sorcery points to give one target of the spell disadvantage on its first saving throw made against the spell."
 Quickened Spell,3 SP,"When you cast a spell that has a casting time of 2 AP, you can spend 3 sorcery points to change the casting time to 1 AP for this casting."
 Seeking Spell,2 SP,"If you make an attack roll for a spell and miss, you can spend 2 sorcerer points to reroll the d20, and you must use the new roll. You can use Seeking Spell even if you have already used a different Metamagic option during the casting of the spell."
@@ -2503,6 +2969,86 @@ Questo si applica al solo tiro salvezza primario. Se lo spell prevede un altro T
 Se il target ha un effetto che gli da vantaggio o svantaggio al tiro salvezza prima che venisse modificato da Insightful Spell, questo effetto rimane anche sul nuovo tiro salvezza modificato.
 Se il target ha un potere, come eludere, per non subire alcun danno se supera il tiro salvezza, e soltanto la metà dei danni se lo fallisce, questo potere rimane anche sul nuovo tiro salvezza modificato."
 Bouncing Spell,1 SP,"1 S.P. Whenever a bouncing spell targeting a single creature has no effect on its intended target (whether due to legendary resistance or a successful saving throw) you may, as 1 AP, redirect it to target another eligible creature within range. The redirected spell behaves in all ways as if its new target were the original target for the spell. Spells that affect a target in any way (including a lesser effect from a successful saving throw) may not be redirected in this manner."`;
+
+        const PRELOADED_PSIONIC_POWERS_CSV = `Name,Action,Cost,Description
+"Protective Field","Reazione",2,"Quando tu o un'altra creatura che puoi vedere entro 9 metri (30 feet) subite danni, puoi usare la tua Reazione per consumare un Dado di Energia Psionica. Tira il dado e riduci il danno subito di un ammontare pari al numero ottenuto più il tuo modificatore di Intelligenza (riduzione minima di 1), creando uno scudo momentaneo di forza telecinetica."
+"Psionic Strike","Speciale (1 volta per turno)",2,"Puoi potenziare le tue armi con la forza psionica. Una volta per ogni tuo turno, immediatamente dopo aver colpito un bersaglio entro 9 metri (30 feet) con un attacco ed avergli inflitto danni con un'arma, puoi consumare un Dado di Energia Psionica. Tira il dado e infliggi al bersaglio danni da Forza extra pari al numero ottenuto più il tuo modificatore di Intelligenza."
+"Psi-Bolstered Knack","Nessuna azione / Al fallimento",2,"Se fallisci una prova di caratteristica usando un'abilità o uno strumento in cui hai competenza, puoi tirare un Dado di Energia Psionica e aggiungere il numero ottenuto alla prova, trasformando potenzialmente il fallimento in un successo. Il dado viene consumato solo se la prova ha successo dopo l'aggiunta del bonus."
+"Psychic Whispers","Azione Magica",2,"Puoi stabilire una comunicazione telepatica tra te e gli altri. Come Azione Magica, scegli una o più creature che sei in grado di vedere, fino a un numero massimo di creature pari al tuo Bonus di Competenza, quindi tira un Dado di Energia Psionica. Per un numero di ore pari al numero ottenuto nel dado, le creature scelte possono parlare telepaticamente con te e tu puoi parlare telepaticamente con loro. Per inviare o ricevere un messaggio (nessuna azione richiesta), tu e l'altra creatura dovete trovarvi entro 1,6 km (1 miglio) l'uno dall'altra. Una creatura può interrompere la connessione telepatica in qualsiasi momento (nessuna azione richiesta). La prima volta che utilizzi questo potere dopo ogni Riposo Lungo, non consumi il Dado di Energia Psionica. Tutte le altre volte che lo utilizzi, consumi il dado."
+"Telekinetic Propel","1 AP",2,"Spendendo 1 Action Point (1 AP), scegli una creatura di taglia Grande o inferiore (diversa da te) che sei in grado di vedere entro 9 metri (30 feet). Quando lo fai, il bersaglio deve superare un tiro salvezza su Forza o essere mosso di 1,5 metri (5 feet) in linea retta verso di te o lontano da te. In alternativa, quando compi questa azione a 1 AP, puoi tirare un Dado di Energia Psionica: in questo caso, la distanza del movimento è pari a 1,5 metri moltiplicati per il numero ottenuto nel dado. Il dado viene consumato solo se il bersaglio fallisce il tiro salvezza."
+"Telekinetic Movement","Azione Magica",2,"Puoi muovere un oggetto o una creatura con la mente. Come Azione Magica, scegli un bersaglio che puoi vedere entro 9 metri (30 feet); il bersaglio deve essere un oggetto non fissato di taglia Grande o inferiore, oppure una creatura consenziente diversa da te. Trasporti il bersaglio fino a 9 metri in uno spazio non occupato che sei in grado di vedere. In alternativa, se il bersaglio è un oggetto di taglia Minuscola, puoi trasportarlo direttamente nella tua mano o dalla tua mano verso un punto entro la gittata. Dopo aver usato questa azione, non puoi più farlo finché non completi un Riposo Breve o Lungo, a meno che tu non consumi un Dado di Energia Psionica (nessuna azione richiesta) per ripristinarne l'uso."
+"Telepathic Connection","1 AP",2,"Possiedi la telepatia entro un raggio di 9 metri (30 feet). Spendendo 1 Action Point (1 AP), puoi tirare un Dado di Energia Psionica. Per l'ora successiva, il raggio della tua telepatia aumenta di un numero di metri pari a 3 moltiplicato per il numero ottenuto (oppure 10 feet per ogni numero ottenuto). La prima volta che utilizzi questo 1 AP dopo ogni Riposo Lungo, non consumi il Dado di Energia Psionica. Tutte le altre volte che utilizzi questo privilegio, consumi il dado."`;
+
+        const PRELOADED_PSIONIC_DISCIPLINES_CSV = `"Name","Action","Cost","Description"
+"Biofeedback","Passive",2,"Quando lanci un incantesimo da Psion della scuola di Necromanzia o Trasmutazione, puoi consumare un numero di Dadi di Energia Psionica fino al tuo modificatore di Intelligenza. Tirali e ottieni un ammontare di Punti Ferita Temporanei pari al totale ottenuto più il tuo modificatore di Intelligenza (minimo 1)."
+"Bolstering Precognition","Passive",2,"Quando lanci un incantesimo da Psion della scuola di Abiurazione o Divinazione, puoi consumare un Dado di Energia Psionica. Tira il dado e scegli una creatura che puoi vedere entro 18 metri (60 feet), che può essere te stesso. Fino alla fine del tuo prossimo turno, la creatura ottiene un bonus al prossimo D20 Test (tiro per colpire, prova di caratteristica o tiro salvezza) che effettua pari al numero ottenuto."
+"Destructive Thoughts","Passive",2,"Quando lanci un incantesimo da Psion della scuola di Evocazione o Congiurazione che costringe una creatura che puoi vedere a effettuare un tiro salvezza, puoi consumare un numero di Dadi di Energia Psionica fino al tuo modificatore di Intelligenza e tirarli. La creatura subisce danni psichici pari al totale ottenuto più il tuo modificatore di Intelligenza (minimo 1), indipendentemente dall'esito del tiro salvezza."
+"Devilish Tongue","Influence",2,"Quando compi l'azione di Influenzare (Influence), puoi tirare un Dado di Energia Psionica e aggiungere il numero ottenuto alla prova di caratteristica. Il dado viene consumato solo se l'aggiunta determina il successo della prova."
+"Expanded Awareness","Search",2,"Quando compi l'azione di Cercare (Search), puoi tirare un Dado di Energia Psionica e aggiungere il numero ottenuto alla prova di caratteristica. Il dado viene consumato solo se l'aggiunta determina il successo della prova."
+"Id Insinuation","Passive",2,"Quando lanci un incantesimo da Psion della scuola di Ammaliamento o Illusione che costringe una creatura a effettuare un tiro salvezza, puoi consumare un Dado di Energia Psionica e tirarlo. Un bersaglio dell'incantesimo che sei in grado di vedere sottrae metà del numero ottenuto (arrotondato per eccesso) dal suo tiro salvezza contro l'incantesimo."
+"Inerrant Aim","Al mancamento",2,"Quando effettui un tiro per colpire contro una creatura e manchi il bersaglio, puoi tirare un Dado di Energia Psionica e aggiungere il numero ottenuto al risultato del tiro. Se questo bonus determina il successo dell'attacco, il dado viene consumato."
+"Observant Mind","Study",2,"Quando compi l'azione di Studiare (Study), puoi tirare un Dado di Energia Psionica e aggiungere il numero ottenuto alla prova di caratteristica. Se questo determina il successo della prova, il dado viene consumato."
+"Psionic Backlash","Reazione",2,"Immediatamente dopo che una creatura che puoi vedere ti ha colpito con un attacco, puoi usare la tua Reazione per consumare un Dado di Energia Psionica. Tiralo e riduci il danno subito dall'attacco di un ammontare pari a due volte il numero ottenuto più il tuo modificatore di Intelligenza (riduzione minima di 2). Inoltre, puoi costringere l'attaccante a effettuare un tiro salvezza su Saggezza: se lo fallisce, il bersaglio subisce danni psichici pari alla quantità di danno che hai ridotto."
+"Psionic Guards","Inizio turno",2,"All'inizio del tuo turno, puoi consumare un Dado di Energia Psionica. Fino all'inizio del tuo prossimo turno, ottieni Immunità alle condizioni Charmed e Frightened e disponi di Vantaggio ai tiri salvezza su Intelligenza. Se sei già Charmed o Frightened quando usi questa disciplina, la condizione termina immediatamente. Quando usi Psionic Guards, puoi utilizzare anche una diversa Disciplina Psionica nello stesso turno."
+"Sharpened Mind","Inizio turno",2,"All'inizio del tuo turno, puoi consumare un Dado di Energia Psionica per affinare la tua potenza distruttiva. Tira il dado e annota il numero ottenuto. Ottieni i seguenti benefici per 1 minuto o finché non subisci la condizione Incapacitato:
+• ***Aggiramento Psionico***: I danni inflitti dai tuoi attacchi con arma, dai tuoi incantesimi da Psion e dai tuoi privilegi da Psion ignorano la Resistenza ai danni psichici.
+• ***Modalità d'Attacco***: Una volta per turno, quando infliggi danni psichici a una o più creature, puoi sostituire il risultato di uno dei dadi di danno con il numero che avevi annotato al momento dell'attivazione di questa disciplina.
+Quando usi Sharpened Mind, puoi utilizzare anche una diversa Disciplina Psionica nello stesso turno."
+`;
+
+        const PRELOADED_ELD_INVOCATIONS_CSV = `Name,Action,Description
+"Agonizing Blast","Passiva","Add Charisma modifier to eldritch blast damage."
+"Armor of Shadows","2 AP","You can cast Mage Armor on yourself without expending a spell slot."
+"Ascendant Step","2 AP","You can cast Levitate on yourself without expending a spell slot."
+"Aspect of the Moon","Passiva","You no longer need to sleep and can't be forced to sleep by any means. To gain the benefits of a long rest, you can spend all 8 hours doing light activity, such as reading your Book of Shadows and keeping watch."
+"Beast Speech","Passiva","You can cast speak with animals at will, without expending a spell slot."
+"Beguiling Influence","Passiva","Give proficiency in 3 skills."
+"Bewitching Whispers","Passiva","Allow to cast compulsion (1/long rest)."
+"Bond of the Talisman","Passiva","Teleport to the talisman or to the warlock (PM/long rest)."
+"Book of Ancient Secrets","Passiva","Allow to cast two 1st-level spells from any class as rituals."
+"Chains of Carceri","Passiva","Allow to cast hold monster at will on celestial, fiend, or elemental."
+"Cloak of Flies","1 AP","Grant adv. on Charisma (Intimidation) checks and dis. on all other Charisma checks. Others creatures in area take poison damage."
+"Devil's Sight","Passiva","You can see normally in Dim Light and Darkness—both magical and nonmagical—within 120 feet of yourself."
+"Dreadful Word","Passiva","Allow to cast confusion (1/long rest)."
+"Eldritch Mind","Passiva","Grant advantage on Constitution saving throws to maintain concentration on a spell."
+"Eldritch Sight","Passiva","Allow to cast detect magic at will."
+"Eldritch Spear","Passiva","The range of eldritch blast increases to 300 ft."
+"Eyes of the Rune Keeper","Passiva","Allow to read all writing."
+"Far Scribe","Passiva","Allow to cast sending to a target who has written its name on your Book of Shadows."
+"Fiendish Vigor","Passiva","You can cast False Life on yourself without expending a spell slot. When you cast the spell with this feature, you don't roll the die for the Temporary Hit Points; you automatically get the highest number on the die."
+"Gaze of Two Minds","Passiva","Allow to perceive through the senses of a willing humanoid."
+"Ghostly Gaze","Passiva","Grant the ability to see through solid objets to a range of 30 ft for 1 minute (1/short rest)."
+"Gift of the Depths","Passiva","Allow to breathe underwater and to cast water breathing (1/long rest)."
+"Gift of the Ever-Living Ones","Passiva","When you roll dice to regain hit point within 100 ft of your familiar, take the maximum value of all dice."
+"Gift of the Protectors","Passiva","A creature that has written its name on your Book of Shadows drops to 1 hp when reduced to 0 hp (1/long rest)."
+"Grasp of Hadar","Passiva","Hit a creature with eldritch blast bring it 10 ft closer to you."
+"Improved Pact Weapon","Passiva","The weapon of your Pact can be used as spellcasting focus, the weapon gains a +1 bonus and can be a bow or a crossbow."
+"Investment of the Chain Master","Reaction","Find familiar grants flying/swim speed, its weapon are magical, can Attack and your reaction grant it resistance."
+"Lance of Lethargy","Passiva","Hit a creature with eldritch blast reduces its speed by 10 ft."
+"Lifedrinker","Passiva","Once per turn when you hit a creature with your pact weapon, you can deal an extra 1d6 Necrotic, Psychic, or Radiant damage (your choice) to the creature, and you can expend one of your Hit Point Dice to roll it and regain a number of Hit Points equal to the roll plus your Constitution modifier (minimum of 1 Hit Point)."
+"Maddening Hex","1 AP","Deal Cha.Mod. psychic damage within 5 ft around the target cursed by your hex spell or one of your warlock feature."
+"Mask of Many Faces","Passiva","Allow to cast disguise self at will."
+"Master of Myriad Forms","Passiva","Allow to cast alter self at will."
+"Minions of Chaos","Passiva","Allow to cast conjure elemental (1/long rest)."
+"Mire the Mind","Passiva","Allow to cast slow (1/long rest)."
+"Misty Visions","Passiva","Allow to cast silent image at will."
+"One with Shadows","Passiva","Allow to become invisible in an area of dim light or darkness without moving."
+"Otherworldly Leap","Passiva","Allow to cast jump at will."
+"Protection of the Talisman","Passiva","When the wearer of your talisman fails a saving throw, he can add 1d4 to potentially change the result."
+"Rebuke of the Talisman","Reaction","When the wearer of your talisman is hit, you can deal psychic damage equal to your proficiency bonus in reaction."
+"Relentless Hex","Passiva","Allow to teleport up to 30 ft within 5 ft of a target cursed by you."
+"Repelling Blast","Passiva","Hit a creature with eldritch blast push it up to 10 ft away."
+"Sculptor of Flesh","Passiva","Allow to cast polymorph (1/long rest)."
+"Shroud of Shadow","Passiva","Allow to cast invisibility at will."
+"Sign of Ill Omen","Passiva","Allow to cast bestow curse (1/long rest)."
+"Thief of Five Fates","Passiva","Allow to cast bane (1/long rest)."
+"Tomb of Levistus","Passiva / Al danno","When you take damage, you gain 10 temporary hp/lvl, take the damage, gain vulnerability to fire, and your speed is reduced to 0."
+"Trickster's Escape","Passiva","Allow to cast freedom of movement (1/long rest)."
+"Undying Servitude","Passiva","Allow to cast animate dead (1/long rest)."
+"Visions of Distant Realms","Passiva","Allow to cast arcane eye at will."
+"Voice of the Chain Master","Passiva","Allow to communicate telepathically with your familiar and speak through it."
+"Whispers of the Grave","Passiva","Allow to cast speak with dead at will."
+"Witch Sight","Passiva","You have Truesight with a range of 30 feet."`;
 
         const PRELOADED_PROFICIENCY_CSV = `Name,Class,Cost,Description
 Artificer Proficiency,Artificier,6,"4pf per livello\nArmor: Light armor, medium armor, shields\nWeapons: Simple weapons\nTools: Thieves’ tools, tinker’s tools, one type of artisan’s tools of your choice\nSaving Throws: Constitution, Intelligence\nSkills: Choose two from Arcana, History, Investigation, Medicine, Nature, Perception, Sleight of Hand"
@@ -2532,6 +3078,25 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
             CHA: { base: 8, race: 0, feat: 0, ability: 0, misc: 0 }
         };
 
+        const parseClassRequirement = (text) => {
+            if (!text || text === '-') return () => true;
+            const clauses = text.split(/[,;]|\band\b/i).map(c => c.trim()).filter(Boolean);
+            return (stats) => {
+                if (!stats) return true;
+                return clauses.every(clause => {
+                    const match = clause.match(/(.+?)\s*(\d+)/);
+                    if (!match) return true;
+                    const statPart = match[1];
+                    const targetVal = parseInt(match[2], 10);
+                    const statKeys = statPart.split(/\/|\bor\b/i).map(s => s.trim().toUpperCase()).filter(Boolean);
+                    return statKeys.some(key => {
+                        const val = stats[key] !== undefined ? stats[key] : (stats[key.substring(0, 3)] || 0);
+                        return val >= targetVal;
+                    });
+                });
+            };
+        };
+
         const CLASS_REQUIREMENTS = {
             "Artificier": { text: "Int 13", check: (s) => s.INT >= 13 },
             "Barbarian": { text: "Str 13", check: (s) => s.STR >= 13 },
@@ -2546,7 +3111,7 @@ Blood-Hunter Proficiency,Blood-Hunter,8,"5pf per livello\nArmor: Light armor, me
             "Ranger": { text: "Dex 13, Wis 13", check: (s) => s.DEX >= 13 && s.WIS >= 13 },
             "Rogue": { text: "Dex 13", check: (s) => s.DEX >= 13 },
             "Sorcerer": { text: "Cha 13", check: (s) => s.CHA >= 13 },
-            "Vampire": { text: "Cha 13, Str/Dex 13", check: () => true },
+            "Vampire": { text: "Cha 13, Str/Dex 13", check: (s) => s.CHA >= 13 && (s.STR >= 13 || s.DEX >= 13) },
             "Warlock": { text: "Cha 13", check: (s) => s.CHA >= 13 },
             "Wizard": { text: "Int 13", check: (s) => s.INT >= 13 }
         };
