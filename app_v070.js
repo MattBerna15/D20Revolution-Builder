@@ -4,16 +4,131 @@
 const CURRENT_SCHEMA_VERSION = 2;
 const MASTER_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyTr_FQSheURjctlB8uZQsyCgjUYKwYYD6W98U99CZe-ino6I0q5yMolLwgcR8X_cGp/exec";
 
+// --- DEDUPLICATION HELPERS ---
+function deduplicateFeaturesList(list) {
+    if (!Array.isArray(list)) return [];
+    const seenIds = new Map();
+    const seenNames = new Map();
+    const result = [];
+    for (const item of list) {
+        if (item === null || item === undefined) continue;
+        let idKey = null;
+        let nameKey = null;
+        if (typeof item === 'object') {
+            if (item.id !== undefined && item.id !== null && item.id !== '') {
+                idKey = String(item.id).trim();
+            }
+            if (typeof item.name === 'string' && item.name.trim()) {
+                nameKey = item.name.trim().toLowerCase();
+            }
+        } else if (typeof item === 'number') {
+            idKey = String(item);
+        } else if (typeof item === 'string') {
+            const s = item.trim();
+            if (/^\d+$/.test(s)) {
+                idKey = s;
+            } else if (s) {
+                nameKey = s.toLowerCase();
+            }
+        }
+
+        const existingItem = (idKey && seenIds.get(idKey)) || (nameKey && seenNames.get(nameKey));
+        if (!existingItem) {
+            const entry = (typeof item === 'object' && item !== null) ? { ...item } : item;
+            if (idKey) seenIds.set(idKey, entry);
+            if (nameKey) seenNames.set(nameKey, entry);
+            result.push(entry);
+        } else if (typeof existingItem !== 'object' && typeof item === 'object' && item !== null) {
+            // Upgrade string representation to full object
+            const idx = result.indexOf(existingItem);
+            if (idx !== -1) {
+                result[idx] = { ...item };
+                if (idKey) seenIds.set(idKey, result[idx]);
+                if (nameKey) seenNames.set(nameKey, result[idx]);
+            }
+        }
+    }
+    return result;
+}
+
+function deduplicateNamedList(list) {
+    if (!Array.isArray(list)) return [];
+    const seenIds = new Map();
+    const seenNames = new Map();
+    const result = [];
+    for (const item of list) {
+        if (item === null || item === undefined) continue;
+        let idKey = null;
+        let nameKey = null;
+        if (typeof item === 'object') {
+            if (item.id !== undefined && item.id !== null && item.id !== '') {
+                idKey = String(item.id).trim();
+            }
+            if (typeof item.name === 'string' && item.name.trim()) {
+                nameKey = item.name.trim().toLowerCase();
+            }
+            if (!idKey && typeof item.className === 'string' && item.className.trim()) {
+                nameKey = item.className.trim().toLowerCase();
+                idKey = nameKey;
+            }
+        } else if (typeof item === 'string') {
+            const s = item.trim();
+            nameKey = s.toLowerCase();
+            idKey = s;
+        } else {
+            idKey = String(item);
+        }
+
+        const existingItem = (idKey && seenIds.get(idKey)) || (nameKey && seenNames.get(nameKey));
+        if (!existingItem) {
+            const entry = (typeof item === 'object' && item !== null) ? { ...item } : item;
+            if (idKey) seenIds.set(idKey, entry);
+            if (nameKey) seenNames.set(nameKey, entry);
+            result.push(entry);
+        } else if (typeof existingItem === 'object' && typeof item === 'object') {
+            // Merge flags if duplicates have different boolean states
+            if (item.isBonus) existingItem.isBonus = true;
+            if (item.isFighter) existingItem.isFighter = true;
+            if (item.isSorcerer) existingItem.isSorcerer = true;
+            if (item.isWarlock) existingItem.isWarlock = true;
+            if (item.showProficiency) existingItem.showProficiency = true;
+        }
+    }
+    return result;
+}
+
+function deduplicateStringList(list) {
+    if (!Array.isArray(list)) return [];
+    const seen = new Set();
+    const result = [];
+    for (const item of list) {
+        if (item === null || item === undefined) continue;
+        const s = String(item).trim();
+        const lower = s.toLowerCase();
+        if (s && !seen.has(lower)) {
+            seen.add(lower);
+            result.push(s);
+        }
+    }
+    return result;
+}
+
 function migrateAndSanitizeCharacter(raw) {
     if (!raw || typeof raw !== 'object') {
         raw = {};
     }
 
     // Handle legacy / aliased keys
-    const rawManeuvers = raw.maneuvers || raw.martialManeuvers || raw.battleManeuvers || [];
-    const rawInvocations = raw.invocations || raw.eldritchInvocations || raw.supplicheOcculte || [];
-    const rawPsionicPowers = raw.psionicPowers || raw.poteriPsionici || [];
-    const rawPsionicDisciplines = raw.psionicDisciplines || raw.disciplinePsioniche || [];
+    const rawFeatures = raw.features || raw.selectedFeatures || [];
+    const rawFeats = raw.feats || raw.selectedFeats || [];
+    const rawFightingStyles = raw.fightingStyles || raw.selectedFightingStyles || [];
+    const rawManeuvers = raw.maneuvers || raw.martialManeuvers || raw.battleManeuvers || raw.selectedManeuvers || [];
+    const rawCunningStrikes = raw.cunningStrikes || raw.selectedCunningStrikes || [];
+    const rawMetamagic = raw.metamagic || raw.selectedMetamagic || [];
+    const rawInvocations = raw.invocations || raw.eldritchInvocations || raw.supplicheOcculte || raw.selectedInvocations || [];
+    const rawPsionicPowers = raw.psionicPowers || raw.poteriPsionici || raw.selectedPsionicPowers || [];
+    const rawPsionicDisciplines = raw.psionicDisciplines || raw.disciplinePsioniche || raw.selectedPsionicDisciplines || [];
+    const rawSpellcasting = raw.spellcasting || raw.selectedSpellcasting || [];
     const rawClasses = Array.isArray(raw.classes) 
         ? raw.classes 
         : (Array.isArray(raw.homebrewClasses) ? raw.homebrewClasses : []);
@@ -45,16 +160,16 @@ function migrateAndSanitizeCharacter(raw) {
             : (parseFloat(raw.charPower?.cpPerLevel) || 12.5)
     };
 
-    // 3. Classes normalization
-    const sanitizedClasses = rawClasses.map(c => ({
+    // 3. Classes normalization (deduplicated by className)
+    const sanitizedClasses = deduplicateNamedList(rawClasses.map(c => ({
         className: (c && typeof c.className === 'string') ? c.className : '',
         level: Math.max(1, parseInt(c?.level) || 1),
         showProficiency: !!c?.showProficiency,
         selectedHp: (typeof c?.selectedHp === 'number' && !isNaN(c.selectedHp)) ? c.selectedHp : undefined
-    }));
+    })).filter(c => c.className));
 
-    // 4. Feats normalization
-    const sanitizedFeats = (Array.isArray(raw.feats) ? raw.feats : []).map(f => {
+    // 4. Feats normalization (deduplicated)
+    const sanitizedFeats = deduplicateNamedList((Array.isArray(rawFeats) ? rawFeats : []).map(f => {
         if (typeof f === 'object' && f !== null) {
             return {
                 ...f,
@@ -63,7 +178,7 @@ function migrateAndSanitizeCharacter(raw) {
             };
         }
         return { id: f, name: String(f), cost: 0, isBonus: false };
-    });
+    }));
 
     // 5. Saving Throws
     const rawST = (raw.savingThrows && typeof raw.savingThrows === 'object') ? raw.savingThrows : {};
@@ -85,19 +200,27 @@ function migrateAndSanitizeCharacter(raw) {
         casterSlots: Array.isArray(rawMagic.casterSlots) ? rawMagic.casterSlots : []
     };
 
-    // 7. Lists
-    const sanitizedFeatures = Array.isArray(raw.features) ? raw.features : [];
-    const sanitizedFightingStyles = Array.isArray(raw.fightingStyles) ? raw.fightingStyles : [];
-    const sanitizedManeuvers = Array.isArray(rawManeuvers) ? rawManeuvers : [];
-    const sanitizedCunningStrikes = Array.isArray(raw.cunningStrikes) ? raw.cunningStrikes : [];
-    const sanitizedMetamagic = Array.isArray(raw.metamagic) ? raw.metamagic : [];
-    const sanitizedPsionicPowers = Array.isArray(rawPsionicPowers) ? rawPsionicPowers : [];
-    const sanitizedPsionicDisciplines = Array.isArray(rawPsionicDisciplines) ? rawPsionicDisciplines : [];
-    const sanitizedInvocations = Array.isArray(rawInvocations) ? rawInvocations : [];
-    const sanitizedSpellcasting = Array.isArray(raw.spellcasting) ? raw.spellcasting : [];
+    // 7. Lists (tutti deduplicati rigorosamente)
+    const sanitizedFeatures = deduplicateFeaturesList(rawFeatures);
+    const sanitizedFightingStyles = deduplicateNamedList(rawFightingStyles);
+    const sanitizedManeuvers = deduplicateNamedList(rawManeuvers);
+    const sanitizedCunningStrikes = deduplicateNamedList(rawCunningStrikes);
+    const sanitizedMetamagic = deduplicateNamedList(rawMetamagic);
+    const sanitizedPsionicPowers = deduplicateNamedList(rawPsionicPowers);
+    const sanitizedPsionicDisciplines = deduplicateNamedList(rawPsionicDisciplines);
+    const sanitizedInvocations = deduplicateNamedList(rawInvocations);
+    const sanitizedSpellcasting = deduplicateStringList(rawSpellcasting);
 
     // 8. Skills
-    const sanitizedSkills = (raw.skills && typeof raw.skills === 'object' && !Array.isArray(raw.skills)) ? raw.skills : {};
+    const sanitizedSkills = (raw.skills && typeof raw.skills === 'object' && !Array.isArray(raw.skills)) ? { ...raw.skills } : {};
+    if (Array.isArray(raw.selectedSkills)) {
+        raw.selectedSkills.forEach(sName => {
+            if (sName && typeof sName === 'string') {
+                sanitizedSkills[sName] = sanitizedSkills[sName] || { isProficient: true, isClassSkill: false, isExpert: false };
+                sanitizedSkills[sName].isProficient = true;
+            }
+        });
+    }
 
     // 9. Meta
     const rawMeta = (raw.meta && typeof raw.meta === 'object') ? raw.meta : {};
@@ -133,11 +256,13 @@ function migrateAndSanitizeCharacter(raw) {
 function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
     if (!p) return 0;
     
-    // 1. Feats
-    const featCosts = (p.feats || []).reduce((acc, f) => acc + (f.isBonus ? 0 : (parseInt(f.cost) || 0)), 0);
+    // 1. Feats (deduplicated)
+    const uniqueFeats = deduplicateNamedList(p.feats || []);
+    const featCosts = uniqueFeats.reduce((acc, f) => acc + (f.isBonus ? 0 : (parseInt(f.cost) || 0)), 0);
 
-    // 2. Classes (level + proficiency cost)
-    const classCosts = (p.classes || []).reduce((acc, c) => {
+    // 2. Classes (level + proficiency cost, deduplicated)
+    const uniqueClasses = deduplicateNamedList(p.classes || []);
+    const classCosts = uniqueClasses.reduce((acc, c) => {
         let cost = parseInt(c.level) || 0;
         if (c.showProficiency) {
             const prof = rawProfMap[c.className];
@@ -158,7 +283,7 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
         }
         return cost;
     };
-    const hpCosts = (p.classes || []).reduce((acc, c) => {
+    const hpCosts = uniqueClasses.reduce((acc, c) => {
         if (!c.showProficiency) return acc;
         let base = 0;
         const prof = rawProfMap[c.className];
@@ -182,53 +307,62 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
         return Math.max(0, count - 1);
     })();
 
-    // 6. Fighting Styles
-    const fsCosts = (p.fightingStyles || []).length * 3;
+    // 6. Fighting Styles (deduplicated)
+    const uniqueFS = deduplicateNamedList(p.fightingStyles || []);
+    const fsCosts = uniqueFS.length * 3;
 
-    // 7. Martial Maneuvers
-    const maneuverCosts = (p.maneuvers || []).reduce((acc, item) => {
+    // 7. Martial Maneuvers (deduplicated)
+    const uniqueManeuvers = deduplicateNamedList(p.maneuvers || []);
+    const maneuverCosts = uniqueManeuvers.reduce((acc, item) => {
         if (typeof item === 'string') return acc + 3;
         return acc + (item.isFighter ? 0 : 3);
     }, 0);
 
-    // 8. Cunning Strikes
-    const csCosts = (p.cunningStrikes || []).length * 2;
+    // 8. Cunning Strikes (deduplicated)
+    const uniqueCS = deduplicateNamedList(p.cunningStrikes || []);
+    const csCosts = uniqueCS.length * 2;
 
-    // 9. Metamagic
-    const mmCosts = (p.metamagic || []).reduce((acc, item) => {
+    // 9. Metamagic (deduplicated)
+    const uniqueMM = deduplicateNamedList(p.metamagic || []);
+    const mmCosts = uniqueMM.reduce((acc, item) => {
         if (typeof item === 'string') return acc + 2;
         return acc + (item.isSorcerer ? 0 : 2);
     }, 0);
 
-    // 10. Eldritch Invocations
-    const eldritchCosts = (p.invocations || []).reduce((acc, item) => {
+    // 10. Eldritch Invocations (deduplicated)
+    const uniqueInvocations = deduplicateNamedList(p.invocations || []);
+    const eldritchCosts = uniqueInvocations.reduce((acc, item) => {
         if (typeof item === 'string') return acc + 3;
         return acc + (item.isWarlock ? 0 : 3);
     }, 0);
 
-    // 11. Psionic Powers & Disciplines
-    const hasPsiPower = (p.features || []).some(f => {
-        const fObj = (typeof f === 'object') ? f : dbMap[f];
+    // 11. Psionic Powers & Disciplines (deduplicated)
+    const uniqueFeatures = deduplicateFeaturesList(p.features || []);
+    const hasPsiPower = uniqueFeatures.some(f => {
+        const fObj = (typeof f === 'object') ? f : (dbMap[f] || (typeof f === 'string' ? dbMap[f.trim().toLowerCase()] : null));
         return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic power';
     });
-    const hasPsiDisc = (p.features || []).some(f => {
-        const fObj = (typeof f === 'object') ? f : dbMap[f];
+    const hasPsiDisc = uniqueFeatures.some(f => {
+        const fObj = (typeof f === 'object') ? f : (dbMap[f] || (typeof f === 'string' ? dbMap[f.trim().toLowerCase()] : null));
         return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic discipline';
     });
-    const psiCosts = hasPsiPower ? (p.psionicPowers || []).reduce((acc, item) => {
+    const uniquePsiPowers = deduplicateNamedList(p.psionicPowers || []);
+    const psiCosts = hasPsiPower ? uniquePsiPowers.reduce((acc, item) => {
         const cost = (typeof item === 'object' && item.cost !== undefined) ? parseInt(item.cost) : 2;
         return acc + (isNaN(cost) ? 2 : cost);
     }, 0) : 0;
-    const psiDiscCosts = hasPsiDisc ? (p.psionicDisciplines || []).reduce((acc, item) => {
+    const uniquePsiDisc = deduplicateNamedList(p.psionicDisciplines || []);
+    const psiDiscCosts = hasPsiDisc ? uniquePsiDisc.reduce((acc, item) => {
         const cost = (typeof item === 'object' && item.cost !== undefined) ? parseInt(item.cost) : 2;
         return acc + (isNaN(cost) ? 2 : cost);
     }, 0) : 0;
 
-    // 12. Magic & Spellcasting
+    // 12. Magic & Spellcasting (deduplicated)
     const magicCosts = (() => {
         const m = p.magic || { extraSpells: 0, extraSlots: 0, slotAsMana: false };
         let b = (m.extraSpells || 0) * 1 + (m.extraSlots || 0) * 10 + (m.slotAsMana ? 10 : 0);
-        const scCosts = (p.spellcasting || []).reduce((acc, scName) => {
+        const uniqueSC = deduplicateStringList(p.spellcasting || []);
+        const scCosts = uniqueSC.reduce((acc, scName) => {
             if (typeof SPELLCASTING_DATA !== 'undefined' && Array.isArray(SPELLCASTING_DATA)) {
                 const sc = SPELLCASTING_DATA.find(s => s.name === scName);
                 return acc + (sc ? sc.cost : 0);
@@ -247,13 +381,21 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
         return b + scCosts + casterLvlCosts;
     })();
 
-    // 13. Features
-    const featCostList = (p.features || []).reduce((acc, feat) => {
-        const f = (typeof feat === 'object') ? feat : dbMap[feat];
+    // 13. Features (deduplicated)
+    const featCostList = uniqueFeatures.reduce((acc, feat) => {
+        const f = (typeof feat === 'object') ? feat : (dbMap[feat] || (typeof feat === 'string' ? dbMap[feat.trim().toLowerCase()] : null));
         return acc + (f ? (parseInt(f.cp) || 0) : 0);
     }, 0);
 
     return featCostList + classCosts + featCosts + abilityScoreCost + hpCosts + skillCosts + fsCosts + maneuverCosts + csCosts + mmCosts + eldritchCosts + psiCosts + psiDiscCosts + magicCosts;
+}
+
+if (typeof window !== 'undefined') {
+    window.deduplicateFeaturesList = deduplicateFeaturesList;
+    window.deduplicateNamedList = deduplicateNamedList;
+    window.deduplicateStringList = deduplicateStringList;
+    window.migrateAndSanitizeCharacter = migrateAndSanitizeCharacter;
+    window.calculateCharacterCPSpent = calculateCharacterCPSpent;
 }
 
 function App() {
@@ -281,6 +423,7 @@ function App() {
         if (!db) return {};
         return db.reduce((acc, item) => { 
             if (item && item.id) acc[item.id] = item; 
+            if (item && item.name) acc[item.name.trim().toLowerCase()] = item;
             return acc; 
         }, {});
     }, [db]);
@@ -703,7 +846,7 @@ function App() {
     const abilityCostCP = totalAbilityScore * 2;
     const totalCPAvailable = Math.ceil((charData.charPower?.level || 1) * (charData.charPower?.cpPerLevel || 12.5));
     
-    const totalCPClasses = React.useMemo(() => (charData.classes || []).reduce((acc, item) => {
+    const totalCPClasses = React.useMemo(() => deduplicateNamedList(charData.classes || []).reduce((acc, item) => {
         let cost = parseInt(item.level) || 0;
         if (item.showProficiency) {
             const prof = proficiencyMap[item.className];
@@ -712,9 +855,9 @@ function App() {
         return acc + cost;
     }, 0), [charData.classes, proficiencyMap]);
 
-    const totalCPFeats = React.useMemo(() => (charData.feats || []).reduce((acc, f) => acc + (f.isBonus ? 0 : (parseInt(f.cost) || 0)), 0), [charData.feats]);
+    const totalCPFeats = React.useMemo(() => deduplicateNamedList(charData.feats || []).reduce((acc, f) => acc + (f.isBonus ? 0 : (parseInt(f.cost) || 0)), 0), [charData.feats]);
 
-    const totalHpCost = React.useMemo(() => (charData.classes || []).reduce((acc, cls) => {
+    const totalHpCost = React.useMemo(() => deduplicateNamedList(charData.classes || []).reduce((acc, cls) => {
         if (!cls.showProficiency) return acc;
         const base = getHpPerLevel(cls.className);
         const current = cls.selectedHp || base;
@@ -730,23 +873,23 @@ function App() {
         return Math.max(0, count - 1);
     }, [charData.skills]);
     
-    const totalCPFightingStyles = React.useMemo(() => (charData.fightingStyles || []).length * 3, [charData.fightingStyles]);
+    const totalCPFightingStyles = React.useMemo(() => deduplicateNamedList(charData.fightingStyles || []).length * 3, [charData.fightingStyles]);
     const totalCPMartialAdept = React.useMemo(() => {
-        return (charData.maneuvers || []).reduce((acc, item) => {
+        return deduplicateNamedList(charData.maneuvers || []).reduce((acc, item) => {
             if (typeof item === 'string') return acc + 3;
             return acc + (item.isFighter ? 0 : 3);
         }, 0);
     }, [charData.maneuvers]);
-    const totalCPCunningStrikes = React.useMemo(() => (charData.cunningStrikes || []).length * 2, [charData.cunningStrikes]);
+    const totalCPCunningStrikes = React.useMemo(() => deduplicateNamedList(charData.cunningStrikes || []).length * 2, [charData.cunningStrikes]);
     const hasPsionicPowerFeature = React.useMemo(() => {
-        return (charData.features || []).some(f => {
+        return deduplicateFeaturesList(charData.features || []).some(f => {
             const fObj = (typeof f === 'object') ? f : dbMap[f];
             return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic power';
         });
     }, [charData.features, dbMap]);
 
     const hasPsionicDisciplineFeature = React.useMemo(() => {
-        return (charData.features || []).some(f => {
+        return deduplicateFeaturesList(charData.features || []).some(f => {
             const fObj = (typeof f === 'object') ? f : dbMap[f];
             return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic discipline';
         });
@@ -754,7 +897,7 @@ function App() {
 
     const totalCPPsionicPowers = React.useMemo(() => {
         if (!hasPsionicPowerFeature) return 0;
-        return (charData.psionicPowers || []).reduce((acc, p) => {
+        return deduplicateNamedList(charData.psionicPowers || []).reduce((acc, p) => {
             const cost = (typeof p === 'object' && p.cost !== undefined) ? parseInt(p.cost) : 2;
             return acc + (isNaN(cost) ? 2 : cost);
         }, 0);
@@ -762,21 +905,21 @@ function App() {
 
     const totalCPPsionicDisciplines = React.useMemo(() => {
         if (!hasPsionicDisciplineFeature) return 0;
-        return (charData.psionicDisciplines || []).reduce((acc, p) => {
+        return deduplicateNamedList(charData.psionicDisciplines || []).reduce((acc, p) => {
             const cost = (typeof p === 'object' && p.cost !== undefined) ? parseInt(p.cost) : 2;
             return acc + (isNaN(cost) ? 2 : cost);
         }, 0);
     }, [charData.psionicDisciplines, hasPsionicDisciplineFeature]);
 
     const totalCPMetamagic = React.useMemo(() => {
-        return (charData.metamagic || []).reduce((acc, item) => {
+        return deduplicateNamedList(charData.metamagic || []).reduce((acc, item) => {
             if (typeof item === 'string') return acc + 2;
             return acc + (item.isSorcerer ? 0 : 2);
         }, 0);
     }, [charData.metamagic]);
 
     const totalCPEldritchAdept = React.useMemo(() => {
-        return (charData.invocations || []).reduce((acc, item) => {
+        return deduplicateNamedList(charData.invocations || []).reduce((acc, item) => {
             if (typeof item === 'string') return acc + 3;
             return acc + (item.isWarlock ? 0 : 3);
         }, 0);
@@ -786,7 +929,7 @@ function App() {
         const m = charData.magic || { extraSpells: 0, extraSlots: 0, slotAsMana: false };
         let base = (m.extraSpells || 0) * 1 + (m.extraSlots || 0) * 10 + (m.slotAsMana ? 10 : 0);
         
-        const spellcastingCost = (charData.spellcasting || []).reduce((acc, scName) => {
+        const spellcastingCost = deduplicateStringList(charData.spellcasting || []).reduce((acc, scName) => {
              const sc = SPELLCASTING_DATA.find(s => s.name === scName);
              return acc + (sc ? sc.cost : 0);
         }, 0);
@@ -806,7 +949,7 @@ function App() {
 
     // --- FILTERING & PREREQUISITES HELPERS ---
     const selectedFeatureNames = React.useMemo(() => new Set((charData.features || []).map(f => {
-        const featObj = (typeof f === 'object') ? f : dbMap[f];
+        const featObj = (typeof f === 'object') ? f : (dbMap[f] || (typeof f === 'string' ? dbMap[f.trim().toLowerCase()] : null));
         return featObj ? featObj.name.trim().toLowerCase() : null;
     }).filter(Boolean)), [dbMap, charData.features]);
 
@@ -837,7 +980,7 @@ function App() {
     };
 
     const isFeatureEligible = React.useCallback((feature, activeFeaturesList, classesList, magicData, spellcastingList = []) => {
-        const f = (typeof feature === 'object') ? feature : dbMap[feature];
+        const f = (typeof feature === 'object') ? feature : (dbMap[feature] || (typeof feature === 'string' ? dbMap[feature.trim().toLowerCase()] : null));
         if (!f) return false;
 
         // 1. Requisito di classe e livello
@@ -854,13 +997,13 @@ function App() {
         if (f.pre && f.pre !== '-') {
             const featObj = f;
             const otherFeatures = (activeFeaturesList || []).filter(item => {
-                const itemObj = (typeof item === 'object') ? item : dbMap[item];
+                const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? dbMap[item.trim().toLowerCase()] : null));
                 return itemObj && featObj && itemObj.id !== featObj.id;
             });
 
             const featureNames = new Set(
                 otherFeatures.map(item => {
-                    const itemObj = (typeof item === 'object') ? item : dbMap[item];
+                    const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? dbMap[item.trim().toLowerCase()] : null));
                     return itemObj && itemObj.name ? itemObj.name.trim().toLowerCase() : null;
                 }).filter(Boolean)
             );
@@ -894,10 +1037,11 @@ function App() {
     }, [charData.classes]);
 
     const totalCPSpent = React.useMemo(() => {
-        const featuresCost = (charData.features || []).reduce((acc, feat) => {
+        const uniqueFeatures = deduplicateFeaturesList(charData.features || []);
+        const featuresCost = uniqueFeatures.reduce((acc, feat) => {
             const f = (typeof feat === 'object') ? feat : dbMap[feat];
             // Sanity check: se un'abilità non soddisfa i prerequisiti, il suo costo non viene addebitato
-            if (f && !isFeatureEligible(f, charData.features, charData.classes, charData.magic, charData.spellcasting)) {
+            if (f && !isFeatureEligible(f, uniqueFeatures, charData.classes, charData.magic, charData.spellcasting)) {
                 return acc;
             }
             return acc + (f ? (parseInt(f.cp) || 0) : 0);
@@ -920,7 +1064,13 @@ function App() {
             return (list || []).map(item => {
                 if (typeof item === 'object' && item !== null && item.name) return item;
                 const id = typeof item === 'object' ? item.id : item;
-                const found = sourceMap[id];
+                let found = null;
+                if (Array.isArray(sourceMap)) {
+                    const idStr = String(id).trim().toLowerCase();
+                    found = sourceMap.find(x => String(x.id).trim().toLowerCase() === idStr || (x.name && x.name.trim().toLowerCase() === idStr));
+                } else if (sourceMap && typeof sourceMap === 'object') {
+                    found = sourceMap[id] || (typeof id === 'string' ? sourceMap[id.trim().toLowerCase()] : null);
+                }
                 if (!found) return null;
                 if (isMetamagic) {
                     const isSorc = (typeof item === 'object' && item.isSorcerer) || false;
@@ -942,35 +1092,106 @@ function App() {
         let hasChanges = false;
 
         if ((charData.features || []).some(f => typeof f === 'number' || typeof f === 'string')) {
-            newData.features = migrateList(charData.features, dbMap);
+            newData.features = deduplicateFeaturesList(migrateList(charData.features, dbMap));
             hasChanges = true;
+        } else {
+            const dedupFeatures = deduplicateFeaturesList(charData.features || []);
+            if (dedupFeatures.length !== (charData.features || []).length) {
+                newData.features = dedupFeatures;
+                hasChanges = true;
+            }
         }
+
         if ((charData.fightingStyles || []).some(s => typeof s === 'string')) {
-            newData.fightingStyles = migrateList(charData.fightingStyles, fightingStylesDb);
+            newData.fightingStyles = deduplicateNamedList(migrateList(charData.fightingStyles, fightingStylesDb));
             hasChanges = true;
+        } else {
+            const dedupStyles = deduplicateNamedList(charData.fightingStyles || []);
+            if (dedupStyles.length !== (charData.fightingStyles || []).length) {
+                newData.fightingStyles = dedupStyles;
+                hasChanges = true;
+            }
         }
+
         if ((charData.maneuvers || []).some(m => typeof m === 'string' || (typeof m === 'object' && !m.name))) {
-            newData.maneuvers = migrateList(charData.maneuvers, maneuversDb, false, true);
+            newData.maneuvers = deduplicateNamedList(migrateList(charData.maneuvers, maneuversDb, false, true));
             hasChanges = true;
+        } else {
+            const dedupManeuvers = deduplicateNamedList(charData.maneuvers || []);
+            if (dedupManeuvers.length !== (charData.maneuvers || []).length) {
+                newData.maneuvers = dedupManeuvers;
+                hasChanges = true;
+            }
         }
+
         if ((charData.cunningStrikes || []).some(c => typeof c === 'string')) {
-            newData.cunningStrikes = migrateList(charData.cunningStrikes, cunningStrikesDb);
+            newData.cunningStrikes = deduplicateNamedList(migrateList(charData.cunningStrikes, cunningStrikesDb));
             hasChanges = true;
+        } else {
+            const dedupStrikes = deduplicateNamedList(charData.cunningStrikes || []);
+            if (dedupStrikes.length !== (charData.cunningStrikes || []).length) {
+                newData.cunningStrikes = dedupStrikes;
+                hasChanges = true;
+            }
         }
+
         if ((charData.metamagic || []).some(m => typeof m === 'string' || (typeof m === 'object' && !m.name))) {
-            newData.metamagic = migrateList(charData.metamagic, metamagicDb, true);
+            newData.metamagic = deduplicateNamedList(migrateList(charData.metamagic, metamagicDb, true));
+            hasChanges = true;
+        } else {
+            const dedupMetamagic = deduplicateNamedList(charData.metamagic || []);
+            if (dedupMetamagic.length !== (charData.metamagic || []).length) {
+                newData.metamagic = dedupMetamagic;
+                hasChanges = true;
+            }
+        }
+
+        if ((charData.invocations || []).some(inv => typeof inv === 'string' || (typeof inv === 'object' && !inv.name))) {
+            newData.invocations = deduplicateNamedList(migrateList(charData.invocations, invocationsMap, false, false, true));
+            hasChanges = true;
+        } else {
+            const dedupInvocations = deduplicateNamedList(charData.invocations || []);
+            if (dedupInvocations.length !== (charData.invocations || []).length) {
+                newData.invocations = dedupInvocations;
+                hasChanges = true;
+            }
+        }
+
+        const dedupFeats = deduplicateNamedList(charData.feats || []);
+        if (dedupFeats.length !== (charData.feats || []).length) {
+            newData.feats = dedupFeats;
             hasChanges = true;
         }
-        if ((charData.invocations || []).some(inv => typeof inv === 'string' || (typeof inv === 'object' && !inv.name))) {
-            newData.invocations = migrateList(charData.invocations, invocationsMap, false, false, true);
+
+        const dedupClasses = deduplicateNamedList(charData.classes || []);
+        if (dedupClasses.length !== (charData.classes || []).length) {
+            newData.classes = dedupClasses;
+            hasChanges = true;
+        }
+
+        const dedupPsiPowers = deduplicateNamedList(charData.psionicPowers || []);
+        if (dedupPsiPowers.length !== (charData.psionicPowers || []).length) {
+            newData.psionicPowers = dedupPsiPowers;
+            hasChanges = true;
+        }
+
+        const dedupPsiDisciplines = deduplicateNamedList(charData.psionicDisciplines || []);
+        if (dedupPsiDisciplines.length !== (charData.psionicDisciplines || []).length) {
+            newData.psionicDisciplines = dedupPsiDisciplines;
+            hasChanges = true;
+        }
+
+        const dedupSpellcasting = deduplicateStringList(charData.spellcasting || []);
+        if (dedupSpellcasting.length !== (charData.spellcasting || []).length) {
+            newData.spellcasting = dedupSpellcasting;
             hasChanges = true;
         }
 
         if (hasChanges) {
-            console.log("Migrazione dati completata.");
+            console.log("Migrazione e deduplicazione dati completata.");
             setCharData(newData);
         }
-    }, [charData.features, charData.fightingStyles, charData.maneuvers, charData.cunningStrikes, charData.metamagic, charData.invocations, dbMap, fightingStylesDb, maneuversDb, cunningStrikesDb, metamagicDb, invocationsMap, db.length]); 
+    }, [charData.features, charData.fightingStyles, charData.maneuvers, charData.cunningStrikes, charData.metamagic, charData.invocations, charData.feats, charData.classes, charData.psionicPowers, charData.psionicDisciplines, charData.spellcasting, dbMap, fightingStylesDb, maneuversDb, cunningStrikesDb, metamagicDb, invocationsMap, db.length]); 
 
     // --- CASCADE AUTO-PRUNE INVALID CLASS FEATURES ---
     React.useEffect(() => {
@@ -1021,9 +1242,22 @@ function App() {
     }, [charData.features, charData.classes, charData.magic, charData.spellcasting, isFeatureEligible, db.length, dbMap, showToast]);
 
     const toggleFeature = (id) => {
-        const exists = charData.features.some(f => (typeof f === 'object' ? f.id : f) === id);
+        const targetIdStr = String(id).trim();
+        const targetObj = dbMap[id];
+        const targetNameLower = targetObj && targetObj.name ? targetObj.name.trim().toLowerCase() : '';
+
+        const exists = (charData.features || []).some(f => {
+            const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
+            const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
+            return fId === targetIdStr || (targetNameLower && fName === targetNameLower);
+        });
+
         if (exists) {
-            const featureToRemove = charData.features.find(f => (typeof f === 'object' ? f.id : f) === id);
+            const featureToRemove = (charData.features || []).find(f => {
+                const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
+                const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
+                return fId === targetIdStr || (targetNameLower && fName === targetNameLower);
+            });
             const fObj = (typeof featureToRemove === 'object') ? featureToRemove : dbMap[id];
             const featName = (fObj && fObj.name) ? fObj.name.trim().toLowerCase() : '';
             
@@ -1038,7 +1272,11 @@ function App() {
             
             setCharData(prev => ({
                 ...prev,
-                features: prev.features.filter(f => (typeof f === 'object' ? f.id : f) !== id),
+                features: (prev.features || []).filter(f => {
+                    const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
+                    const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
+                    return fId !== targetIdStr && (!targetNameLower || fName !== targetNameLower);
+                }),
                 ...extraUpdates
             }));
             showToast("Abilità rimossa");
@@ -1055,7 +1293,7 @@ function App() {
                 }
                 return;
             }
-            updateCharData('features', [...charData.features, f]);
+            updateCharData('features', deduplicateFeaturesList([...(charData.features || []), f]));
             showToast("Abilità aggiunta!");
         }
     };
@@ -1066,7 +1304,11 @@ function App() {
                             (item.desc || "").toLowerCase().includes(search.toLowerCase()) ||
                             (item.pre || "").toLowerCase().includes(search.toLowerCase());
         
-        const isSelected = charData.features.some(f => f.id === item.id);
+        const isSelected = (charData.features || []).some(f => {
+            const fId = typeof f === 'object' ? f.id : f;
+            const fName = typeof f === 'object' ? f.name : (dbMap[f]?.name);
+            return fId === item.id || (fName && fName.trim().toLowerCase() === item.name.trim().toLowerCase());
+        });
         const matchesSelected = !showSelectedOnly || isSelected;
 
         return matchesTag && matchSearch && matchesSelected;
@@ -1117,14 +1359,24 @@ function App() {
         }
         const powerObj = psionicPowersDb.find(s => s.id === psionicPowerSelection);
         if (powerObj) {
-            updateCharData('psionicPowers', [...(charData.psionicPowers || []), powerObj]);
-            setPsionicPowerSelection('');
-            showToast(`Potere Psionico aggiunto: ${powerObj.name}`);
+            const current = charData.psionicPowers || [];
+            const alreadyIn = current.some(p => (typeof p === 'object' ? p.id : p) === powerObj.id || (p.name && p.name.toLowerCase() === powerObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('psionicPowers', deduplicateNamedList([...current, powerObj]));
+                setPsionicPowerSelection('');
+                showToast(`Potere Psionico aggiunto: ${powerObj.name}`);
+            } else {
+                showToast("Potere già presente", "info");
+            }
         }
     };
 
     const removePsionicPower = (powerId) => {
-        updateCharData('psionicPowers', (charData.psionicPowers || []).filter(s => (typeof s === 'object' ? s.id : s) !== powerId));
+        const targetIdStr = String(powerId).trim();
+        updateCharData('psionicPowers', (charData.psionicPowers || []).filter(s => {
+            const sId = typeof s === 'object' ? String(s.id).trim() : String(s).trim();
+            return sId !== targetIdStr;
+        }));
         showToast("Potere Psionico rimosso", "info");
     };
 
@@ -1143,14 +1395,24 @@ function App() {
         }
         const discObj = psionicDisciplinesDb.find(s => s.id === psionicDisciplineSelection);
         if (discObj) {
-            updateCharData('psionicDisciplines', [...(charData.psionicDisciplines || []), discObj]);
-            setPsionicDisciplineSelection('');
-            showToast(`Disciplina Psionica aggiunta: ${discObj.name}`);
+            const current = charData.psionicDisciplines || [];
+            const alreadyIn = current.some(p => (typeof p === 'object' ? p.id : p) === discObj.id || (p.name && p.name.toLowerCase() === discObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('psionicDisciplines', deduplicateNamedList([...current, discObj]));
+                setPsionicDisciplineSelection('');
+                showToast(`Disciplina Psionica aggiunta: ${discObj.name}`);
+            } else {
+                showToast("Disciplina già presente", "info");
+            }
         }
     };
 
     const removePsionicDiscipline = (discId) => {
-        updateCharData('psionicDisciplines', (charData.psionicDisciplines || []).filter(s => (typeof s === 'object' ? s.id : s) !== discId));
+        const targetIdStr = String(discId).trim();
+        updateCharData('psionicDisciplines', (charData.psionicDisciplines || []).filter(s => {
+            const sId = typeof s === 'object' ? String(s.id).trim() : String(s).trim();
+            return sId !== targetIdStr;
+        }));
         showToast("Disciplina Psionica rimossa", "info");
     };
 
@@ -1293,10 +1555,14 @@ function App() {
     const addFeat = () => {
         if (!featSelection) return;
         const featToAdd = featsMap[featSelection];
-        if (featToAdd && !(charData.feats || []).some(f => f.id === featToAdd.id)) {
-            updateCharData('feats', [...(charData.feats || []), { ...featToAdd, isBonus: false }]);
-            setFeatSelection("");
-            showToast("Talento aggiunto!");
+        if (featToAdd) {
+            const current = charData.feats || [];
+            const alreadyIn = current.some(f => (typeof f === 'object' ? f.id : f) === featToAdd.id || (f.name && f.name.toLowerCase() === featToAdd.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('feats', deduplicateNamedList([...current, { ...featToAdd, isBonus: false }]));
+                setFeatSelection("");
+                showToast("Talento aggiunto!");
+            }
         }
     };
     const removeFeat = (index) => {
@@ -1313,14 +1579,22 @@ function App() {
         if (!fightingStyleSelection) return;
         const styleObj = fightingStylesDb.find(s => s.id === fightingStyleSelection); 
         if (styleObj) {
-            updateCharData('fightingStyles', [...(charData.fightingStyles || []), styleObj]);
-            setFightingStyleSelection("");
-            showToast("Stile di combattimento aggiunto!");
+            const current = charData.fightingStyles || [];
+            const alreadyIn = current.some(s => (typeof s === 'object' ? s.id : s) === styleObj.id || (s.name && s.name.toLowerCase() === styleObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('fightingStyles', deduplicateNamedList([...current, styleObj]));
+                setFightingStyleSelection("");
+                showToast("Stile di combattimento aggiunto!");
+            }
         }
     };
 
     const removeFightingStyle = (styleId) => {
-        updateCharData('fightingStyles', (charData.fightingStyles || []).filter(s => s.id !== styleId));
+        const targetIdStr = String(styleId).trim();
+        updateCharData('fightingStyles', (charData.fightingStyles || []).filter(s => {
+            const sId = typeof s === 'object' ? String(s.id).trim() : String(s).trim();
+            return sId !== targetIdStr;
+        }));
         showToast("Stile rimosso");
     };
 
@@ -1328,14 +1602,22 @@ function App() {
         if (!cunningStrikeSelection) return;
         const strikeObj = cunningStrikesDb.find(s => s.id === cunningStrikeSelection); 
         if (strikeObj) {
-            updateCharData('cunningStrikes', [...(charData.cunningStrikes || []), strikeObj]);
-            setCunningStrikeSelection("");
-            showToast("Cunning Strike aggiunto!");
+            const current = charData.cunningStrikes || [];
+            const alreadyIn = current.some(s => (typeof s === 'object' ? s.id : s) === strikeObj.id || (s.name && s.name.toLowerCase() === strikeObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('cunningStrikes', deduplicateNamedList([...current, strikeObj]));
+                setCunningStrikeSelection("");
+                showToast("Cunning Strike aggiunto!");
+            }
         }
     };
 
     const removeCunningStrike = (styleId) => {
-        updateCharData('cunningStrikes', (charData.cunningStrikes || []).filter(s => s.id !== styleId));
+        const targetIdStr = String(styleId).trim();
+        updateCharData('cunningStrikes', (charData.cunningStrikes || []).filter(s => {
+            const sId = typeof s === 'object' ? String(s.id).trim() : String(s).trim();
+            return sId !== targetIdStr;
+        }));
         showToast("Strike rimosso");
     };
 
@@ -1343,16 +1625,21 @@ function App() {
         if (!maneuverSelection) return;
         const mObj = maneuversDb.find(m => m.id === maneuverSelection); 
         if (mObj) {
-            updateCharData('maneuvers', [...(charData.maneuvers || []), { ...mObj, isFighter: false }]);
-            setManeuverSelection("");
-            showToast("Manovra aggiunta!");
+            const current = charData.maneuvers || [];
+            const alreadyIn = current.some(m => (typeof m === 'object' ? m.id : m) === mObj.id || (m.name && m.name.toLowerCase() === mObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('maneuvers', deduplicateNamedList([...current, { ...mObj, isFighter: false }]));
+                setManeuverSelection("");
+                showToast("Manovra aggiunta!");
+            }
         }
     };
 
     const removeManeuver = (mId) => {
+        const targetIdStr = String(mId).trim();
         updateCharData('maneuvers', (charData.maneuvers || []).filter(item => {
-            const currentId = typeof item === 'string' ? item : item.id;
-            return currentId !== mId;
+            const currentId = typeof item === 'object' ? String(item.id).trim() : String(item).trim();
+            return currentId !== targetIdStr;
         }));
         showToast("Manovra rimossa");
     };
@@ -1372,16 +1659,21 @@ function App() {
         if (!metamagicSelection) return;
         const mmObj = metamagicDb.find(m => m.id === metamagicSelection); 
         if (mmObj) {
-            updateCharData('metamagic', [...(charData.metamagic || []), { ...mmObj, isSorcerer: false }]);
-            setMetamagicSelection("");
-            showToast("Metamagic aggiunta!");
+            const current = charData.metamagic || [];
+            const alreadyIn = current.some(m => (typeof m === 'object' ? m.id : m) === mmObj.id || (m.name && m.name.toLowerCase() === mmObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('metamagic', deduplicateNamedList([...current, { ...mmObj, isSorcerer: false }]));
+                setMetamagicSelection("");
+                showToast("Metamagic aggiunta!");
+            }
         }
     };
 
     const removeMetamagic = (styleId) => {
+        const targetIdStr = String(styleId).trim();
         updateCharData('metamagic', (charData.metamagic || []).filter(item => {
-            const currentId = typeof item === 'string' ? item : item.id;
-            return currentId !== styleId;
+            const currentId = typeof item === 'object' ? String(item.id).trim() : String(item).trim();
+            return currentId !== targetIdStr;
         }));
         showToast("Metamagic rimossa");
     };
@@ -1401,16 +1693,21 @@ function App() {
         if (!invocationSelection) return;
         const invObj = invocationsDb.find(m => m.id === invocationSelection); 
         if (invObj) {
-            updateCharData('invocations', [...(charData.invocations || []), { ...invObj, isWarlock: false }]);
-            setInvocationSelection("");
-            showToast("Invocazione aggiunta!");
+            const current = charData.invocations || [];
+            const alreadyIn = current.some(m => (typeof m === 'object' ? m.id : m) === invObj.id || (m.name && m.name.toLowerCase() === invObj.name.toLowerCase()));
+            if (!alreadyIn) {
+                updateCharData('invocations', deduplicateNamedList([...current, { ...invObj, isWarlock: false }]));
+                setInvocationSelection("");
+                showToast("Invocazione aggiunta!");
+            }
         }
     };
 
     const removeInvocation = (invId) => {
+        const targetIdStr = String(invId).trim();
         updateCharData('invocations', (charData.invocations || []).filter(item => {
-            const currentId = typeof item === 'string' ? item : item.id;
-            return currentId !== invId;
+            const currentId = typeof item === 'object' ? String(item.id).trim() : String(item).trim();
+            return currentId !== targetIdStr;
         }));
         showToast("Invocazione rimossa");
     };
@@ -1427,9 +1724,11 @@ function App() {
     };
     
     const toggleSpellcasting = (scName) => {
-        const current = charData.spellcasting || [];
-        if (current.includes(scName)) {
-            updateCharData('spellcasting', current.filter(n => n !== scName));
+        const current = deduplicateStringList(charData.spellcasting || []);
+        const scLower = scName.trim().toLowerCase();
+        const exists = current.some(n => n.trim().toLowerCase() === scLower);
+        if (exists) {
+            updateCharData('spellcasting', current.filter(n => n.trim().toLowerCase() !== scLower));
         } else {
             updateCharData('spellcasting', [...current, scName]);
         }
@@ -1630,38 +1929,43 @@ function App() {
         text += `\n`;
 
         text += `--- TALENTI (FEATS) ---\n`;
-        if(charData.feats.length === 0) text += `(Nessuno)\n`;
-        charData.feats.forEach(f => {
+        const exportFeats = deduplicateNamedList(charData.feats || []);
+        if(exportFeats.length === 0) text += `(Nessuno)\n`;
+        exportFeats.forEach(f => {
             text += `- ${f.name} (${f.cost} CP)\n`;
         });
         text += `\n`;
 
         text += `--- CLASS FEATURES ---\n`;
-        if(charData.features.length === 0) text += `(Nessuna)\n`;
-        charData.features.forEach(f => {
+        const exportFeatures = deduplicateFeaturesList(charData.features || []);
+        if(exportFeatures.length === 0) text += `(Nessuna)\n`;
+        exportFeatures.forEach(f => {
             const featObj = (typeof f === 'object') ? f : dbMap[f];
             if (featObj) text += `- ${featObj.name} (${featObj.cp} CP)\n`;
         });
         text += `\n`;
 
         text += `--- COMBAT ---\n`;
-        if (charData.fightingStyles.length) {
+        const exportStyles = deduplicateNamedList(charData.fightingStyles || []);
+        if (exportStyles.length) {
             text += `Fighting Styles:\n`;
-            charData.fightingStyles.forEach(style => {
+            exportStyles.forEach(style => {
                 text += `  * ${style.name}\n`;
             });
         }
-        if (charData.cunningStrikes.length) {
+        const exportStrikes = deduplicateNamedList(charData.cunningStrikes || []);
+        if (exportStrikes.length) {
             text += `Cunning Strikes:\n`;
-            charData.cunningStrikes.forEach(strike => {
+            exportStrikes.forEach(strike => {
                 text += `  * ${strike.name}\n`;
             });
         }
         text += `\n`;
 
         text += `--- MAGIC ---\n`;
-        if (charData.spellcasting && charData.spellcasting.length) {
-            text += `Spellcasting Classes: ${charData.spellcasting.join(', ').replace(/Spellcasting, /g, '')}\n`;
+        const exportSc = deduplicateStringList(charData.spellcasting || []);
+        if (exportSc.length) {
+            text += `Spellcasting Classes: ${exportSc.join(', ').replace(/Spellcasting, /g, '')}\n`;
         }
         const totalCasterLevel = (charData.magic.casterSlots || []).reduce((acc, slot, idx) => {
             if (!slot || !slot.active) return acc;
@@ -1669,25 +1973,28 @@ function App() {
         }, 0);
         if (totalCasterLevel > 0) text += `Total Caster Level: ${totalCasterLevel}\n`;
         
-        if (hasPsionicPowerFeature && charData.psionicPowers && charData.psionicPowers.length) {
+        const exportPsiPowers = deduplicateNamedList(charData.psionicPowers || []);
+        if (hasPsionicPowerFeature && exportPsiPowers.length) {
             text += `Poteri Psionici (Psionic Power - Costo 2 CP ciascuno):\n`;
-            charData.psionicPowers.forEach(power => {
+            exportPsiPowers.forEach(power => {
                 text += `  * ${power.name} [${power.action || '1 AP'}]: ${power.desc}\n`;
             });
             text += `\n`;
         }
         
-        if (hasPsionicDisciplineFeature && charData.psionicDisciplines && charData.psionicDisciplines.length) {
+        const exportPsiDisc = deduplicateNamedList(charData.psionicDisciplines || []);
+        if (hasPsionicDisciplineFeature && exportPsiDisc.length) {
             text += `Discipline Psioniche (Psionic Discipline - Costo 2 CP ciascuna):\n`;
-            charData.psionicDisciplines.forEach(disc => {
+            exportPsiDisc.forEach(disc => {
                 text += `  * ${disc.name} [${disc.action || 'Passive'}]: ${disc.desc}\n`;
             });
             text += `\n`;
         }
         
-        if (charData.maneuvers && charData.maneuvers.length) {
+        const exportManeuvers = deduplicateNamedList(charData.maneuvers || []);
+        if (exportManeuvers.length) {
             text += `Martial Adept (Battle Maneuvers):\n`;
-            charData.maneuvers.forEach(item => {
+            exportManeuvers.forEach(item => {
                 const isFighter = typeof item === 'object' ? item.isFighter : false;
                 const m = typeof item === 'object' ? item : (maneuversMap[item] || (maneuversDb || []).find(x => x.id === item));
                 if (m) text += `  * ${m.name} [${m.action || 'Passiva'}]${isFighter ? ' (Fighter - Free)' : ''}: ${m.desc}\n`;
@@ -1695,9 +2002,10 @@ function App() {
             text += `\n`;
         }
 
-        if (charData.metamagic.length) {
+        const exportMetamagic = deduplicateNamedList(charData.metamagic || []);
+        if (exportMetamagic.length) {
             text += `Metamagic:\n`;
-            charData.metamagic.forEach(item => {
+            exportMetamagic.forEach(item => {
                 const isSorcerer = typeof item === 'object' ? item.isSorcerer : false;
                 const m = typeof item === 'object' ? item : metamagicMap[item];
                 if (m) text += `  * ${m.name}${isSorcerer ? ' (Sorcerer - Free)' : ''}\n`;
@@ -1705,9 +2013,10 @@ function App() {
             text += `\n`;
         }
 
-        if (charData.invocations && charData.invocations.length) {
+        const exportInvocations = deduplicateNamedList(charData.invocations || []);
+        if (exportInvocations.length) {
             text += `Eldritch Adept (Eldritch Invocations):\n`;
-            charData.invocations.forEach(item => {
+            exportInvocations.forEach(item => {
                 const isWarlock = typeof item === 'object' ? item.isWarlock : false;
                 const inv = typeof item === 'object' ? item : (invocationsMap[item] || (invocationsDb || []).find(x => x.id === item));
                 if (inv) text += `  * ${inv.name} [${inv.action || 'Passiva'}]${isWarlock ? ' (Warlock - Free)' : ''}: ${inv.desc}\n`;
