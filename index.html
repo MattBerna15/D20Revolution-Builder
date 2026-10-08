@@ -1089,6 +1089,7 @@ function App() {
     }, [proficiencyDb]);
 
     // UI STATES
+    const [selectedClassFilter, setSelectedClassFilter] = React.useState("all");
     const [selectedTags, setSelectedTags] = React.useState([]); 
     const [search, setSearch] = React.useState('');
     const [activeTab, setActiveTab] = React.useState('basic'); 
@@ -1908,19 +1909,43 @@ function App() {
         }
     };
 
-    const filteredData = db.filter(item => {
-        const matchesTag = selectedTags.length === 0 || selectedTags.some(selected => item.tag.includes(selected));
-        const matchSearch = (item.name || "").toLowerCase().includes(search.toLowerCase()) || 
-                            (item.desc || "").toLowerCase().includes(search.toLowerCase()) ||
-                            (item.pre || "").toLowerCase().includes(search.toLowerCase());
-        
-        const isSelected = isFeatureSelected(item, charData.features, dbMap);
-        const matchesSelected = !showSelectedOnly || isSelected;
+    const visibleFeatures = React.useMemo(() => {
+        if (!db || !Array.isArray(db)) return [];
+        return db.filter(feature => {
+            // Controllo filtro classe
+            if (selectedClassFilter && selectedClassFilter !== "all") {
+                const featureClasses = (feature.tag || feature.class || "").toLowerCase();
+                const filterLower = selectedClassFilter.toLowerCase();
+                let matchesClass = featureClasses.includes(filterLower);
+                if (!matchesClass) {
+                    if (filterLower === 'artificer' && featureClasses.includes('artificier')) matchesClass = true;
+                    if (filterLower === 'artificier' && featureClasses.includes('artificer')) matchesClass = true;
+                }
+                if (!matchesClass) return false;
+            }
 
-        return matchesTag && matchSearch && matchesSelected;
-    });
+            // Controllo ricerca testuale (se presente)
+            if (search && search.trim() !== "") {
+                const term = search.trim().toLowerCase();
+                const matchName = (feature.name || "").toLowerCase().includes(term);
+                const matchDesc = (feature.desc || feature.description || "").toLowerCase().includes(term);
+                const matchPre = (feature.pre || "").toLowerCase().includes(term);
+                if (!matchName && !matchDesc && !matchPre) return false;
+            }
 
-    const toggleTag = (tag) => setSelectedTags(prev => prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]);
+            // Controllo solo selezionati
+            if (showSelectedOnly) {
+                const isSelected = isFeatureSelected(feature, charData.features, dbMap);
+                if (!isSelected) return false;
+            }
+
+            return true;
+        });
+    }, [db, selectedClassFilter, search, showSelectedOnly, charData.features, dbMap]);
+
+    const filteredData = visibleFeatures;
+
+    const toggleTag = (tag) => setSelectedClassFilter(current => (current && current.toLowerCase() === tag.toLowerCase()) ? "all" : tag);
 
     const availableFeats = React.useMemo(() => featsDb.filter(f => !charData.feats.some(sf => sf.id === f.id)).sort((a,b) => a.name.localeCompare(b.name)), [featsDb, charData.feats]);
     const availableFightingStyles = React.useMemo(() => fightingStylesDb.filter(s => !charData.fightingStyles.some(fs => fs.id === s.id)).sort((a,b) => a.name.localeCompare(b.name)), [fightingStylesDb, charData.fightingStyles]);
@@ -3673,21 +3698,24 @@ function App() {
                                     </button>
                                     <div className="w-px h-6 bg-slate-800"></div>
                                     <button 
-                                        onClick={() => setSelectedTags([])} 
-                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${selectedTags.length === 0 ? 'bg-blue-600/10 border-blue-500/50 text-blue-400' : 'bg-slate-950 text-slate-500 border-slate-850 hover:bg-slate-850'}`}
+                                        onClick={() => setSelectedClassFilter("all")} 
+                                        className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${(!selectedClassFilter || selectedClassFilter === 'all') ? 'bg-blue-600/10 border-blue-500/50 text-blue-400' : 'bg-slate-950 text-slate-500 border-slate-850 hover:bg-slate-850'}`}
                                     >
                                         Tutte le classi
                                     </button>
-                                    {FIXED_CLASSES_LIST.map(cls => (
-                                        <button 
-                                            key={cls} 
-                                            onClick={() => toggleTag(cls)} 
-                                            className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border flex items-center gap-1.5 ${selectedTags.includes(cls) ? 'bg-blue-600/10 border-blue-500/50 text-blue-400' : 'bg-slate-950 text-slate-500 border-slate-850 hover:bg-slate-850'}`}
-                                        >
-                                            {cls}
-                                            {selectedTags.includes(cls) && <Icons.X />}
-                                        </button>
-                                    ))}
+                                    {FIXED_CLASSES_LIST.map(cls => {
+                                        const isActive = selectedClassFilter && selectedClassFilter.toLowerCase() === cls.toLowerCase();
+                                        return (
+                                            <button 
+                                                key={cls} 
+                                                onClick={() => setSelectedClassFilter(current => (current && current.toLowerCase() === cls.toLowerCase()) ? "all" : cls)} 
+                                                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border flex items-center gap-1.5 ${isActive ? 'bg-blue-600/10 border-blue-500/50 text-blue-400' : 'bg-slate-950 text-slate-500 border-slate-850 hover:bg-slate-850'}`}
+                                            >
+                                                {cls}
+                                                {isActive && <Icons.X />}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         )}
@@ -4164,7 +4192,7 @@ function App() {
                                 </div>
 
                                 {/* Features list */}
-                                {filteredData.map(feat => {
+                                {visibleFeatures.map((feat, idx) => {
                                     const isSelected = isFeatureSelected(feat, charData.features, dbMap);
                                     const displayTags = feat.tag ? feat.tag.split(';').map(t => t.trim()) : [];
                                     const displayPrereqs = feat.pre && feat.pre !== '-' ? feat.pre.split(';').map(t => t.trim()).filter(Boolean) : [];
@@ -4182,8 +4210,8 @@ function App() {
 
                                     return (
                                         <div 
-                                            key={feat.id} 
-                                            onClick={() => toggleFeature(feat.id)}
+                                            key={`${feat.id || feat.name}_${feat.tag}_${feat.req}_${idx}`} 
+                                            onClick={() => toggleFeature(feat.id || feat.name)}
                                             title={!canSelect && !isSelected ? reqMsg : ''}
                                             className={`group relative rounded-xl border transition-all duration-200 overflow-hidden ${isSelected ? 'bg-blue-900/10 border-blue-500/30 shadow-[0_0_15px_rgba(59,130,246,0.05)] cursor-pointer' : canSelect ? 'bg-slate-900 border-slate-850 hover:bg-slate-850 hover:border-slate-750 cursor-pointer' : 'bg-slate-900/40 border-slate-900/50 opacity-40 cursor-not-allowed grayscale'}`}
                                         >
