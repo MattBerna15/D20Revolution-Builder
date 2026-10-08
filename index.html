@@ -374,6 +374,318 @@ function deduplicateStringList(list) {
     return result;
 }
 
+// --- GLOBAL FEATURE CATALOG & CLASS VALIDATION HELPERS ---
+let GLOBAL_FEATURE_CATALOG = null;
+
+function getGlobalFeatureCatalog() {
+    if (GLOBAL_FEATURE_CATALOG) return GLOBAL_FEATURE_CATALOG;
+    GLOBAL_FEATURE_CATALOG = new Map();
+    if (typeof Papa !== 'undefined' && typeof PRELOADED_CSV !== 'undefined') {
+        try {
+            const parsed = Papa.parse(PRELOADED_CSV, { header: true, skipEmptyLines: true });
+            if (parsed && Array.isArray(parsed.data)) {
+                parsed.data.forEach(row => {
+                    if (!row || !row["Name"]) return;
+                    const name = row["Name"].trim();
+                    const item = {
+                        id: name,
+                        name: name,
+                        tag: row["Class Tag"] || "Generico",
+                        cp: parseInt(row["Creation Points"] || 0),
+                        req: parseInt(row["Class Power"] || 0),
+                        ap: row["Action Points"] || "-",
+                        desc: row["Description"] || "",
+                        pre: row["Prerequistes"] || "-"
+                    };
+                    GLOBAL_FEATURE_CATALOG.set(name.toLowerCase(), item);
+                    GLOBAL_FEATURE_CATALOG.set(normalizeFeatureName(name), item);
+                });
+            }
+        } catch (e) {
+            console.error("Errore creazione catalogo globale feature:", e);
+        }
+    }
+    return GLOBAL_FEATURE_CATALOG;
+}
+
+const LEGACY_FEATURE_NAME_MAP = {
+    "expertise (rogue)": "Expertise, Rogue",
+    "expertise rogue": "Expertise, Rogue",
+    "expertise, rogue": "Expertise, Rogue",
+    "expertise (bard)": "Expertise, Bard",
+    "expertise bard": "Expertise, Bard",
+    "expertise, bard": "Expertise, Bard",
+    "expertise (ranger)": "Expertise, Ranger",
+    "expertise ranger": "Expertise, Ranger",
+    "expertise, ranger": "Expertise, Ranger",
+    "rakish audacity": "Rakish Audacity",
+    "font of magic": "Font of Magic"
+};
+
+function resolveFeatureObject(item, catalogMap) {
+    if (item === null || item === undefined) return null;
+    // Rifiuta tassativamente indici posizionali di riga o numeri
+    if (typeof item === 'number' || (typeof item === 'string' && /^\d+$/.test(item.trim()))) {
+        return null;
+    }
+
+    const cat = (catalogMap && typeof catalogMap.get === 'function') 
+        ? catalogMap 
+        : getGlobalFeatureCatalog();
+
+    if (typeof item === 'object') {
+        const rawName = (item.name || '').trim();
+        if (rawName) {
+            const lowerName = rawName.toLowerCase();
+            const mappedName = LEGACY_FEATURE_NAME_MAP[lowerName] || rawName;
+            const found = cat.get(mappedName.toLowerCase()) || cat.get(normalizeFeatureName(mappedName));
+            if (found) return found;
+        }
+        if (item.tag && item.cp !== undefined) {
+            return {
+                id: item.name || item.id,
+                name: item.name || '',
+                tag: item.tag || 'Generico',
+                cp: parseInt(item.cp) || 0,
+                req: parseInt(item.req) || 0,
+                ap: item.ap || '-',
+                desc: item.desc || '',
+                pre: item.pre || '-'
+            };
+        }
+    } else if (typeof item === 'string') {
+        const trimmed = item.trim();
+        const lower = trimmed.toLowerCase();
+        const mappedName = LEGACY_FEATURE_NAME_MAP[lower] || trimmed;
+        return cat.get(mappedName.toLowerCase()) || cat.get(normalizeFeatureName(mappedName)) || null;
+    }
+
+    return null;
+}
+
+function checkSinglePrereqString(prereqString, featureNamesSet, magicData, spellcastingList = []) {
+    const raw = (prereqString || '').trim().toLowerCase();
+    if (!raw || raw === '-') return true;
+
+    if (featureNamesSet.has(raw) || featureNamesSet.has(normalizeFeatureName(raw))) return true;
+
+    if (raw === 'spellcasting' || raw === 'spell casting') {
+        const hasSlots = (magicData?.casterSlots || []).some(s => s && s.level > 0);
+        const hasScClass = (spellcastingList || []).length > 0;
+        return hasSlots || hasScClass || featureNamesSet.has('spellcasting') || featureNamesSet.has('spell casting') || featureNamesSet.has('incantesimi');
+    }
+
+    if (raw.includes(',')) {
+        const subParts = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+        return subParts.every(sub => {
+            if (sub === 'spellcasting' || sub === 'spell casting') {
+                const hasSlots = (magicData?.casterSlots || []).some(s => s && s.level > 0);
+                const hasScClass = (spellcastingList || []).length > 0;
+                return hasSlots || hasScClass || featureNamesSet.has('spellcasting') || featureNamesSet.has('spell casting');
+            }
+            return featureNamesSet.has(sub) || featureNamesSet.has(normalizeFeatureName(sub));
+        });
+    }
+
+    return false;
+}
+
+function isFeatureClassAllowed(feature, characterClasses) {
+    if (!feature) return false;
+    const tag = (feature.tag || '').trim();
+    if (!tag || tag.toLowerCase() === 'generico' || tag.toLowerCase() === 'generic' || tag === '-') {
+        return true;
+    }
+
+    const classesList = Array.isArray(characterClasses) ? characterClasses : [];
+    const userClassMap = new Map();
+    classesList.forEach(c => {
+        if (!c) return;
+        const name = String(c.className || c.name || '').trim().toLowerCase();
+        if (!name) return;
+        const lvl = parseInt(c.level) || 0;
+        if (lvl > 0) {
+            userClassMap.set(name, Math.max(userClassMap.get(name) || 0, lvl));
+            if (name === 'artificier') userClassMap.set('artificer', lvl);
+            if (name === 'artificer') userClassMap.set('artificier', lvl);
+        }
+    });
+
+    const reqLevel = parseInt(feature.req) || 0;
+    const tagBranches = tag.split(';').map(b => b.trim()).filter(Boolean);
+    if (tagBranches.length === 0) return true;
+
+    const fixedClasses = (typeof FIXED_CLASSES_LIST !== 'undefined' && Array.isArray(FIXED_CLASSES_LIST))
+        ? FIXED_CLASSES_LIST
+        : ["Artificier", "Barbarian", "Bard", "Blood-Hunter", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Psion", "Ranger", "Rogue", "Sorcerer", "Vampire", "Warlock", "Wizard"];
+
+    return tagBranches.some(branch => {
+        const parts = branch.split(',').map(p => p.trim()).filter(Boolean);
+        if (parts.length === 0) return true;
+
+        const matchedFixedClasses = fixedClasses.filter(cls => {
+            const clsLower = cls.toLowerCase();
+            return parts.some(p => {
+                const pLower = p.toLowerCase();
+                return pLower === clsLower || 
+                       (clsLower === 'artificier' && pLower === 'artificer') ||
+                       (clsLower === 'artificer' && pLower === 'artificier');
+            });
+        });
+
+        if (matchedFixedClasses.length > 0) {
+            return matchedFixedClasses.some(cls => {
+                const userLvl = userClassMap.get(cls.toLowerCase()) || 0;
+                return userLvl > 0 && userLvl >= reqLevel;
+            });
+        }
+
+        // Custom / Homebrew class
+        return parts.some(p => {
+            const userLvl = userClassMap.get(p.toLowerCase()) || 0;
+            return userLvl > 0 && userLvl >= reqLevel;
+        });
+    });
+}
+
+function checkFeatureClassRequirement(feature, characterClasses) {
+    if (!feature) return { allowed: true, msg: '' };
+    const tag = (feature.tag || '').trim();
+    if (!tag || tag.toLowerCase() === 'generico' || tag.toLowerCase() === 'generic' || tag === '-') {
+        return { allowed: true, msg: '' };
+    }
+
+    const classesList = Array.isArray(characterClasses) ? characterClasses : [];
+    const userClassMap = new Map();
+    classesList.forEach(c => {
+        if (!c) return;
+        const name = String(c.className || c.name || '').trim().toLowerCase();
+        if (!name) return;
+        const lvl = parseInt(c.level) || 0;
+        if (lvl > 0) {
+            userClassMap.set(name, Math.max(userClassMap.get(name) || 0, lvl));
+            if (name === 'artificier') userClassMap.set('artificer', lvl);
+            if (name === 'artificer') userClassMap.set('artificier', lvl);
+        }
+    });
+
+    const reqLevel = parseInt(feature.req) || 0;
+    const tagBranches = tag.split(';').map(b => b.trim()).filter(Boolean);
+    if (tagBranches.length === 0) return { allowed: true, msg: '' };
+
+    let anyBranchAllowed = false;
+    let missingMsgs = [];
+
+    const fixedClasses = (typeof FIXED_CLASSES_LIST !== 'undefined' && Array.isArray(FIXED_CLASSES_LIST))
+        ? FIXED_CLASSES_LIST
+        : ["Artificier", "Barbarian", "Bard", "Blood-Hunter", "Cleric", "Druid", "Fighter", "Monk", "Paladin", "Psion", "Ranger", "Rogue", "Sorcerer", "Vampire", "Warlock", "Wizard"];
+
+    tagBranches.forEach(branch => {
+        const parts = branch.split(',').map(p => p.trim()).filter(Boolean);
+        if (parts.length === 0) {
+            anyBranchAllowed = true;
+            return;
+        }
+
+        const matchedFixedClasses = fixedClasses.filter(cls => {
+            const clsLower = cls.toLowerCase();
+            return parts.some(p => {
+                const pLower = p.toLowerCase();
+                return pLower === clsLower || 
+                       (clsLower === 'artificier' && pLower === 'artificer') ||
+                       (clsLower === 'artificer' && pLower === 'artificier');
+            });
+        });
+
+        if (matchedFixedClasses.length > 0) {
+            const hasClassAndLevel = matchedFixedClasses.some(cls => {
+                const userLvl = userClassMap.get(cls.toLowerCase()) || 0;
+                return userLvl > 0 && userLvl >= reqLevel;
+            });
+            if (hasClassAndLevel) {
+                anyBranchAllowed = true;
+            } else {
+                const classLabel = matchedFixedClasses.join(' o ');
+                missingMsgs.push(reqLevel > 0 ? `Richiede ${classLabel} Lv. ${reqLevel}` : `Richiede ${classLabel}`);
+            }
+        } else {
+            const hasCustom = parts.some(p => {
+                const userLvl = userClassMap.get(p.toLowerCase()) || 0;
+                return userLvl > 0 && userLvl >= reqLevel;
+            });
+            if (hasCustom) {
+                anyBranchAllowed = true;
+            } else {
+                const label = parts[parts.length - 1] || parts[0];
+                missingMsgs.push(reqLevel > 0 ? `Richiede ${label} Lv. ${reqLevel}` : `Richiede ${label}`);
+            }
+        }
+    });
+
+    if (anyBranchAllowed) {
+        return { allowed: true, msg: '' };
+    }
+    return { allowed: false, msg: missingMsgs[0] || 'Prerequisiti di classe non soddisfatti' };
+}
+
+function areFeaturePrereqsMet(feature, activeNamesSet, magicData, spellcastingList) {
+    if (!feature || !feature.pre || feature.pre === '-' || feature.pre.trim() === '') {
+        return true;
+    }
+    const parts = feature.pre.split(';').map(p => p.trim()).filter(Boolean);
+    return parts.every(part => checkSinglePrereqString(part, activeNamesSet, magicData, spellcastingList));
+}
+
+function pruneInvalidFeatures(featuresList, classesList, magicData, spellcastingList, catalogMap) {
+    if (!Array.isArray(featuresList)) return [];
+
+    let currentList = featuresList.map(item => resolveFeatureObject(item, catalogMap)).filter(Boolean);
+    currentList = deduplicateFeaturesList(currentList);
+
+    while (true) {
+        let changed = false;
+
+        const activeNamesSet = new Set();
+        currentList.forEach(item => {
+            if (item && item.name) {
+                activeNamesSet.add(item.name.trim().toLowerCase());
+                activeNamesSet.add(normalizeFeatureName(item.name));
+            }
+        });
+
+        const nextList = [];
+        for (const feat of currentList) {
+            // 1. Controllo appartenenza di classe e livello
+            if (!isFeatureClassAllowed(feat, classesList)) {
+                changed = true;
+                continue;
+            }
+
+            // 2. Controllo prerequisiti di abilità propedeutiche (f.pre)
+            const otherNamesSet = new Set();
+            currentList.forEach(other => {
+                if (other.name && feat.name && other.name.trim().toLowerCase() !== feat.name.trim().toLowerCase()) {
+                    otherNamesSet.add(other.name.trim().toLowerCase());
+                    otherNamesSet.add(normalizeFeatureName(other.name));
+                }
+            });
+
+            if (!areFeaturePrereqsMet(feat, otherNamesSet, magicData, spellcastingList)) {
+                changed = true;
+                continue;
+            }
+
+            nextList.push(feat);
+        }
+
+        currentList = nextList;
+        if (!changed) break;
+    }
+
+    // Restituisce l'array pulito di nomi univoci canonici (stringhe)
+    return currentList.map(f => f.name.trim());
+}
+
 function migrateAndSanitizeCharacter(raw) {
     if (!raw || typeof raw !== 'object') {
         raw = {};
@@ -423,7 +735,7 @@ function migrateAndSanitizeCharacter(raw) {
 
     // 3. Classes normalization (deduplicated by className)
     const sanitizedClasses = deduplicateNamedList(rawClasses.map(c => ({
-        className: (c && typeof c.className === 'string') ? c.className : '',
+        className: (c ? (c.className || c.name || '') : '').trim(),
         level: Math.max(1, parseInt(c?.level) || 1),
         showProficiency: !!c?.showProficiency,
         selectedHp: (typeof c?.selectedHp === 'number' && !isNaN(c.selectedHp)) ? c.selectedHp : undefined
@@ -461,42 +773,8 @@ function migrateAndSanitizeCharacter(raw) {
         casterSlots: Array.isArray(rawMagic.casterSlots) ? rawMagic.casterSlots : []
     };
 
-    // 7. Lists (tutti deduplicati rigorosamente)
-    const LEGACY_FEATURE_NAME_MAP = {
-        "expertise (rogue)": "Expertise, Rogue",
-        "expertise rogue": "Expertise, Rogue",
-        "expertise, rogue": "Expertise, Rogue",
-        "expertise (bard)": "Expertise, Bard",
-        "expertise bard": "Expertise, Bard",
-        "expertise, bard": "Expertise, Bard",
-        "expertise (ranger)": "Expertise, Ranger",
-        "expertise ranger": "Expertise, Ranger",
-        "expertise, ranger": "Expertise, Ranger",
-        "rakish audacity": "Rakish Audacity",
-        "font of magic": "Font of Magic"
-    };
-
-    const cleanFeatureItem = (item) => {
-        if (item === null || item === undefined) return null;
-        if (typeof item === 'string') {
-            const trimmed = item.trim();
-            const lower = trimmed.toLowerCase();
-            return LEGACY_FEATURE_NAME_MAP[lower] || trimmed;
-        }
-        if (typeof item === 'object') {
-            const rawName = (item.name || '').trim();
-            const lowerName = rawName.toLowerCase();
-            const mappedName = LEGACY_FEATURE_NAME_MAP[lowerName] || rawName;
-            return {
-                ...item,
-                name: mappedName
-            };
-        }
-        return item;
-    };
-
-    const cleanedFeatures = (Array.isArray(rawFeatures) ? rawFeatures : []).map(cleanFeatureItem).filter(Boolean);
-    const sanitizedFeatures = deduplicateFeaturesList(cleanedFeatures);
+    // 7. Lists (tutti deduplicati e sanificati rigorosamente con pruning automatico delle feature orfane)
+    const sanitizedFeatures = pruneInvalidFeatures(rawFeatures, sanitizedClasses, sanitizedMagic, rawSpellcasting);
     const sanitizedFightingStyles = deduplicateNamedList(rawFightingStyles);
     const sanitizedManeuvers = deduplicateNamedList(rawManeuvers);
     const sanitizedCunningStrikes = deduplicateNamedList(rawCunningStrikes);
@@ -535,6 +813,7 @@ function migrateAndSanitizeCharacter(raw) {
         savingThrows: sanitizedSavingThrows,
         magic: sanitizedMagic,
         features: sanitizedFeatures,
+        selectedFeatures: sanitizedFeatures,
         fightingStyles: sanitizedFightingStyles,
         maneuvers: sanitizedManeuvers,
         cunningStrikes: sanitizedCunningStrikes,
@@ -632,7 +911,7 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
     }, 0);
 
     // 11. Psionic Powers & Disciplines (deduplicated)
-    const uniqueFeatures = deduplicateFeaturesList(p.features || []);
+    const uniqueFeatures = deduplicateFeaturesList(p.features || p.selectedFeatures || []);
     const hasPsiPower = uniqueFeatures.some(f => {
         const fObj = (typeof f === 'object') ? f : (dbMap[f] || (typeof f === 'string' ? dbMap[f.trim().toLowerCase()] : null));
         return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic power';
@@ -676,10 +955,13 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
         return b + scCosts + casterLvlCosts;
     })();
 
-    // 13. Features (deduplicated)
+    // 13. Features (deduplicated & validated)
+    const cat = (dbMap && Object.keys(dbMap).length > 0) ? dbMap : getGlobalFeatureCatalog();
     const featCostList = uniqueFeatures.reduce((acc, feat) => {
-        const f = (typeof feat === 'object') ? feat : (dbMap[feat] || (typeof feat === 'string' ? dbMap[feat.trim().toLowerCase()] : null));
-        return acc + (f ? (parseInt(f.cp) || 0) : 0);
+        const f = resolveFeatureObject(feat, cat);
+        if (!f) return acc;
+        if (!isFeatureClassAllowed(f, p.classes)) return acc;
+        return acc + (parseInt(f.cp) || 0);
     }, 0);
 
     return featCostList + classCosts + featCosts + abilityScoreCost + hpCosts + skillCosts + fsCosts + maneuverCosts + csCosts + mmCosts + eldritchCosts + psiCosts + psiDiscCosts + magicCosts;
@@ -693,6 +975,10 @@ if (typeof window !== 'undefined') {
     window.deduplicateStringList = deduplicateStringList;
     window.migrateAndSanitizeCharacter = migrateAndSanitizeCharacter;
     window.calculateCharacterCPSpent = calculateCharacterCPSpent;
+    window.isFeatureClassAllowed = isFeatureClassAllowed;
+    window.checkFeatureClassRequirement = checkFeatureClassRequirement;
+    window.pruneInvalidFeatures = pruneInvalidFeatures;
+    window.getGlobalFeatureCatalog = getGlobalFeatureCatalog;
 }
 
 function App() {
@@ -719,8 +1005,13 @@ function App() {
     const dbMap = React.useMemo(() => {
         if (!db) return {};
         return db.reduce((acc, item) => { 
-            if (item && item.id) acc[item.id] = item; 
-            if (item && item.name) acc[item.name.trim().toLowerCase()] = item;
+            if (item && item.name) {
+                const name = item.name.trim();
+                acc[name] = item;
+                acc[name.toLowerCase()] = item;
+                acc[normalizeFeatureName(name)] = item;
+                if (item.id) acc[item.id] = item;
+            }
             return acc; 
         }, {});
     }, [db]);
@@ -891,11 +1182,12 @@ function App() {
             header: true,
             skipEmptyLines: true,
             complete: function(results) {
-                const newItems = results.data.map((row, index) => {
+                const newItems = results.data.map((row) => {
                     if (!row["Name"]) return null; 
+                    const name = row["Name"].trim();
                     return {
-                        id: index + 1, 
-                        name: row["Name"],
+                        id: name, 
+                        name: name,
                         tag: row["Class Tag"] || "Generico",
                         cp: parseInt(row["Creation Points"] || 0),
                         req: parseInt(row["Class Power"] || 0),
@@ -1116,7 +1408,18 @@ function App() {
     // --- SAVE DATA AUTOMATICALLY ---
     React.useEffect(() => {
         if (currentProfile && charData) {
-            const dataToSave = { ...charData, schemaVersion: CURRENT_SCHEMA_VERSION };
+            const cleanFeatures = deduplicateFeaturesList(charData.features || []).map(f => {
+                if (typeof f === 'string') return f.trim();
+                if (typeof f === 'object' && f && f.name) return f.name.trim();
+                return null;
+            }).filter(Boolean);
+
+            const dataToSave = { 
+                ...charData, 
+                features: cleanFeatures,
+                selectedFeatures: cleanFeatures,
+                schemaVersion: CURRENT_SCHEMA_VERSION 
+            };
             localStorage.setItem(`d20_profile_${currentProfile}`, JSON.stringify(dataToSave));
         }
     }, [charData, currentProfile]);
@@ -1277,33 +1580,37 @@ function App() {
     };
 
     const isFeatureEligible = React.useCallback((feature, activeFeaturesList, classesList, magicData, spellcastingList = []) => {
-        const f = (typeof feature === 'object') ? feature : (dbMap[feature] || (typeof feature === 'string' ? dbMap[feature.trim().toLowerCase()] : null));
+        const f = (typeof feature === 'object') ? feature : (dbMap[feature] || (typeof feature === 'string' ? (dbMap[feature.trim().toLowerCase()] || dbMap[normalizeFeatureName(feature)]) : null));
         if (!f) return false;
 
         // 1. Requisito di classe e livello
-        const baseClasses = FIXED_CLASSES_LIST.filter(cls => f.tag && f.tag.includes(cls));
-        if (baseClasses.length > 0 && f.req > 0) {
-            const isAllowed = baseClasses.some(baseClass => {
-                const userHas = (classesList || []).find(c => c.className === baseClass);
-                return userHas && (parseInt(userHas.level) || 0) >= f.req;
-            });
-            if (!isAllowed) return false;
+        if (!isFeatureClassAllowed(f, classesList)) {
+            return false;
         }
 
         // 2. Requisiti di abilità propedeutiche (f.pre)
         if (f.pre && f.pre !== '-') {
             const featObj = f;
             const otherFeatures = (activeFeaturesList || []).filter(item => {
-                const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? dbMap[item.trim().toLowerCase()] : null));
-                return itemObj && featObj && itemObj.id !== featObj.id;
+                const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? (dbMap[item.trim().toLowerCase()] || dbMap[normalizeFeatureName(item)]) : null));
+                const otherName = itemObj ? itemObj.name : (typeof item === 'string' ? item : null);
+                return otherName && otherName.trim().toLowerCase() !== featObj.name.trim().toLowerCase();
             });
 
             const featureNames = new Set(
                 otherFeatures.map(item => {
-                    const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? dbMap[item.trim().toLowerCase()] : null));
-                    return itemObj && itemObj.name ? itemObj.name.trim().toLowerCase() : null;
+                    const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? (dbMap[item.trim().toLowerCase()] || dbMap[normalizeFeatureName(item)]) : null));
+                    return itemObj && itemObj.name ? itemObj.name.trim().toLowerCase() : (typeof item === 'string' ? item.trim().toLowerCase() : null);
                 }).filter(Boolean)
             );
+
+            otherFeatures.forEach(item => {
+                const itemObj = (typeof item === 'object') ? item : (dbMap[item] || (typeof item === 'string' ? (dbMap[item.trim().toLowerCase()] || dbMap[normalizeFeatureName(item)]) : null));
+                const n = itemObj && itemObj.name ? itemObj.name : (typeof item === 'string' ? item : null);
+                if (n) {
+                    featureNames.add(normalizeFeatureName(n));
+                }
+            });
 
             const parts = f.pre.split(';').map(p => p.trim()).filter(Boolean);
             const allPrereqsMet = parts.every(part => checkSinglePrereqString(part, featureNames, magicData, spellcastingList));
@@ -1319,29 +1626,18 @@ function App() {
     }, [selectedFeatureNames, charData.magic, charData.spellcasting]);
 
     const checkClassPrereq = React.useCallback((feature) => {
-        const baseClasses = FIXED_CLASSES_LIST.filter(cls => feature.tag && feature.tag.includes(cls));
-        if (baseClasses.length === 0) return { allowed: true, msg: '' };
-
-        const isAllowed = baseClasses.some(baseClass => {
-            const userHas = (charData.classes || []).find(c => c.className === baseClass);
-            return userHas && (parseInt(userHas.level) || 0) >= feature.req;
-        });
-
-        if (!isAllowed) {
-            return { allowed: false, msg: `Richiede ${baseClasses.join(' o ')} Lv. ${feature.req}` };
-        }
-        return { allowed: true, msg: '' };
+        return checkFeatureClassRequirement(feature, charData.classes);
     }, [charData.classes]);
 
     const totalCPSpent = React.useMemo(() => {
         const uniqueFeatures = deduplicateFeaturesList(charData.features || []);
         const featuresCost = uniqueFeatures.reduce((acc, feat) => {
-            const f = (typeof feat === 'object') ? feat : dbMap[feat];
-            // Sanity check: se un'abilità non soddisfa i prerequisiti, il suo costo non viene addebitato
-            if (f && !isFeatureEligible(f, uniqueFeatures, charData.classes, charData.magic, charData.spellcasting)) {
+            const f = (typeof feat === 'object') ? feat : (dbMap[feat] || (typeof feat === 'string' ? (dbMap[feat.trim().toLowerCase()] || dbMap[normalizeFeatureName(feat)]) : null));
+            if (!f) return acc;
+            if (!isFeatureEligible(f, uniqueFeatures, charData.classes, charData.magic, charData.spellcasting)) {
                 return acc;
             }
-            return acc + (f ? (parseInt(f.cp) || 0) : 0);
+            return acc + (parseInt(f.cp) || 0);
         }, 0);
         return featuresCost + totalCPClasses + totalCPFeats + abilityCostCP + totalHpCost + totalSkillCost + totalCPFightingStyles + totalCPMartialAdept + totalCPCunningStrikes + totalCPMetamagic + totalCPEldritchAdept + totalCPPsionicPowers + totalCPPsionicDisciplines + totalCPMagic;
     }, [charData.features, dbMap, isFeatureEligible, charData.classes, charData.magic, charData.spellcasting, totalCPClasses, totalCPFeats, abilityCostCP, totalHpCost, totalSkillCost, totalCPFightingStyles, totalCPMartialAdept, totalCPCunningStrikes, totalCPMetamagic, totalCPEldritchAdept, totalCPPsionicPowers, totalCPPsionicDisciplines, totalCPMagic]);
@@ -1403,13 +1699,20 @@ function App() {
         let newData = { ...charData };
         let hasChanges = false;
 
-        if ((charData.features || []).some(f => typeof f === 'number' || typeof f === 'string')) {
-            newData.features = deduplicateFeaturesList(migrateList(charData.features, dbMap));
+        if ((charData.features || []).some(f => typeof f === 'object' || typeof f === 'number')) {
+            const cleanList = deduplicateFeaturesList(charData.features.map(f => {
+                if (typeof f === 'string') return f.trim();
+                if (typeof f === 'object' && f && f.name) return f.name.trim();
+                return null;
+            }).filter(Boolean));
+            newData.features = cleanList;
+            newData.selectedFeatures = cleanList;
             hasChanges = true;
         } else {
             const dedupFeatures = deduplicateFeaturesList(charData.features || []);
             if (dedupFeatures.length !== (charData.features || []).length) {
                 newData.features = dedupFeatures;
+                newData.selectedFeatures = dedupFeatures;
                 hasChanges = true;
             }
         }
@@ -1509,7 +1812,7 @@ function App() {
     React.useEffect(() => {
         if (!db || db.length === 0 || !charData.features || charData.features.length === 0) return;
 
-        let currentList = [...charData.features];
+        let currentList = deduplicateFeaturesList(charData.features);
         let prunedAny = false;
         const initialCount = currentList.length;
 
@@ -1534,16 +1837,19 @@ function App() {
         if (prunedAny) {
             const hasPsiPower = currentList.some(f => {
                 const fObj = (typeof f === 'object') ? f : dbMap[f];
-                return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic power';
+                const fn = fObj ? fObj.name : String(f);
+                return fn && fn.trim().toLowerCase() === 'psionic power';
             });
             const hasPsiDisc = currentList.some(f => {
                 const fObj = (typeof f === 'object') ? f : dbMap[f];
-                return fObj && fObj.name && fObj.name.trim().toLowerCase() === 'psionic discipline';
+                const fn = fObj ? fObj.name : String(f);
+                return fn && fn.trim().toLowerCase() === 'psionic discipline';
             });
 
             setCharData(prev => ({
                 ...prev,
                 features: currentList,
+                selectedFeatures: currentList,
                 psionicPowers: hasPsiPower ? (prev.psionicPowers || []) : [],
                 psionicDisciplines: hasPsiDisc ? (prev.psionicDisciplines || []) : []
             }));
@@ -1554,13 +1860,13 @@ function App() {
     }, [charData.features, charData.classes, charData.magic, charData.spellcasting, isFeatureEligible, db.length, dbMap, showToast]);
 
     const toggleFeature = (id) => {
-        const f = dbMap[id] || (typeof id === 'object' ? id : null);
+        const f = dbMap[id] || (typeof id === 'object' ? id : (typeof id === 'string' ? (dbMap[id.toLowerCase()] || dbMap[normalizeFeatureName(id)]) : null));
         const featTarget = f || id;
         const exists = isFeatureSelected(featTarget, charData.features, dbMap);
 
         if (exists) {
             const fObj = f || (typeof featTarget === 'object' ? featTarget : (dbMap[featTarget] || null));
-            const featName = (fObj && fObj.name) ? fObj.name.trim().toLowerCase() : '';
+            const featName = (fObj && fObj.name) ? fObj.name.trim().toLowerCase() : (typeof featTarget === 'string' ? featTarget.trim().toLowerCase() : '');
             
             let extraUpdates = {};
             if (featName === 'psionic power') {
@@ -1571,9 +1877,11 @@ function App() {
                 setPsionicDisciplineSelection('');
             }
             
+            const updatedList = (charData.features || []).filter(item => !isFeatureSelected(featTarget, [item], dbMap));
             setCharData(prev => ({
                 ...prev,
-                features: (prev.features || []).filter(item => !isFeatureSelected(featTarget, [item], dbMap)),
+                features: updatedList,
+                selectedFeatures: updatedList,
                 ...extraUpdates
             }));
             showToast("Abilità rimossa");
@@ -1589,7 +1897,13 @@ function App() {
                 }
                 return;
             }
-            updateCharData('features', deduplicateFeaturesList([...(charData.features || []), f]));
+            const featName = f.name ? f.name.trim() : String(f).trim();
+            const updatedList = deduplicateFeaturesList([...(charData.features || []), featName]);
+            setCharData(prev => ({
+                ...prev,
+                features: updatedList,
+                selectedFeatures: updatedList
+            }));
             showToast("Abilità aggiunta!");
         }
     };
