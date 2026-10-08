@@ -4,6 +4,92 @@
 const CURRENT_SCHEMA_VERSION = 2;
 const MASTER_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbyTr_FQSheURjctlB8uZQsyCgjUYKwYYD6W98U99CZe-ino6I0q5yMolLwgcR8X_cGp/exec";
 
+// --- NORMALIZATION & SELECTION HELPERS ---
+function normalizeFeatureName(name) {
+    if (!name) return "";
+    return String(name)
+        .toLowerCase()
+        .replace(/[(),]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+}
+
+function isFeatureSelected(feature, selectedFeaturesList, dbMap = {}) {
+    if (!feature || !selectedFeaturesList || !Array.isArray(selectedFeaturesList) || selectedFeaturesList.length === 0) {
+        return false;
+    }
+
+    const targetId = (typeof feature === 'object' && feature !== null && feature.id !== undefined && feature.id !== null && feature.id !== '')
+        ? String(feature.id).trim()
+        : (typeof feature === 'number' || (typeof feature === 'string' && /^\d+$/.test(feature.trim())) ? String(feature).trim() : null);
+
+    const rawTargetName = (typeof feature === 'object' && feature !== null)
+        ? (feature.name || '')
+        : String(feature || '');
+    const targetNameNorm = normalizeFeatureName(rawTargetName);
+    const targetNameClean = rawTargetName.trim().toLowerCase();
+
+    return selectedFeaturesList.some(item => {
+        if (item === null || item === undefined) return false;
+
+        let itemId = null;
+        let rawItemName = '';
+
+        if (typeof item === 'object') {
+            if (item.id !== undefined && item.id !== null && item.id !== '') {
+                itemId = String(item.id).trim();
+            }
+            rawItemName = item.name || '';
+        } else if (typeof item === 'number') {
+            itemId = String(item);
+        } else if (typeof item === 'string') {
+            const s = item.trim();
+            if (/^\d+$/.test(s)) {
+                itemId = s;
+            } else {
+                rawItemName = s;
+            }
+        }
+
+        // 1. Direct ID match
+        if (targetId && itemId && targetId === itemId) {
+            return true;
+        }
+
+        // 2. Direct string ID match
+        if (targetId && typeof item === 'string' && item.trim() === targetId) {
+            return true;
+        }
+
+        // 3. Resolve name from dbMap if missing on item
+        if (!rawItemName && itemId && dbMap[itemId]) {
+            rawItemName = dbMap[itemId].name || '';
+        }
+
+        // 4. Exact trimmed lower-case name match
+        const itemNameClean = rawItemName.trim().toLowerCase();
+        if (targetNameClean && itemNameClean && targetNameClean === itemNameClean) {
+            return true;
+        }
+
+        // 5. Normalized name match (handles "Expertise, Rogue" vs "Expertise (Rogue)", commas, brackets, whitespace)
+        const itemNameNorm = normalizeFeatureName(rawItemName);
+        if (targetNameNorm && itemNameNorm && targetNameNorm === itemNameNorm) {
+            return true;
+        }
+
+        // 6. Direct string comparison for string items
+        if (typeof item === 'string') {
+            const itemNorm = normalizeFeatureName(item);
+            if (targetNameNorm && itemNorm && targetNameNorm === itemNorm) {
+                return true;
+            }
+        }
+
+        return false;
+    });
+}
+
 // --- DEDUPLICATION HELPERS ---
 function deduplicateFeaturesList(list) {
     if (!Array.isArray(list)) return [];
@@ -19,7 +105,7 @@ function deduplicateFeaturesList(list) {
                 idKey = String(item.id).trim();
             }
             if (typeof item.name === 'string' && item.name.trim()) {
-                nameKey = item.name.trim().toLowerCase();
+                nameKey = normalizeFeatureName(item.name);
             }
         } else if (typeof item === 'number') {
             idKey = String(item);
@@ -28,7 +114,7 @@ function deduplicateFeaturesList(list) {
             if (/^\d+$/.test(s)) {
                 idKey = s;
             } else if (s) {
-                nameKey = s.toLowerCase();
+                nameKey = normalizeFeatureName(s);
             }
         }
 
@@ -201,7 +287,41 @@ function migrateAndSanitizeCharacter(raw) {
     };
 
     // 7. Lists (tutti deduplicati rigorosamente)
-    const sanitizedFeatures = deduplicateFeaturesList(rawFeatures);
+    const LEGACY_FEATURE_NAME_MAP = {
+        "expertise (rogue)": "Expertise, Rogue",
+        "expertise rogue": "Expertise, Rogue",
+        "expertise, rogue": "Expertise, Rogue",
+        "expertise (bard)": "Expertise, Bard",
+        "expertise bard": "Expertise, Bard",
+        "expertise, bard": "Expertise, Bard",
+        "expertise (ranger)": "Expertise, Ranger",
+        "expertise ranger": "Expertise, Ranger",
+        "expertise, ranger": "Expertise, Ranger",
+        "rakish audacity": "Rakish Audacity",
+        "font of magic": "Font of Magic"
+    };
+
+    const cleanFeatureItem = (item) => {
+        if (item === null || item === undefined) return null;
+        if (typeof item === 'string') {
+            const trimmed = item.trim();
+            const lower = trimmed.toLowerCase();
+            return LEGACY_FEATURE_NAME_MAP[lower] || trimmed;
+        }
+        if (typeof item === 'object') {
+            const rawName = (item.name || '').trim();
+            const lowerName = rawName.toLowerCase();
+            const mappedName = LEGACY_FEATURE_NAME_MAP[lowerName] || rawName;
+            return {
+                ...item,
+                name: mappedName
+            };
+        }
+        return item;
+    };
+
+    const cleanedFeatures = (Array.isArray(rawFeatures) ? rawFeatures : []).map(cleanFeatureItem).filter(Boolean);
+    const sanitizedFeatures = deduplicateFeaturesList(cleanedFeatures);
     const sanitizedFightingStyles = deduplicateNamedList(rawFightingStyles);
     const sanitizedManeuvers = deduplicateNamedList(rawManeuvers);
     const sanitizedCunningStrikes = deduplicateNamedList(rawCunningStrikes);
@@ -391,6 +511,8 @@ function calculateCharacterCPSpent(p, dbMap = {}, rawProfMap = {}) {
 }
 
 if (typeof window !== 'undefined') {
+    window.normalizeFeatureName = normalizeFeatureName;
+    window.isFeatureSelected = isFeatureSelected;
     window.deduplicateFeaturesList = deduplicateFeaturesList;
     window.deduplicateNamedList = deduplicateNamedList;
     window.deduplicateStringList = deduplicateStringList;
@@ -1062,14 +1184,29 @@ function App() {
 
         const migrateList = (list, sourceMap, isMetamagic = false, isManeuver = false, isInvocation = false) => {
             return (list || []).map(item => {
-                if (typeof item === 'object' && item !== null && item.name) return item;
+                if (typeof item === 'object' && item !== null && item.name) {
+                    const normName = normalizeFeatureName(item.name);
+                    let found = null;
+                    if (Array.isArray(sourceMap)) {
+                        found = sourceMap.find(x => normalizeFeatureName(x.name) === normName || String(x.id).trim() === String(item.id).trim());
+                    } else if (sourceMap && typeof sourceMap === 'object') {
+                        found = sourceMap[item.id] || sourceMap[item.name.trim().toLowerCase()] || Object.values(sourceMap).find(x => normalizeFeatureName(x.name) === normName);
+                    }
+                    if (found) {
+                        return { ...found, ...item, id: found.id, name: found.name };
+                    }
+                    return item;
+                }
                 const id = typeof item === 'object' ? item.id : item;
                 let found = null;
                 if (Array.isArray(sourceMap)) {
                     const idStr = String(id).trim().toLowerCase();
-                    found = sourceMap.find(x => String(x.id).trim().toLowerCase() === idStr || (x.name && x.name.trim().toLowerCase() === idStr));
+                    const normId = normalizeFeatureName(id);
+                    found = sourceMap.find(x => String(x.id).trim().toLowerCase() === idStr || normalizeFeatureName(x.name) === normId);
                 } else if (sourceMap && typeof sourceMap === 'object') {
-                    found = sourceMap[id] || (typeof id === 'string' ? sourceMap[id.trim().toLowerCase()] : null);
+                    const cleanId = typeof id === 'string' ? id.trim().toLowerCase() : id;
+                    const normId = typeof id === 'string' ? normalizeFeatureName(id) : '';
+                    found = sourceMap[id] || sourceMap[cleanId] || (normId ? Object.values(sourceMap).find(x => normalizeFeatureName(x.name) === normId) : null);
                 }
                 if (!found) return null;
                 if (isMetamagic) {
@@ -1242,23 +1379,12 @@ function App() {
     }, [charData.features, charData.classes, charData.magic, charData.spellcasting, isFeatureEligible, db.length, dbMap, showToast]);
 
     const toggleFeature = (id) => {
-        const targetIdStr = String(id).trim();
-        const targetObj = dbMap[id];
-        const targetNameLower = targetObj && targetObj.name ? targetObj.name.trim().toLowerCase() : '';
-
-        const exists = (charData.features || []).some(f => {
-            const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
-            const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
-            return fId === targetIdStr || (targetNameLower && fName === targetNameLower);
-        });
+        const f = dbMap[id] || (typeof id === 'object' ? id : null);
+        const featTarget = f || id;
+        const exists = isFeatureSelected(featTarget, charData.features, dbMap);
 
         if (exists) {
-            const featureToRemove = (charData.features || []).find(f => {
-                const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
-                const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
-                return fId === targetIdStr || (targetNameLower && fName === targetNameLower);
-            });
-            const fObj = (typeof featureToRemove === 'object') ? featureToRemove : dbMap[id];
+            const fObj = f || (typeof featTarget === 'object' ? featTarget : (dbMap[featTarget] || null));
             const featName = (fObj && fObj.name) ? fObj.name.trim().toLowerCase() : '';
             
             let extraUpdates = {};
@@ -1272,17 +1398,12 @@ function App() {
             
             setCharData(prev => ({
                 ...prev,
-                features: (prev.features || []).filter(f => {
-                    const fId = typeof f === 'object' ? String(f.id).trim() : String(f).trim();
-                    const fName = (typeof f === 'object' && f.name) ? f.name.trim().toLowerCase() : (dbMap[f]?.name?.trim()?.toLowerCase() || '');
-                    return fId !== targetIdStr && (!targetNameLower || fName !== targetNameLower);
-                }),
+                features: (prev.features || []).filter(item => !isFeatureSelected(featTarget, [item], dbMap)),
                 ...extraUpdates
             }));
             showToast("Abilità rimossa");
             return;
         }
-        const f = dbMap[id];
         if (f) {
             if (!isFeatureEligible(f, charData.features, charData.classes, charData.magic, charData.spellcasting)) {
                 const classCheck = checkClassPrereq(f);
@@ -1304,11 +1425,7 @@ function App() {
                             (item.desc || "").toLowerCase().includes(search.toLowerCase()) ||
                             (item.pre || "").toLowerCase().includes(search.toLowerCase());
         
-        const isSelected = (charData.features || []).some(f => {
-            const fId = typeof f === 'object' ? f.id : f;
-            const fName = typeof f === 'object' ? f.name : (dbMap[f]?.name);
-            return fId === item.id || (fName && fName.trim().toLowerCase() === item.name.trim().toLowerCase());
-        });
+        const isSelected = isFeatureSelected(item, charData.features, dbMap);
         const matchesSelected = !showSelectedOnly || isSelected;
 
         return matchesTag && matchSearch && matchesSelected;
@@ -3559,7 +3676,7 @@ function App() {
 
                                 {/* Features list */}
                                 {filteredData.map(feat => {
-                                    const isSelected = (charData.features || []).some(f => (typeof f === 'string' ? f === feat.id : f?.id === feat.id));
+                                    const isSelected = isFeatureSelected(feat, charData.features, dbMap);
                                     const displayTags = feat.tag ? feat.tag.split(';').map(t => t.trim()) : [];
                                     const displayPrereqs = feat.pre && feat.pre !== '-' ? feat.pre.split(';').map(t => t.trim()).filter(Boolean) : [];
                                     
